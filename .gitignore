@@ -122,3 +122,6 @@ src/**/*.{js,jsx}
 # Idea
 .idea
 .idea/*
+
+# ci/cd
+.gitlab-ci.yml
