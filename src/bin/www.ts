@@ -6,6 +6,7 @@ import 'regenerator-runtime/runtime'
 
 import http from 'http'
 import App from '..'
+import SocketServer from './socket'
 
 import Variable from '@/env/variable.env'
 import logger from '@/utils/logger.util'
@@ -47,6 +48,8 @@ app.set('port', port)
  * Create HTTP server.
  */
 const server = http.createServer(app)
+const socketServer = new SocketServer(app)
+
 
 /**
  * Event listener for HTTP server "error" event.
@@ -85,3 +88,4 @@ const onListening = () => {
 server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
+socketServer.initSocketServer()

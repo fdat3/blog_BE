@@ -6,6 +6,7 @@ class Variable {
     public static readonly NODE_ENV: string = process.env.NODE_ENV!;
 
     public static readonly PORT: number = Number(process.env.PORT)!;
+    public static readonly SOCKET_PORT: number = Number(process.env.SOCKET_PORT)!;
 
     public static readonly MONGO_DATABASE_URL: string = process.env.MONGO_DATABASE_URL!;
 

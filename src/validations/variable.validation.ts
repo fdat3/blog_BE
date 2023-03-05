@@ -6,6 +6,7 @@ const validate = (): void => {
             choices: ["development", "production"]
         }),
         PORT: port({ default: 3030 }),
+        SOCKET_PORT: port({default: 5000}),
         MONGO_DATABASE_URL: str(),
         POSTGRES_DATABASE_URL: str(),
         POSTGRES_DATABASE_NAME: str(),
