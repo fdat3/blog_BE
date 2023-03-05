@@ -1,6 +1,7 @@
-import { InstanceUpdateOptions, Sequelize, UpdateOptions } from 'sequelize'
+import { Sequelize, UpdateOptions } from 'sequelize'
 import VariableEnv from '@/env/variable.env'
 import logger from '@/utils/logger.util'
+
 const sequelizeTransforms = require('sequelize-transforms')
 
 const {
@@ -27,7 +28,7 @@ export const sequelize = new Sequelize(POSTGRES_DATABASE_NAME, POSTGRES_DATABASE
           instance.slug = instance.slug.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
         }
       },
-      beforeUpdate: function(instance: any, options: InstanceUpdateOptions) {
+      beforeUpdate: function(instance: any) {
         instance.updatedAt = new Date()
         // Slugify
         if (instance.slug === undefined || instance.slug === null || instance.slug === '') {

@@ -1,10 +1,5 @@
-import { Router, Request, Response, NextFunction } from 'express'
-
-import AuthService from '@/services/auth.service'
+import { NextFunction, Request, Response, Router } from 'express'
 import Controller from '@/interfaces/controller.interface'
-
-import Validate from '@/validations/user.validation'
-import validationMiddleware from '@/middlewares/validation.middleware'
 
 import HttpException from '@/utils/exceptions/http.exceptions'
 
@@ -12,16 +7,14 @@ import HttpException from '@/utils/exceptions/http.exceptions'
 import ConstantAPI from '@/constants/api.constant'
 
 // message constant
-import ConstantMessage from '@/constants/message.constant'
-
 // http constant
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 
 // logger
-import logger from '@/utils/logger.util'
 import { GithubHookInterface } from '@/interfaces/github.hook.interface'
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios'
+
 const {GithubWebhook} = require('@inventivetalent/express-github-webhook');
 
 class GithubHookController implements Controller {
@@ -104,16 +97,6 @@ class GithubHookController implements Controller {
       repository
     } = data
 
-    const new_workflow_job = {
-      check_run_url: workflow_job?.check_run_url,
-      completed_at: workflow_job?.completed_at,
-      created_at: workflow_job?.created_at,
-      head_branch: workflow_job?.head_branch,
-      started_at: workflow_job?.started_at,
-      status: workflow_job?.status,
-      workflow_name: workflow_job?.workflow_name,
-    }
-
     const new_repository = {
       full_name: repository?.full_name,
       html_url: repository?.html_url,
@@ -139,7 +122,7 @@ url: <a>${new_repository.html_url}</a>`
     try {
       const res: AxiosResponse = await axios.post(url, body)
       return res.data
-    } catch (err: AxiosError | any) {
+    } catch (err: any) {
       console.log(err)
       console.log(err.message)
     }

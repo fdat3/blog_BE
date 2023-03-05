@@ -25,7 +25,7 @@ import ConstantMessage from '@/constants/message.constant'
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 
-const morgan = require('morgan')
+import morgan from 'morgan'
 
 const session = require('express-session')
 
@@ -72,8 +72,7 @@ class App {
         this.app.use(compression())
         this.app.use(cors())
         this.app.use(helmet())
-        this.app.use(morgan())
-
+        this.app.use(morgan('combined'))
         // Reduce Fingerprinting
         this.app.disable('x-powered-by')
 

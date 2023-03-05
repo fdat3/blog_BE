@@ -88,4 +88,7 @@ const onListening = () => {
 server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
-socketServer.initSocketServer()
+setTimeout(async () => {
+    await socketServer.initSocketServer()
+    console.log(`Socket server run on ${SocketServer.SOCKET_PORT}`)
+}, 0)

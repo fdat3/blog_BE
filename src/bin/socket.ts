@@ -1,15 +1,13 @@
-import { Server, Socket, Event } from "socket.io";
-import App from '..'
-import {Express, Application} from 'express'
-import {ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketData} from "@/interfaces/socket.interface"
+import { Server, Socket } from 'socket.io'
+import { Application } from 'express'
 import SocketConstant from '@/constants/socket.constant'
 import * as http from 'http'
 import Variable from '@/env/variable.env'
-const { instrument, RedisStore } = require("@socket.io/admin-ui");
+import * as _ from 'lodash'
 
 
-import { createAdapter, RedisAdapter } from "@socket.io/redis-adapter";
-import { createClient } from "redis";
+import { createAdapter } from '@socket.io/redis-adapter'
+import { createClient } from 'redis'
 
 class SocketServer {
 
@@ -17,52 +15,105 @@ class SocketServer {
   private readonly io: Server;
   public static readonly SOCKET_PORT: number = Variable.SOCKET_PORT
 
+  users: {[key: string]: any} = {}
+
   constructor(app: Application) {
+    /**
+     * Socket init optional with wsEngine, that can be extended for max connections concurrently
+     * Refer to: https://socket.io/docs/v4/performance-tuning/
+     */
+
     this.app = http.createServer(app)
     this.io = new Server(this.app, {
       wsEngine: require("eiows").Server,
-      cors: {
-        origin: ['https://admin.socket.io'],
-        credentials: true
-      }
+      // cors: {
+      //   origin: ['https://admin.socket.io'],
+      //   credentials: true
+      // }
     })
 
 
     // this.initSocketServer()
   }
 
-  initSocketServer() {
+  async initSocketServer() {
     this.io.listen(SocketServer.SOCKET_PORT)
-    this.socketAdapter(this.io)
+    await this.socketAdapter(this.io)
     // instrument(this.io, {
     //   auth: false,
     //   mode: "development",
     //   store: new RedisStore(pubClient)
     // });
-    this.io.on(SocketConstant.CONNECTION, this.onConnection.bind(this))
+    await this.io.on(SocketConstant.CONNECTION, this.onClientConnection.bind(this))
 
   }
 
-  socketAdapter(server: Server){
-    const pubClient = createClient({url: 'redis://localhost:6379'})
-    const subClient = pubClient.duplicate()
-    server.adapter(createAdapter(pubClient, subClient))
+  private async socketAdapter(server: Server){
+    /**
+     * This function create the pub and sub Client for caching connection with redis
+     */
+    const pubClient = await createClient({
+      url: 'redis://localhost:6379',
+      legacyMode: true
+    })
+
+    const subClient = await pubClient.duplicate()
+    // pubClient.on('error', (err) => {
+    //   console.log(err)
+    // })
+    // subClient.on('error', (err) => {
+    //   console.log(err)
+    // })
+    Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+      // pubClient.on('error', (...args) => {
+      //   console.log(args)
+      // })
+      server.adapter(createAdapter(pubClient, subClient));
+      console.log('Socket With Redis cache connected')
+    }).catch(() => {
+      console.error('Socket With Redis cache connected')
+    })
 
   }
 
-  socketMiddleware(io: Server) {
+  private socketMiddleware(io: Server) {
     io.use((socket: Socket, next: any) => {
       next()
     })
   }
 
+  private sendOnlineListWhileFirstConnection(socket: Socket) {
+    socket.emit('online_list', this.users)
+  }
 
 
-  onConnection(server: Server) {
-    // server.on(SocketConstant.CONNECTION, (socket: Socket, data: any) => {
-    //   console.log(socket.id, data)
-    // })
+  private async onClientConnection(socket: Socket) {
+    this.sendOnlineListWhileFirstConnection(socket)
+    const user_id = socket.handshake.query.user_id?.toString() || null
 
+    if (user_id) {
+      if (!this.users[user_id])  this.users[user_id] = []
+      this.users[user_id].push(user_id)
+
+      this.io.emit('online', user_id)
+      socket.on(SocketConstant.DISCONNECT, () => {
+            _.remove(this.users[user_id], (u) => u === user_id)
+            this.io.emit('offline', user_id)
+            delete this.users[user_id];
+            socket.disconnect();
+      })
+
+      // Custom socket event bellow
+
+    }
+  }
+
+
+
+  private handleSocketEvents(
+    func: (server: Server, ...params: any[]) => any,
+    server: Server) {
+    return (...args: any[]) => func.bind(this)(server, ...args);
   }
 
 

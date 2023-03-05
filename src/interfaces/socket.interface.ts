@@ -16,3 +16,10 @@ export interface SocketData {
   name: string;
   age: number;
 }
+
+export interface IConnection {
+  user_id: string,
+  sockets: string[],
+  conversation_ids?: string[]
+  token?: string
+}

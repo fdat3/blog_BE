@@ -81,9 +81,9 @@ class UserService {
     }
 
     public async getUsersStats(): Promise<any> {
-        const date = new Date()
-        const lastYear = new Date(date.setFullYear(date.getFullYear() - 1))
-        const usersStats = await this.userRepository.getUsersStats(lastYear)
+        // const date = new Date()
+        // const lastYear = new Date(date.setFullYear(date.getFullYear() - 1))
+        const usersStats = await this.userRepository.getUsersStats()
         return usersStats
     }
 }

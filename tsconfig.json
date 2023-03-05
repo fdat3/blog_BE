@@ -4,6 +4,7 @@
     "module": "commonjs",
     "rootDir": "./src",
     "moduleResolution": "node",
+    "removeComments": true,
     "baseUrl": "./src",
     "declaration": true,
     "emitDeclarationOnly": true,

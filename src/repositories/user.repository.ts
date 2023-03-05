@@ -226,7 +226,7 @@ class UserRepository {
     return user
   }
 
-  public async getUsersStats(lastYear: Date): Promise<User[] | null> {
+  public async getUsersStats(): Promise<User[] | null> {
     const users = await User.findAll()
     return users
   }
