@@ -35,6 +35,7 @@ class User extends Model<
   declare phone: string | null
   declare password: string | null
   declare is_admin: boolean
+  declare fcm_token: string | null
   declare readonly created_at?: Date
   declare readonly updated_at?: Date
   declare readonly deleted_at?: Date | null
@@ -54,6 +55,7 @@ class User extends Model<
   declare hasPost: HasManyHasAssociationMixin<Post, uuid>
   declare hasPosts: HasManyHasAssociationsMixin<Post, uuid>
   declare countPosts: HasManyCountAssociationsMixin
+
 
     static initModel(): typeof User {
       User.init({
@@ -93,6 +95,10 @@ class User extends Model<
           allowNull: false,
           defaultValue: false,
         },
+        fcm_token: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
         created_at: {
           type: DataTypes.DATE,
           allowNull: false,
@@ -114,6 +120,10 @@ class User extends Model<
       })
 
       return User
+    }
+
+    static sendPush() {
+
     }
 }
 

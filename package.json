@@ -9,14 +9,15 @@
     "build": "yarn build:compile && yarn build:types",
     "build:compile": "npx babel src --extensions .ts --out-dir build --source-maps",
     "build:types": "tsc",
-    "dev": "concurrently yarn:dev:* --kill-others \"nodemon --exec node build/bin/www.js\"",
+    "dev": "yarn swagger_auto && concurrently yarn:dev:* --kill-others \"nodemon --exec node build/bin/www.js\"",
     "dev:compile": "npx babel src --extensions .ts --out-dir build --source-maps --watch",
     "dev:types": "tsc --watch",
     "lint": "eslint --ignore-path .eslintignore \"src/**/*.ts\" --fix",
     "lint:check": "eslint --ignore-path .eslintignore \"src/**/*.ts\"",
     "prettier": "prettier --write \"src/**/*.ts\"",
     "prettier:check": "prettier --check \"src/**/*.ts\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "swagger_auto": "node build/swagger/swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -67,6 +68,9 @@
     "sequelize-transparent-cache-ioredis": "2.3.0",
     "sequelize-typescript": "2.1.5",
     "socket.io": "4.6.1",
+    "swagger-autogen": "2.23.1",
+    "swagger-jsdoc": "6.2.8",
+    "swagger-ui-express": "4.6.2",
     "uuid": "9.0.0",
     "winston": "3.8.2"
   },
@@ -129,6 +133,7 @@
     "@/schemas": "build/schemas",
     "@/security": "build/security",
     "@/services": "build/services",
+    "@/swagger": "build/swagger",
     "@/utils": "build/utils",
     "@/validations": "build/validations",
     "@types": "build/types"

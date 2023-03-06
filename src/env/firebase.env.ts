@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 import FirebaseValidation from "@/validations/firebase.validation";
 
-class Firebase {
+class FirebaseEnv {
 
     public static readonly FIREBASE_TYPE: string = process.env.FIREBASE_TYPE!
 
@@ -34,4 +34,4 @@ class Firebase {
     }
 }
 
-export default Firebase
+export default FirebaseEnv

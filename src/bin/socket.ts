@@ -25,7 +25,7 @@ class SocketServer {
 
     this.app = http.createServer(app)
     this.io = new Server(this.app, {
-      wsEngine: require("eiows").Server,
+      // wsEngine: require("eiows").Server,
       // cors: {
       //   origin: ['https://admin.socket.io'],
       //   credentials: true
