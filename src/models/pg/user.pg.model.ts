@@ -19,7 +19,7 @@ import {
 } from 'sequelize'
 import { sequelize } from '@/config/sql.config'
 import ModelConstant from '@/constants/model.pg.constant'
-import { PostModel as Post } from '.'
+import { PostModel } from '.'
 
 type UserAssociations = 'posts'
 
@@ -35,25 +35,25 @@ class User extends Model<
   declare phone: string | null
   declare password: string | null
   declare is_admin: boolean
-  declare fcm_token: string | null
+  // declare fcm_token: string | null
   declare readonly created_at?: Date
   declare readonly updated_at?: Date
   declare readonly deleted_at?: Date | null
 
   declare static associations: {
-    authors: Association<Post, User>,
+    authors: Association<PostModel, User>,
   }
 
-  declare posts?: NonAttribute<Post[]>
-  declare getPosts: HasManyGetAssociationsMixin<Post>
-  declare setPosts: HasManySetAssociationsMixin<Post, uuid>
-  declare addPost: HasManyAddAssociationMixin<Post, uuid>
-  declare addPosts: HasManyAddAssociationsMixin<Post, uuid>
-  declare createPost: HasManyCreateAssociationMixin<Post>
-  declare removePost: HasManyRemoveAssociationMixin<Post, uuid>
-  declare removePosts: HasManyRemoveAssociationsMixin<Post, uuid>
-  declare hasPost: HasManyHasAssociationMixin<Post, uuid>
-  declare hasPosts: HasManyHasAssociationsMixin<Post, uuid>
+  declare posts?: NonAttribute<PostModel[]>
+  declare getPosts: HasManyGetAssociationsMixin<PostModel>
+  declare setPosts: HasManySetAssociationsMixin<PostModel, uuid>
+  declare addPost: HasManyAddAssociationMixin<PostModel, uuid>
+  declare addPosts: HasManyAddAssociationsMixin<PostModel, uuid>
+  declare createPost: HasManyCreateAssociationMixin<PostModel>
+  declare removePost: HasManyRemoveAssociationMixin<PostModel, uuid>
+  declare removePosts: HasManyRemoveAssociationsMixin<PostModel, uuid>
+  declare hasPost: HasManyHasAssociationMixin<PostModel, uuid>
+  declare hasPosts: HasManyHasAssociationsMixin<PostModel, uuid>
   declare countPosts: HasManyCountAssociationsMixin
 
 
@@ -95,10 +95,10 @@ class User extends Model<
           allowNull: false,
           defaultValue: false,
         },
-        fcm_token: {
-          type: DataTypes.STRING,
-          allowNull: true,
-        },
+        // fcm_token: {
+        //   type: DataTypes.STRING,
+        //   allowNull: true,
+        // },
         created_at: {
           type: DataTypes.DATE,
           allowNull: false,
@@ -118,7 +118,6 @@ class User extends Model<
         modelName: 'User',
         tableName: ModelConstant.USER_MODEL,
       })
-
       return User
     }
 

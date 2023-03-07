@@ -7,29 +7,35 @@ class PostCategory extends Model {
   declare readonly created_at: Date
   declare readonly updated_at: Date
   declare readonly deleted_at: Date
+
+  static initModel() {
+    PostCategory.init({
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+      },
+      deletedAt: {
+        type: DataTypes.DATE
+      }
+    }, {
+      sequelize,
+      modelName: 'PostCategory',
+      tableName: ModelConstant.POST_CATEGORY_MODEL,
+    })
+
+    return PostCategory
+  }
 }
 
-PostCategory.init({
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  deletedAt: {
-    type: DataTypes.DATE
-  }
-}, {
-  sequelize,
-  modelName: 'PostCategory',
-  tableName: ModelConstant.POST_CATEGORY_MODEL,
-})
+
 
 export default PostCategory

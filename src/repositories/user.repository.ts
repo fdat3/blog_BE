@@ -4,9 +4,22 @@ import User from '@/models/pg/user.pg.model'
 import { sequelize } from '@/config/sql.config'
 
 class UserRepository {
+  public model;
+  constructor() {
+    this.model = User.initModel()
+  }
+
   public async findAll(): Promise<User[]> {
-    const users = await User.findAll({})
-    return users
+    try {
+      const users = await this.model.findAll()
+      console.log({users})
+      return users
+    } catch (e) {
+      console.log(e)
+      return []
+
+    }
+
   }
 
   public async findById(id: string): Promise<User | null> {

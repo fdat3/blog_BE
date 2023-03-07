@@ -16,6 +16,7 @@ export const sequelize = new Sequelize(POSTGRES_DATABASE_NAME, POSTGRES_DATABASE
   host: POSTGRES_DATABASE_URL,
   port: 5432,
   database: POSTGRES_DATABASE_NAME,
+  logging: false,
   define: {
     timestamps: true,
     underscored: true,

@@ -98,7 +98,7 @@ class UserController implements Controller {
 
         this.router.get(
             `${this.path}${ConstantAPI.USER_GET_ALL}`,
-            this.authenticated.verifyTokenAndAdmin,
+            // this.authenticated.verifyTokenAndAdmin,
             this.getAllUsers,
         )
 
@@ -866,7 +866,8 @@ class UserController implements Controller {
     ): Promise<Response | void> => {
         try {
             const users = await this.userService.findAll()
-            if (!users) {
+            console.log({users})
+            if (!users || users.lenght == 0) {
                 return next(
                     new HttpException(
                         ConstantHttpCode.NOT_FOUND,

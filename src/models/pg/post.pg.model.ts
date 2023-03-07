@@ -14,54 +14,60 @@ class Post extends Model {
   declare readonly created_at: Date
   declare readonly updated_at: Date
   declare readonly deleted_at: Date
+
+  static initModel() {
+    Post.init({
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      title: {
+        type: DataTypes.STRING(75),
+        allowNull: false
+      },
+      metaTitle: {
+        type: DataTypes.STRING(100)
+      },
+      slug: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true
+      },
+      summary: {
+        type: DataTypes.TEXT
+      },
+      published: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      publishedAt: {
+        type: DataTypes.DATE
+      },
+      content: {
+        type: DataTypes.TEXT
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+      },
+      deletedAt: {
+        type: DataTypes.DATE
+      }
+    }, {
+      sequelize,
+      modelName: 'Post',
+      tableName: ModelConstant.POST_MODEL,
+    })
+
+    return Post
+  }
 }
 
-Post.init({
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true,
-  },
-  title: {
-    type: DataTypes.STRING(75),
-    allowNull: false
-  },
-  metaTitle: {
-    type: DataTypes.STRING(100)
-  },
-  slug: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-    unique: true
-  },
-  summary: {
-    type: DataTypes.TEXT
-  },
-  published: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false
-  },
-  publishedAt: {
-    type: DataTypes.DATE
-  },
-  content: {
-    type: DataTypes.TEXT
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  deletedAt: {
-    type: DataTypes.DATE
-  }
-}, {
-  sequelize,
-  modelName: 'Post',
-  tableName: ModelConstant.POST_MODEL,
-})
+
 
 export default Post
