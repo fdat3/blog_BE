@@ -45,7 +45,8 @@ module.exports = {
                 "translation",
                 "security",
                 "changeset",
-                "swagger"
+                "swagger",
+                "sequelize"
             ]
         ],
     },
