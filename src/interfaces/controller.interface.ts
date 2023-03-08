@@ -9,7 +9,7 @@ export default Controller
 
 export interface ICrudOption {
   filter?: any
-  limit: number
+  limit?: number
   offset: number
   scope?: string[]
   order?: any[]

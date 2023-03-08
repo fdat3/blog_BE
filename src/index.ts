@@ -130,7 +130,7 @@ class App {
         Object.keys(versioning).forEach((version) => {
             const controllers: Controller[] = versioning[version]
             controllers.forEach((controller: Controller) => {
-                this.app.use(version, controller.router)
+                this.app.use(`/${version}`, controller.router)
             })
         })
     }

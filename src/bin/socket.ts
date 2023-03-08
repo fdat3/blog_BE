@@ -31,9 +31,6 @@ class SocketServer {
       //   credentials: true
       // }
     })
-
-
-    // this.initSocketServer()
   }
 
   async initSocketServer() {

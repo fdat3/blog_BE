@@ -28,7 +28,7 @@ class AuthController implements Controller {
     private validate: Validate
 
     constructor() {
-        this.path = ConstantAPI.AUTH
+        this.path = `${ConstantAPI.AUTH}`
         this.router = Router()
         this.authService = new AuthService()
         this.validate = new Validate()

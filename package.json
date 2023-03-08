@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node build/bin/www.js",
+    "start": "yarn swagger_auto && node build/bin/www.js",
     "clean": "rm -rf build",
     "build": "yarn build:compile && yarn build:types",
     "build:compile": "npx babel src --extensions .ts --out-dir build --source-maps",

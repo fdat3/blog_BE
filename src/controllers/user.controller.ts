@@ -22,20 +22,26 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 
 // logger
 import logger from '@/utils/logger.util'
+import QueryMiddleware from '@/middlewares/quey.middleware'
+import BaseController from '@/controllers/base.controller'
 
-class UserController implements Controller {
+class UserController implements Controller{
     public path: string
     public router: Router
     private userService: UserService
     private authenticated: Authenticated
     private validate: Validate
+    private queryMiddleware: QueryMiddleware;
+    private baseController: BaseController;
 
     constructor() {
-        this.path = ConstantAPI.USERS
+        this.path = `${ConstantAPI.USERS}`
         this.router = Router()
         this.userService = new UserService()
         this.authenticated = new Authenticated()
         this.validate = new Validate()
+        this.queryMiddleware = new QueryMiddleware()
+        this.baseController = new BaseController()
 
         this.initialiseRoutes()
     }
@@ -882,7 +888,6 @@ class UserController implements Controller {
                     code: ConstantHttpCode.OK,
                     msg: ConstantHttpReason.OK,
                 },
-                msg: ConstantMessage.USER_FOUND,
                 data: {
                     users,
                 },

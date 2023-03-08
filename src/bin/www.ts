@@ -20,10 +20,6 @@ const { app } = new App({
     v1: [
         new AuthController(),
         new UserController(),
-    ],
-    v2: [
-        new AuthController(),
-        new UserController(),
     ]
 })
 
