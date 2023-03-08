@@ -14,13 +14,18 @@ import logger from '@/utils/logger.util'
 // controllers
 import AuthController from '@/controllers/auth.controller'
 import UserController from '@/controllers/user.controller'
-import GithubController from '@/controllers/github.controller'
+// import GithubController from '@/controllers/github.controller'
 
-const { app } = new App([
-    new AuthController(),
-    new UserController(),
-    new GithubController()
-])
+const { app } = new App({
+    v1: [
+        new AuthController(),
+        new UserController(),
+    ],
+    v2: [
+        new AuthController(),
+        new UserController(),
+    ]
+})
 
 /**
  * Normalize a port into a number, string, or false.

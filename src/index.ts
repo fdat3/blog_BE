@@ -26,6 +26,7 @@ import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 
 import morgan from 'morgan'
+import Versioning from '@/interfaces/versioning.interface'
 
 const session = require('express-session')
 
@@ -45,7 +46,7 @@ class App {
     private SESSION_MAX_AGE: number;
     private SESSION_RESAVE: boolean;
 
-    constructor(controllers: Controller[]) {
+    constructor(versioning: Versioning) {
         this.app = express();
         // this.MONGO_DATABASE_URL = Variable.MONGO_DATABASE_URL;
         // this.POSTGRES_DATABASE_URL = Variable.POSTGRES_DATABASE_URL;
@@ -63,7 +64,7 @@ class App {
         this.initialisePostgresConnection().then();
         this.initialiseConfig();
         this.initialiseRoutes();
-        this.initialiseControllers(controllers);
+        this.initialiseControllers(versioning);
         this.initialiseErrorHandling();
     }
 
@@ -125,10 +126,13 @@ class App {
 
     }
 
-    private initialiseControllers(controllers: Controller[]): void {
-        controllers.forEach((controller: Controller) => {
-            this.app.use(controller.router);
-        });
+    private initialiseControllers(versioning: Versioning): void {
+        Object.keys(versioning).forEach((version) => {
+            const controllers: Controller[] = versioning[version]
+            controllers.forEach((controller: Controller) => {
+                this.app.use(version, controller.router)
+            })
+        })
     }
 
     private initialiseErrorHandling(): void {
