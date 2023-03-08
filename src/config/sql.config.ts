@@ -59,6 +59,7 @@ export const postgresTestConnectDB = async (): Promise<void> => {
 
 export const syncSequelize = async (): Promise<void> => {
   try {
+
     await sequelize.sync({
       alter: true,
     })

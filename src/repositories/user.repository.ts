@@ -1,18 +1,20 @@
 // import User from "@/models/mongo/user.model";
 // import UserInterface from "@/interfaces/user.interface";
-import User from '@/models/pg/user.pg.model'
+import { User } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 
 class UserRepository {
   public model;
   constructor() {
-    this.model = User.initModel()
+    this.model = User
   }
 
   public async findAll(): Promise<User[]> {
     try {
-      const users = await this.model.findAll()
-      console.log({users})
+      const users = await this.model.findAll({
+
+        // include: ['polls']
+      })
       return users
     } catch (e) {
       console.log(e)
@@ -83,11 +85,10 @@ class UserRepository {
       const result = await sequelize.transaction(async (transaction) => {
         const newUser = await User.create({
           username: user.username,
-          last_name: user.last_name,
+          fullname: user.fullname,
           email: user.email,
           password: user.password,
           phone: user.phone,
-          is_admin: user.is_admin,
         }, {
           transaction,
         })
@@ -125,12 +126,12 @@ class UserRepository {
 
   public async updateName(
     id: string,
-    last_name: string,
+    fullname: string,
   ): Promise<User | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
         await User.update({
-          last_name,
+          fullname,
         }, {
           where: {
             id,

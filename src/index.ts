@@ -27,6 +27,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 
 import morgan from 'morgan'
 import Versioning from '@/interfaces/versioning.interface'
+import { initModels } from '@/models/pg'
 
 const session = require('express-session')
 
@@ -147,6 +148,8 @@ class App {
         await postgresTestConnectDB().then(async () => {
             await syncSequelize()
 
+        }).then(() => {
+            initModels()
         })
     }
 }
