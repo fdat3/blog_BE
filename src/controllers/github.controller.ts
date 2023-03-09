@@ -21,9 +21,13 @@ class GithubHookController implements Controller {
   public path: string
   public router: Router
   private webhookHandler: typeof GithubWebhook
+  private BASE_URL: string
+  private ROOM: string
 
   constructor() {
     this.path = ConstantAPI.HOOK
+    this.BASE_URL = ''
+    this.ROOM = ''
     this.router = Router()
     this.webhookHandler = new GithubWebhook({
       // events: ['push', 'workflow_run', 'workflow_job', 'in_progress', 'completed'],
@@ -89,7 +93,7 @@ class GithubHookController implements Controller {
   private sendToTelegram = async (
     data: GithubHookInterface
   ): Promise<Response | any> => {
-    const url: string = 'https://api.telegram.org/bot5972720670:AAGekgTvZOlgU1S6FTCGmwA31b28lJdszQs/sendMessage'
+    const url: string = this.BASE_URL
     // filtering necessary keys in object
     const {
       action,
@@ -104,7 +108,7 @@ class GithubHookController implements Controller {
     }
 
     const body = {
-      chat_id: -1001871216290,
+      chat_id: this.ROOM,
       parse_mode: "HTML",
       disable_web_page_preview: true,
       allow_sending_without_reply: true,
