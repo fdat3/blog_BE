@@ -55,4 +55,4 @@ jobs:
             yarn install
             yarn build
             pm2 save
-            pm2 restart 1 --update-env
+            pm2 restart trendypoll --update-env
