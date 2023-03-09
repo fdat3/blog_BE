@@ -1,6 +1,15 @@
 import "dotenv/config";
 
 import VariableValidate from "@/validations/variable.validation";
+import dotenv from 'dotenv'
+import * as process from 'process'
+import logger from '@/utils/logger.util'
+
+
+dotenv.config({
+    path: `.env.${process.env.NODE_ENV}`
+})
+dotenv.config({ path: `.env.local`, override: true });
 
 class Variable {
     public static readonly NODE_ENV: string = process.env.NODE_ENV!;
@@ -70,6 +79,7 @@ class Variable {
 
     constructor() {
         this.initialise();
+        logger.warn(Variable.POSTGRES_DATABASE_URL)
     }
 
     private initialise(): void {

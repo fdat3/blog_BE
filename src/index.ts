@@ -44,12 +44,12 @@ class App {
     // private POSTGRES_DATABASE_NAME: string;
     // private POSTGRES_DATABASE_USERNAME: string;
     // private POSTGRES_DATABASE_PASSWORD: string;
-    private SESSION_SECRET: string;
-    private SESSION_NAME: string;
-    private SESSION_KEYS: string;
-    private SESSION_MAX_AGE: number;
-    private SESSION_RESAVE: boolean;
-    private PORT: number;
+    private readonly SESSION_SECRET: string;
+    private readonly SESSION_NAME: string;
+    private readonly SESSION_KEYS: string;
+    private readonly SESSION_MAX_AGE: number;
+    private readonly SESSION_RESAVE: boolean;
+    private readonly PORT: number;
 
     constructor(versioning: Versioning) {
         this.app = express();
@@ -129,7 +129,7 @@ class App {
             },
         )
 
-        this.app.get('/api-docs', swaggerUi.serve, swaggerUi.setup(require('@/swagger/output_swagger.json'), {
+        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(require('@/swagger/output_swagger.json'), {
             explorer: true
         }))
 

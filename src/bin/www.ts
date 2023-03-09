@@ -16,6 +16,15 @@ import logger from '@/utils/logger.util'
 import AuthController from '@/controllers/auth.controller'
 import UserController from '@/controllers/user.controller'
 // import GithubController from '@/controllers/github.controller'
+import dotenv from 'dotenv'
+import * as process from 'process'
+
+dotenv.config({
+    path: `.env.${process.env.NODE_ENV}`
+})
+dotenv.config({ path: `.env.local`, override: true });
+
+logger.warn(`Process run on ${process.env?.NODE_ENV?.toUpperCase()} Environment!`)
 
 const { app } = new App({
     v1: [

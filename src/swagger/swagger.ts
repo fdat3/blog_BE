@@ -1,21 +1,22 @@
 import swaggerAutogen from "swagger-autogen";
-import path from 'path';
+// import path from 'path';
+const swaggerJSDocs = require('swagger-jsdoc')
 
-const doc = {
+const swaggerDefinition = {
   info: {
-    version: '',      // by default: '1.0.0'
-    title: '',        // by default: 'REST API'
+    version: '1.0.0',      // by default: '1.0.0'
+    title: 'Rest API',        // by default: 'REST API'
     description: '',  // by default: ''
   },
-  host: '',      // by default: 'localhost:3000'
-  basePath: '',  // by default: '/'
-  schemes: [],   // by default: ['http']
-  consumes: [],  // by default: ['application/json']
-  produces: [],  // by default: ['application/json']
+  host: 'localhost:5050',      // by default: 'localhost:3000'
+  basePath: '/',  // by default: '/'
+  schemes: ['http', 'https'],   // by default: ['http']
+  consumes: ["application/json"],  // by default: ['application/json']
+  produces: ["application/json"],  // by default: ['application/json']
   tags: [        // by default: empty Array
     {
-      name: '',         // Tag name
-      description: '',  // Tag description
+      name: 'Tag 1',         // Tag name
+      description: 'Tag 1 Description',  // Tag description
     },
     // { ... }
   ],
@@ -23,11 +24,23 @@ const doc = {
   definitions: {},          // by default: empty object (Swagger 2.0)
   components: {}            // by default: empty object (OpenAPI 3.x)
 };
-
-const outputFile: string = './output_swagger.json'
 const endpointsFiles: string[] = [
-  path.join(__dirname, 'controllers/*.js')
+  'build/controllers/auth.controller.js',
+  'build/controllers/user.controller.js',
 ]
 
+// const routers = []
+// console.log({endpointsFiles})
+const options ={
+  swaggerDefinition,
+  apis: [
+    'build/controllers/*.js'
+  ]
+}
+const swaggerSpec = swaggerJSDocs(options)
 
-swaggerAutogen()(outputFile, endpointsFiles, doc)
+console.log({options})
+
+const outputFile: string = './output_swagger.json'
+
+swaggerAutogen()(outputFile, endpointsFiles, swaggerSpec)
