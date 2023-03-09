@@ -9871,6 +9871,11 @@ sequelize-pool@^7.1.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-7.1.0.tgz#210b391af4002762f823188fd6ecfc7413020768"
   integrity sha512-G9c0qlIWQSK29pR/5U2JF5dDQeqqHRragoyahj/Nx4KOOQ3CPPfzxnfqFPCSB7x5UgjOgnZ61nSxz+fjDpRlJg==
 
+sequelize-query@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/sequelize-query/-/sequelize-query-1.0.4.tgz#1ab7ce1f931f339c913c56d11f62104871eae214"
+  integrity sha512-hN4ihjpWwHjJA29VNnGwtf8R+UU6vNchE8bBJ3MOpoHmVfJiE4XD/OsPXCJCqEzbWr7Sg7rQ8YkxX7qWdEOC7g==
+
 sequelize-slugify@1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/sequelize-slugify/-/sequelize-slugify-1.6.2.tgz#143645d0d0cd49b40b4029b5067ccf1532d8008c"

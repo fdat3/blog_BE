@@ -1,7 +1,6 @@
 import { Sequelize, UpdateOptions } from 'sequelize'
 import VariableEnv from '@/env/variable.env'
 import logger from '@/utils/logger.util'
-
 const sequelizeTransforms = require('sequelize-transforms')
 
 const {

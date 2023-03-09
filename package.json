@@ -6,7 +6,7 @@
   "scripts": {
     "start": "yarn swagger_auto && node build/bin/www.js",
     "clean": "rm -rf build",
-    "build": "yarn build:compile && yarn build:types",
+    "build": "yarn build:compile && yarn build:types && yarn swagger_auto",
     "build:compile": "npx babel src --extensions .ts --out-dir build --source-maps",
     "build:types": "tsc",
     "dev": "yarn swagger_auto && concurrently yarn:dev:* --kill-others \"nodemon --exec node build/bin/www.js\"",
@@ -70,6 +70,7 @@
     "regenerator-runtime": "0.13.11",
     "sequelize": "6.29.0",
     "sequelize-auto": "0.8.8",
+    "sequelize-query": "1.0.4",
     "sequelize-slugify": "1.6.2",
     "sequelize-transforms": "2.0.0",
     "sequelize-transparent-cache": "2.3.0",
