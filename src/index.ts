@@ -5,11 +5,11 @@ import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
+// const passport = require('passport')
 
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 import Controller from '@/interfaces/controller.interface'
-
 import mongoConnectDB from '@/config/db.config'
 import { postgresTestConnectDB, syncSequelize } from '@/config/sql.config'
 
@@ -74,9 +74,11 @@ class App {
     }
 
     private initialiseConfig(): void {
-        this.app.use(express.json())
+        // this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(cookieParser())
+        // this.app.use(passport.initialise())
+        // this.app.use(passport.session())
         this.app.use(bodyParser.json())
         this.app.use(compression())
         this.app.use(cors())
@@ -98,6 +100,7 @@ class App {
             },
             proxy: true,
         }))
+
 
 
     }
@@ -152,7 +155,6 @@ class App {
     private async initialisePostgresConnection(): Promise<void> {
         await postgresTestConnectDB().then(async () => {
             await syncSequelize()
-
         }).then(() => {
             initModels()
         })
