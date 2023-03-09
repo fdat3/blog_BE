@@ -16,6 +16,9 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
+      "@/admin/*": [
+        "admin/*"
+      ],
       "@/bin/*": [
         "bin/*"
       ],

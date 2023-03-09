@@ -11,20 +11,6 @@ import { ReportUser } from './ReportUser'
 import { ReportPoll } from './ReportPoll'
 import {sequelize} from '@/config/sql.config'
 
-export {
-  User,
-  Poll,
-  PollAnswer,
-  PollAnswerChosen,
-  PollComment,
-  Mbti,
-  PollCategory,
-  UserDevice,
-  Block,
-  ReportUser,
-  ReportPoll
-}
-
 export function initModels() {
   User.initModel(sequelize)
   Poll.initModel(sequelize)
@@ -172,4 +158,18 @@ export function initModels() {
     ReportUser,
     ReportPoll
   }
+}
+
+export {
+  User,
+  Poll,
+  PollAnswer,
+  PollAnswerChosen,
+  PollComment,
+  Mbti,
+  PollCategory,
+  UserDevice,
+  Block,
+  ReportUser,
+  ReportPoll
 }

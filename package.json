@@ -131,6 +131,7 @@
     "npm": "please-use-yarn"
   },
   "_moduleAliases": {
+    "@/admin": "build/admin",
     "@/bin": "build/bin",
     "@/config": "build/config",
     "@/constants": "build/constants",

@@ -2,6 +2,7 @@ import express, { Application, NextFunction, Request, Response } from 'express'
 
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
 
@@ -32,6 +33,8 @@ import { initModels } from '@/models/pg'
 const session = require('express-session')
 
 const swaggerUi = require('swagger-ui-express');
+import runAdminPage from '@/admin/.'
+
 
 
 class App {
@@ -46,6 +49,7 @@ class App {
     private SESSION_KEYS: string;
     private SESSION_MAX_AGE: number;
     private SESSION_RESAVE: boolean;
+    private PORT: number;
 
     constructor(versioning: Versioning) {
         this.app = express();
@@ -59,8 +63,8 @@ class App {
         this.SESSION_KEYS = Variable.SESSION_KEYS;
         this.SESSION_MAX_AGE = Variable.SESSION_MAX_AGE;
         this.SESSION_RESAVE = Variable.SESSION_RESAVE;
-
-
+        this.PORT = Variable.PORT
+        runAdminPage(this.app, this.PORT)
         // this.initialiseDatabaseConnection(this.MONGO_DATABASE_URL).then();
         this.initialisePostgresConnection().then();
         this.initialiseConfig();
@@ -73,6 +77,7 @@ class App {
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(cookieParser())
+        this.app.use(bodyParser.json())
         this.app.use(compression())
         this.app.use(cors())
         this.app.use(helmet())

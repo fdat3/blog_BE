@@ -125,3 +125,6 @@ src/**/*.{js,jsx}
 
 # ci/cd
 .gitlab-ci.yml
+
+# AdminJS
+.adminjs
