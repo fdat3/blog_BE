@@ -56,7 +56,8 @@ class AuthController implements Controller {
         next: NextFunction,
     ): Promise<Response | void> => {
         try {
-            const { username, name, email, password, phone, address } = req.body
+            const { username, fullname, email, password, phone } = req.body
+            logger.info(req.body)
 
             const usernameValidated = this.validate.validateUsername(username)
             if (!usernameValidated) {
@@ -70,17 +71,17 @@ class AuthController implements Controller {
             }
             logger.info(`username ${username} is valid`)
 
-            const nameValidated = this.validate.validateName(name)
-            if (!nameValidated) {
+            const fullnameValidated = this.validate.validateName(fullname)
+            if (!fullnameValidated) {
                 return next(
                     new HttpException(
                         ConstantHttpCode.CONFLICT,
                         ConstantHttpReason.CONFLICT,
-                        ConstantMessage.NAME_NOT_VALID,
+                        ConstantMessage.FULLNAME_NOT_VALID,
                     ),
                 )
             }
-            logger.info(`name ${name} is valid`)
+            logger.info(`fullname ${fullname} is valid`)
 
             const emailValidated = this.validate.validateEmail(email)
             if (!emailValidated) {
@@ -118,18 +119,6 @@ class AuthController implements Controller {
             }
             logger.info(`phone ${phone} is valid`)
 
-            const addressValidated = this.validate.validateAddress(address)
-            if (!addressValidated) {
-                return next(
-                    new HttpException(
-                        ConstantHttpCode.CONFLICT,
-                        ConstantHttpReason.CONFLICT,
-                        ConstantMessage.ADDRESS_NOT_VALID,
-                    ),
-                )
-            }
-            logger.info(`address ${address} is valid`)
-
             const usernameCheck = await this.authService.findByUsername(username)
             if (usernameCheck) {
                 return next(
@@ -165,11 +154,10 @@ class AuthController implements Controller {
 
             const newUserData = {
                 username,
-                name,
+                fullname,
                 email,
                 password,
                 phone,
-                address,
             }
 
             const user = await this.authService.createUser(newUserData)
@@ -183,7 +171,7 @@ class AuthController implements Controller {
                 )
             }
 
-            const newUser = { ...user }._doc
+            const newUser = { ...user }
 
             logger.info({ newUserpassword: newUser.password })
 
@@ -270,7 +258,7 @@ class AuthController implements Controller {
             )
             logger.info(`accessToken: ${accessToken}`)
 
-            const newUser = { ...user }._doc
+            const newUser = { ...user }
 
             logger.info({ newUserpassword: newUser.password })
 

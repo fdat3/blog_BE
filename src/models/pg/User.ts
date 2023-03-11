@@ -29,8 +29,10 @@ import type { PollAnswerChosen } from './PollAnswerChosen'
 import type { PollComment } from './PollComment'
 import type { UserDevice } from './UserDevice'
 import ModelPgConstant from '@/constants/model.pg.constant'
+import { HookReturn } from 'sequelize/types/hooks'
+import UserUtils from '@/utils/user.utils'
 
-type UserAssociations = 'mbti' |
+type UserAssociations = 'ref' | 'mbti' |
   'devices' |
   // 'blockers' |
   // 'blockeds' |
@@ -45,13 +47,13 @@ export class User extends Model<
 > {
   declare id: CreationOptional<uuid>
   declare fullname: string
-  declare password: string
-  declare dob: Date | null
-  declare username: string
-  declare email: string | null
-  declare phone: string | null
-  declare inviteCode: string | null
-  declare refCode: string | null
+  declare password: CreationOptional<string>
+  declare dob: CreationOptional<Date>
+  declare username: CreationOptional<string>
+  declare email: CreationOptional<string>
+  declare phone: CreationOptional<string>
+  declare inviteCode: CreationOptional<string>
+  declare refUser: CreationOptional<uuid>
   declare gender: string | null
   declare instagram: string | null
   declare mbtiId: CreationOptional<uuid>
@@ -59,19 +61,25 @@ export class User extends Model<
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
 
+  // User hasOne Reference User (as refUser)
+  declare ref?: NonAttribute<User>
+  declare getRefUser: HasOneGetAssociationMixin<User>
+  declare setRefUser: CreationOptional<HasOneSetAssociationMixin<User, uuid>>
+  declare createRefUser: CreationOptional<HasOneCreateAssociationMixin<User>>
+  
   // User hasOne Mbti (as Mbti)
   declare mbti?: NonAttribute<Mbti>
   declare getMbti: HasOneGetAssociationMixin<Mbti>
-  declare setMbti: HasOneSetAssociationMixin<Mbti, number>
-  declare createMbti: HasOneCreateAssociationMixin<Mbti>
+  declare setMbti: CreationOptional<HasOneSetAssociationMixin<Mbti, uuid>>
+  declare createMbti: CreationOptional<HasOneCreateAssociationMixin<Mbti>>
   
   // User hasMany UserDevice (as Devices)
   declare devices?: NonAttribute<UserDevice[]>
   declare getDevices: HasManyGetAssociationsMixin<UserDevice>
-  declare setDevices: HasManySetAssociationsMixin<UserDevice, number>
-  declare addDevice: HasManyAddAssociationMixin<UserDevice, number>
-  declare addDevices: HasManyAddAssociationsMixin<UserDevice, number>
-  declare createDevice: HasManyCreateAssociationMixin<UserDevice>
+  declare setDevices: CreationOptional<HasManySetAssociationsMixin<UserDevice, uuid>>
+  declare addDevice: CreationOptional<HasManyAddAssociationMixin<UserDevice, UserDevice>>
+  declare addDevices: CreationOptional<HasManyAddAssociationsMixin<UserDevice, UserDevice>>
+  declare createDevice: CreationOptional<HasManyCreateAssociationMixin<UserDevice>>
   declare removeDevice: HasManyRemoveAssociationMixin<UserDevice, number>
   declare removeDevices: HasManyRemoveAssociationsMixin<UserDevice, number>
   declare hasDevice: HasManyHasAssociationMixin<UserDevice, number>
@@ -157,6 +165,7 @@ export class User extends Model<
   declare countPollComments: HasManyCountAssociationsMixin
   
   declare static associations: {
+    ref: Association<User, User>,
     mbti: Association<User, Mbti>,
     devices: Association<User, UserDevice>,
     blockers: Association<User, Block>,
@@ -178,7 +187,7 @@ export class User extends Model<
       },
       fullname: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: true
       },
       email: {
         type: DataTypes.STRING(100),
@@ -186,7 +195,7 @@ export class User extends Model<
       },
       password: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        allowNull: true
       },
       dob: {
         type: DataTypes.DATE
@@ -198,15 +207,22 @@ export class User extends Model<
       },
       phone: {
         type: DataTypes.STRING(15),
-        unique: true
+        unique: true,
+        allowNull: true
       },
       inviteCode: {
         type: DataTypes.STRING(20),
-        unique: true
+        unique: true,
+        allowNull: true
       },
-      refCode: {
-        type: DataTypes.STRING(20),
-        unique: true
+      refUser: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        field: 'ref_user',
+        references: {
+          model: 'user',
+          key: 'id',
+        }
       },
       gender: {
         type: DataTypes.STRING(10)
@@ -229,6 +245,13 @@ export class User extends Model<
     }, {
       sequelize,
       tableName: ModelPgConstant.USER_MODEL,
+      hooks: {
+        beforeCreate(attributes: User): HookReturn {
+          if (!attributes.inviteCode) {
+            attributes.inviteCode = UserUtils.generateInviteCode()
+          }
+        }
+      },
       indexes: [
         {
           unique: true,

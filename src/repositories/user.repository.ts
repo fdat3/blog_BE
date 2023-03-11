@@ -2,6 +2,7 @@
 // import UserInterface from "@/interfaces/user.interface";
 import { User } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
+import logger from '@/utils/logger.util'
 
 class UserRepository {
   public model;
@@ -84,20 +85,18 @@ class UserRepository {
     try {
       const result = await sequelize.transaction(async (transaction) => {
         const newUser = await User.create({
-          username: user.username,
-          fullname: user.fullname,
-          email: user.email,
-          password: user.password,
-          phone: user.phone,
+          ...user
         }, {
           transaction,
         })
-
         return newUser
       })
 
+      logger.info({result})
+
       return result
     } catch (e) {
+      logger.error(e)
       return null
     }
   }

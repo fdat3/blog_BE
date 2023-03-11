@@ -35,6 +35,7 @@ module.exports = {
                 "ci",
                 "docs",
                 "feat",
+                "feature",
                 "fix",
                 "migration",
                 "perf",

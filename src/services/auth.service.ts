@@ -1,5 +1,6 @@
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
+import logger from '@/utils/logger.util'
 
 class AuthService {
     private userRepository: UserRepository
@@ -35,16 +36,14 @@ class AuthService {
     }
 
     public async createUser(user: any): Promise<any> {
+        logger.warn('Create user')
+        logger.warn({user})
         const encryptedPassword = this.userSecurity.encrypt(user.password)
         const newUser = {
-            username: user.username,
-            name: user.name,
-            email: user.email,
-            password: encryptedPassword,
-            phone: user.phone,
-            address: user.address,
-            isAdmin: user.isAdmin,
+           ...user,
+            password: encryptedPassword
         }
+        logger.info({newUser})
         const savedUser = await this.userRepository.createUser(newUser)
         return savedUser
     }

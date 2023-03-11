@@ -253,7 +253,7 @@ class UserController implements Controller{
                     new HttpException(
                         ConstantHttpCode.BAD_REQUEST,
                         ConstantHttpReason.BAD_REQUEST,
-                        ConstantMessage.NAME_NOT_VALID,
+                        ConstantMessage.FULLNAME_NOT_VALID,
                     ),
                 )
             }

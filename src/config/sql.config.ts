@@ -16,6 +16,9 @@ export const sequelize = new Sequelize(POSTGRES_DATABASE_NAME, POSTGRES_DATABASE
   port: 5432,
   database: POSTGRES_DATABASE_NAME,
   logging: false,
+  query: {
+    raw: true
+  },
   define: {
     timestamps: true,
     underscored: true,
@@ -23,15 +26,16 @@ export const sequelize = new Sequelize(POSTGRES_DATABASE_NAME, POSTGRES_DATABASE
     freezeTableName: true,
     hooks: {
       beforeCreate: function(instance: any): void {
+        logger.warn({instance})
         // Slugify
-        if (instance.slug === undefined || instance.slug === null || instance.slug === '') {
+        if (instance?.slug && instance.slug === '') {
           instance.slug = instance.slug.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
         }
       },
       beforeUpdate: function(instance: any): void {
         instance.updatedAt = new Date()
         // Slugify
-        if (instance.slug === undefined || instance.slug === null || instance.slug === '') {
+        if (instance?.slug && instance.slug === '') {
           instance.slug = instance.slug.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
         }
       },
@@ -60,7 +64,7 @@ export const syncSequelize = async (): Promise<void> => {
   try {
 
     await sequelize.sync({
-      force: true,
+      force: false,
       alter: true,
     })
     logger.info('Sequelize sync has been established successfully.')

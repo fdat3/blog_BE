@@ -1,14 +1,14 @@
 import Joi from 'joi'
 import ConstantRegex from '@/constants/regex.constant'
+import logger from '@/utils/logger.util'
 
 class UserValidation {
     public register = Joi.object({
         username: Joi.string().max(30).required(),
-        name: Joi.string().max(30).required(),
+        fullname: Joi.string().max(30).required(),
         email: Joi.string().email().required(),
         password: Joi.string().min(6).max(30).required(),
         phone: Joi.string().min(10).max(15).required(),
-        address: Joi.string().max(100).required(),
     })
 
     public login = Joi.object({
@@ -56,7 +56,7 @@ class UserValidation {
     }
 
     public validateName(name: string): boolean {
-        return ConstantRegex.NAME.test(name)
+        return ConstantRegex.FULLNAME.test(name)
     }
 
     public validateEmail(email: string): boolean {
@@ -64,7 +64,9 @@ class UserValidation {
     }
 
     public validatePassword(password: string): boolean {
-        return ConstantRegex.PASSWORD.test(password)
+        const result = ConstantRegex.PASSWORD.test(password)
+        logger.warn({result})
+        return result
     }
 
     public validatePhone(phone: string): boolean {

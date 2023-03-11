@@ -10,20 +10,22 @@ const levels = {
     info: 2,
     http: 3,
     debug: 4,
+    data: 5
 }
 
 const level = (): string => {
     const env = Variable.NODE_ENV || 'development'
-    const isDevelopment = env === 'development'
+    const isDevelopment = ["development", "local"].includes(env)
     return isDevelopment ? 'debug' : 'warn'
 }
 
 const colors = {
     error: 'red',
     warn: 'yellow',
-    info: 'green',
+    info: 'blue',
     http: 'magenta',
     debug: 'white',
+    data: 'blue'
 }
 
 winston.addColors(colors)

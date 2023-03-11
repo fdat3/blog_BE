@@ -10,6 +10,7 @@ class Number {
     public static readonly PHONE_MAX_LENGTH: number = 20
     public static readonly ADDRESS_MIN_LENGTH: number = 10
     public static readonly ADDRESS_MAX_LENGTH: number = 200
+    public static readonly DEFAULT_LENGTH: number = 6
 }
 
 export default Number
