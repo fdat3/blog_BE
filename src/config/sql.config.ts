@@ -60,6 +60,7 @@ export const syncSequelize = async (): Promise<void> => {
   try {
 
     await sequelize.sync({
+      force: true,
       alter: true,
     })
     logger.info('Sequelize sync has been established successfully.')

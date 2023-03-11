@@ -54,7 +54,7 @@ export class User extends Model<
   declare refCode: string | null
   declare gender: string | null
   declare instagram: string | null
-  declare mbtiId: string | null
+  declare mbtiId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -216,7 +216,6 @@ export class User extends Model<
       },
       mbtiId: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4
       },
       createdAt: {
         type: DataTypes.DATE
@@ -229,7 +228,15 @@ export class User extends Model<
       }
     }, {
       sequelize,
-      tableName: ModelPgConstant.USER_MODEL
+      tableName: ModelPgConstant.USER_MODEL,
+      indexes: [
+        {
+          unique: true,
+          fields: ['email', 'username'],
+          using: 'BTREE',
+
+        }
+      ]
     })
     
     return User
