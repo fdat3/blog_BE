@@ -15,8 +15,8 @@ class AuthenticatedMiddleware {
         req: Request,
         res: Response,
         next: NextFunction,
-    ) {
-        verifyToken(req, res, () => {
+    ): Promise<void> {
+         return await verifyToken(req, res, () => {
             if (req?.user?.id === req?.params?.id || req?.user?.isAdmin) {
                 return next()
             }
@@ -35,8 +35,8 @@ class AuthenticatedMiddleware {
         req: Request,
         res: Response,
         next: NextFunction,
-    ) {
-        verifyToken(req, res, () => {
+    ): Promise<void> {
+        return await verifyToken(req, res, () => {
             if (req?.user?.isAdmin) {
                 return next()
             }

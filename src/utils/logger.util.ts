@@ -12,7 +12,7 @@ const levels = {
     debug: 4,
 }
 
-const level = () => {
+const level = (): string => {
     const env = Variable.NODE_ENV || 'development'
     const isDevelopment = env === 'development'
     return isDevelopment ? 'debug' : 'warn'

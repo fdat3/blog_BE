@@ -5,7 +5,7 @@ class ServiceFirebase extends InstanceFirebase {
     super()
   }
 
-  sendSingleDevice() {
+  sendSingleDevice(): void {
 
   }
 

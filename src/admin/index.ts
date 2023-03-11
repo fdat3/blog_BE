@@ -20,14 +20,14 @@ const DEFAULT_ADMIN = {
   password: 'password'
 }
 
-const authenticate = async (email: string, password: string) => {
+const authenticate = async (email: string, password: string): Promise<any | null> => {
   if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
     return Promise.resolve(DEFAULT_ADMIN)
   }
   return null
 }
 
-const runAdminPage = (app: Application, PORT: number) => {
+const runAdminPage = (app: Application, PORT: number): void => {
   const admin = new AdminJS({
     resources: [
       Models.User.initModel(sequelize),

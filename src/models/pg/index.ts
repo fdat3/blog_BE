@@ -9,9 +9,10 @@ import { UserDevice } from './UserDevice'
 import { Block } from './Block'
 import { ReportUser } from './ReportUser'
 import { ReportPoll } from './ReportPoll'
-import {sequelize} from '@/config/sql.config'
+import { sequelize } from '@/config/sql.config'
 
-export function initModels() {
+
+export function initModels(): any {
   User.initModel(sequelize)
   Poll.initModel(sequelize)
   PollAnswer.initModel(sequelize)

@@ -1,3 +1,4 @@
+import { ICrudOption } from '@/interfaces/controller.interface';
 import BaseMiddleware from '@/middlewares/base.middleware'
 import { Request } from 'express'
 import * as _ from 'lodash'
@@ -41,7 +42,7 @@ class QueryMiddleware extends BaseMiddleware {
       return null;
     }
   }
-  _parseAttribute(attrs: any) {
+  _parseAttribute(attrs: any): ICrudOption {
     const attributes: any[] = [];
     const includes: any[] = [];
     let isGetAll = false;
@@ -62,7 +63,7 @@ class QueryMiddleware extends BaseMiddleware {
       } else if (typeof f === 'object' && !Array.isArray(f)) {
         _.forEach(
           f,
-          ((value: any, name: string) => {
+          ((value: any, name: string): void => {
             switch (name) {
               case '$filter':
                 where = _.merge({}, where, value);
@@ -91,16 +92,16 @@ class QueryMiddleware extends BaseMiddleware {
     return result;
   }
 
-  _parseInclude(includes: any) {
+  _parseInclude(includes: any): any[] {
     if (includes.length === 0) return includes;
 
     const associates: any[] = [];
     _.forEach(
       includes,
-      ((i: any) => {
+      ((i: any): void => {
         _.forEach(
           i,
-          ((attrs: any, name: string) => {
+          ((attrs: any, name: string): void => {
             const associate = Object.assign(
               {
                 association: name,

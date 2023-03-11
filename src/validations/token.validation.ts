@@ -19,7 +19,7 @@ export const verifyToken = async (
     req: Request,
     res: Response,
     next: NextFunction,
-) => {
+): Promise<any> => {
     const bearer = req.headers.authorization
     logger.info(`bearer: ${bearer}`)
 

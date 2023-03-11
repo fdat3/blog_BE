@@ -21,7 +21,7 @@ class InstanceFirebase {
     })
   }
 
-  public initFirebase({...config}: any) {
+  public initFirebase({...config}: any): void {
     this.app = initializeApp({...config})
   }
 }

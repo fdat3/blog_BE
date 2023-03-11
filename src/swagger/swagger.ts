@@ -39,6 +39,6 @@ const options ={
 }
 const swaggerSpec = swaggerJSDocs(options)
 
-const outputFile: string = './output_swagger.json'
+const outputFile: string = `${__dirname}/output_swagger.json`
 
 swaggerAutogen()(outputFile, endpointsFiles, swaggerSpec)

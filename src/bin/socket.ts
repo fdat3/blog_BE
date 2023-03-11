@@ -8,12 +8,14 @@ import * as _ from 'lodash'
 
 import { createAdapter } from '@socket.io/redis-adapter'
 import { createClient } from 'redis'
+import logger from '@/utils/logger.util'
 
 class SocketServer {
 
   private readonly app: Application | http.Server;
   private readonly io: Server;
   public static readonly SOCKET_PORT: number = Variable.SOCKET_PORT
+  private socketOption = {}
 
   users: {[key: string]: any} = {}
 
@@ -24,16 +26,17 @@ class SocketServer {
      */
 
     this.app = http.createServer(app)
-    this.io = new Server(this.app, {
-      wsEngine: require("eiows").Server,
-      // cors: {
-      //   origin: ['https://admin.socket.io'],
-      //   credentials: true
-      // }
-    })
+    this.socketOption = process.env.NODE_ENV === 'production' ? {
+      ...this.socketOption,
+      wsEngine: require('eiows').Server
+    } : {
+      ...this.socketOption
+    }
+
+    this.io = new Server(this.app, this.socketOption)
   }
 
-  async initSocketServer() {
+  async initSocketServer(): Promise<void> {
     this.io.listen(SocketServer.SOCKET_PORT)
     await this.socketAdapter(this.io)
     // instrument(this.io, {
@@ -45,7 +48,7 @@ class SocketServer {
 
   }
 
-  private async socketAdapter(server: Server){
+  private async socketAdapter(server: Server): Promise<void> {
     /**
      * This function create the pub and sub Client for caching connection with redis
      */
@@ -66,25 +69,26 @@ class SocketServer {
       //   console.log(args)
       // })
       server.adapter(createAdapter(pubClient, subClient));
-      console.log('Socket With Redis cache connected')
+      logger.info('Socket With Redis cache connected!')
     }).catch(() => {
-      console.error('Socket With Redis cache connected')
+      logger.error('Socket With Redis cache failed!')
+      return
     })
 
   }
 
-  private socketMiddleware(io: Server) {
+  private socketMiddleware(io: Server): void {
     io.use((socket: Socket, next: any) => {
       next()
     })
   }
 
-  private sendOnlineListWhileFirstConnection(socket: Socket) {
+  private sendOnlineListWhileFirstConnection(socket: Socket): void {
     socket.emit('online_list', this.users)
   }
 
 
-  private async onClientConnection(socket: Socket) {
+  private async onClientConnection(socket: Socket): Promise<void> {
     this.sendOnlineListWhileFirstConnection(socket)
     const user_id = socket.handshake.query.user_id?.toString() || null
 
@@ -109,8 +113,8 @@ class SocketServer {
 
   private handleSocketEvents(
     func: (server: Server, ...params: any[]) => any,
-    server: Server) {
-    return (...args: any[]) => func.bind(this)(server, ...args);
+    server: Server): any {
+    return (...args: any[]): any => func.bind(this)(server, ...args);
   }
 
 

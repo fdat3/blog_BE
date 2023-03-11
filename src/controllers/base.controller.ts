@@ -21,7 +21,7 @@ export interface ExtraResponse extends Response {
 
 class BaseController {
 
-  onError(res: ExtraResponse, error: any) {
+  onError(res: ExtraResponse, error: any): void {
     if (!error.options) {
       // const err = errorService.router.somethingWentWrong()
       res.status(error.options.code).json(error.options)
@@ -30,7 +30,7 @@ class BaseController {
     }
   }
 
-  onSuccess(res: ExtraResponse, object: any = {}, extras: any) {
+  onSuccess(res: ExtraResponse, object: any = {}, extras: any): void {
     object = object || {}
     if (Object.keys(object).length === 0) {
       res.json({
@@ -46,7 +46,7 @@ class BaseController {
     }
   }
 
-  onSuccessAsList(res: ExtraResponse, objects: any = [], extras: any = {}, option?: ICrudOption) {
+  onSuccessAsList(res: ExtraResponse, objects: any = [], extras: any = {}, option?: ICrudOption): void {
     option = option ? option : {
       offset: 0, limit: 10
     }

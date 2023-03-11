@@ -36,7 +36,7 @@ const { app } = new App({
 /**
  * Normalize a port into a number, string, or false.
  */
-const normalizePort = (val: any) => {
+const normalizePort = (val: any): string | number | boolean => {
     const port = parseInt(val, 10)
 
     if (Number.isNaN(port)) {
@@ -68,7 +68,7 @@ const socketServer = new SocketServer(app)
 /**
  * Event listener for HTTP server "error" event.
  */
-const onError = (error: any) => {
+const onError = (error: any): void => {
     if (error.syscall !== 'listen') {
         throw error
     }
@@ -93,7 +93,7 @@ const onError = (error: any) => {
 /**
  * Event listener for HTTP server "listening" event.
  */
-const onListening = () => {
+const onListening = (): void => {
     const addr = server.address()
     const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`
     logger.info(`Listening on ${bind}`)
