@@ -1,25 +1,27 @@
 import {
   Association,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasManyGetAssociationsMixin,
-  HasManySetAssociationsMixin,
   HasManyAddAssociationMixin,
   HasManyAddAssociationsMixin,
+  HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
-  HasManyRemoveAssociationMixin,
-  HasManyRemoveAssociationsMixin,
+  HasManyGetAssociationsMixin,
   HasManyHasAssociationMixin,
   HasManyHasAssociationsMixin,
-  HasManyCountAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasOneCreateAssociationMixin,
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
-  InferCreationAttributes,
   InferAttributes,
+  InferCreationAttributes,
   Model,
   NonAttribute,
-  Sequelize
+  Sequelize,
 } from 'sequelize'
 import type { Block } from './Block'
 import type { Mbti } from './Mbti'
@@ -32,18 +34,20 @@ import ModelPgConstant from '@/constants/model.pg.constant'
 import { HookReturn } from 'sequelize/types/hooks'
 import UserUtils from '@/utils/user.utils'
 
-type UserAssociations = 'ref' | 'mbti' |
-  'devices' |
+type UserAssociations =
+  | 'ref'
+  | 'mbti'
+  | 'devices'
   // 'blockers' |
   // 'blockeds' |
-  'polls' |
-  'pollAnswers' |
-  'pollChosens' |
-  'pollComments'
+  | 'polls'
+  | 'pollAnswers'
+  | 'pollChosens'
+  | 'pollComments'
 
 export class User extends Model<
-  InferAttributes<User, {omit: UserAssociations}>,
-  InferCreationAttributes<User, {omit: UserAssociations}>
+  InferAttributes<User, { omit: UserAssociations }>,
+  InferCreationAttributes<User, { omit: UserAssociations }>
 > {
   declare id: CreationOptional<uuid>
   declare fullname: string
@@ -56,7 +60,8 @@ export class User extends Model<
   declare refUser: CreationOptional<uuid>
   declare gender: string | null
   declare instagram: string | null
-  declare mbtiId: CreationOptional<uuid>
+  declare mbtiId: CreationOptional<string>
+  declare isAdmin: CreationOptional<boolean>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -66,26 +71,33 @@ export class User extends Model<
   declare getRefUser: HasOneGetAssociationMixin<User>
   declare setRefUser: CreationOptional<HasOneSetAssociationMixin<User, uuid>>
   declare createRefUser: CreationOptional<HasOneCreateAssociationMixin<User>>
-  
-  // User hasOne Mbti (as Mbti)
-  declare mbti?: NonAttribute<Mbti>
-  declare getMbti: HasOneGetAssociationMixin<Mbti>
-  declare setMbti: CreationOptional<HasOneSetAssociationMixin<Mbti, uuid>>
-  declare createMbti: CreationOptional<HasOneCreateAssociationMixin<Mbti>>
-  
+
+  // User belongsTo Mbti (as mbti)
+  declare mbti: NonAttribute<Mbti>
+  declare getMbti: BelongsToGetAssociationMixin<Mbti>
+  declare setMbti: BelongsToSetAssociationMixin<Mbti, uuid>
+
   // User hasMany UserDevice (as Devices)
   declare devices?: NonAttribute<UserDevice[]>
   declare getDevices: HasManyGetAssociationsMixin<UserDevice>
-  declare setDevices: CreationOptional<HasManySetAssociationsMixin<UserDevice, uuid>>
-  declare addDevice: CreationOptional<HasManyAddAssociationMixin<UserDevice, UserDevice>>
-  declare addDevices: CreationOptional<HasManyAddAssociationsMixin<UserDevice, UserDevice>>
-  declare createDevice: CreationOptional<HasManyCreateAssociationMixin<UserDevice>>
+  declare setDevices: CreationOptional<
+    HasManySetAssociationsMixin<UserDevice, uuid>
+  >
+  declare addDevice: CreationOptional<
+    HasManyAddAssociationMixin<UserDevice, UserDevice>
+  >
+  declare addDevices: CreationOptional<
+    HasManyAddAssociationsMixin<UserDevice, UserDevice>
+  >
+  declare createDevice: CreationOptional<
+    HasManyCreateAssociationMixin<UserDevice>
+  >
   declare removeDevice: HasManyRemoveAssociationMixin<UserDevice, number>
   declare removeDevices: HasManyRemoveAssociationsMixin<UserDevice, number>
   declare hasDevice: HasManyHasAssociationMixin<UserDevice, number>
   declare hasDevices: HasManyHasAssociationsMixin<UserDevice, number>
   declare countDevices: HasManyCountAssociationsMixin
-  
+
   // User hasMany Block (as Blockers)
   // declare blockers?: NonAttribute<Block[]>
   // declare getBlockers: HasManyGetAssociationsMixin<Block>
@@ -98,7 +110,7 @@ export class User extends Model<
   // declare hasBlocker: HasManyHasAssociationMixin<Block, string>
   // declare hasBlockers: HasManyHasAssociationsMixin<Block, string>
   // declare countBlockers: HasManyCountAssociationsMixin
-  
+
   // User hasMany Block (as Blocked)
   // declare blockeds?: NonAttribute<Block[]>
   // declare getBlockeds: HasManyGetAssociationsMixin<Block>
@@ -111,7 +123,7 @@ export class User extends Model<
   // declare hasBlocked: HasManyHasAssociationMixin<Block, string>
   // declare hasBlockeds: HasManyHasAssociationsMixin<Block, string>
   // declare countBlockeds: HasManyCountAssociationsMixin
-  
+
   // User hasMany Poll (as Polls)
   declare polls?: NonAttribute<Poll[]>
   declare getPolls: HasManyGetAssociationsMixin<Poll>
@@ -124,7 +136,7 @@ export class User extends Model<
   declare hasPoll: HasManyHasAssociationMixin<Poll, string>
   declare hasPolls: HasManyHasAssociationsMixin<Poll, string>
   declare countPolls: HasManyCountAssociationsMixin
-  
+
   // User hasMany PollAnswer (as PollAnswers)
   declare pollAnswers?: NonAttribute<PollAnswer[]>
   declare getPollAnswers: HasManyGetAssociationsMixin<PollAnswer>
@@ -137,7 +149,7 @@ export class User extends Model<
   declare hasPollAnswer: HasManyHasAssociationMixin<PollAnswer, string>
   declare hasPollAnswers: HasManyHasAssociationsMixin<PollAnswer, string>
   declare countPollAnswers: HasManyCountAssociationsMixin
-  
+
   // User hasMany PollAnswerChosen (as PollChosen)
   declare pollChosens?: NonAttribute<PollAnswerChosen[]>
   declare getPollChosens: HasManyGetAssociationsMixin<PollAnswerChosen>
@@ -145,12 +157,18 @@ export class User extends Model<
   declare addPollChosen: HasManyAddAssociationMixin<PollAnswerChosen, number>
   declare addPollChosens: HasManyAddAssociationsMixin<PollAnswerChosen, number>
   declare createPollChosen: HasManyCreateAssociationMixin<PollAnswerChosen>
-  declare removePollChosen: HasManyRemoveAssociationMixin<PollAnswerChosen, number>
-  declare removePollChosens: HasManyRemoveAssociationsMixin<PollAnswerChosen, number>
+  declare removePollChosen: HasManyRemoveAssociationMixin<
+    PollAnswerChosen,
+    number
+  >
+  declare removePollChosens: HasManyRemoveAssociationsMixin<
+    PollAnswerChosen,
+    number
+  >
   declare hasPollChosen: HasManyHasAssociationMixin<PollAnswerChosen, number>
   declare hasPollChosens: HasManyHasAssociationsMixin<PollAnswerChosen, number>
   declare countPollChosens: HasManyCountAssociationsMixin
-  
+
   // User hasMany PollComment (as PollComments)
   declare pollComments?: NonAttribute<PollComment[]>
   declare getPollComments: HasManyGetAssociationsMixin<PollComment>
@@ -159,109 +177,132 @@ export class User extends Model<
   declare addPollComments: HasManyAddAssociationsMixin<PollComment, string>
   declare createPollComment: HasManyCreateAssociationMixin<PollComment>
   declare removePollComment: HasManyRemoveAssociationMixin<PollComment, string>
-  declare removePollComments: HasManyRemoveAssociationsMixin<PollComment, string>
+  declare removePollComments: HasManyRemoveAssociationsMixin<
+    PollComment,
+    string
+  >
   declare hasPollComment: HasManyHasAssociationMixin<PollComment, string>
   declare hasPollComments: HasManyHasAssociationsMixin<PollComment, string>
   declare countPollComments: HasManyCountAssociationsMixin
-  
+
   declare static associations: {
-    ref: Association<User, User>,
-    mbti: Association<User, Mbti>,
-    devices: Association<User, UserDevice>,
-    blockers: Association<User, Block>,
-    blockeds: Association<User, Block>,
-    polls: Association<User, Poll>,
-    pollAnswers: Association<User, PollAnswer>,
-    pollChosens: Association<User, PollAnswerChosen>,
+    ref: Association<User, User>
+    mbti: Association<User, Mbti>
+    devices: Association<User, UserDevice>
+    blockers: Association<User, Block>
+    blockeds: Association<User, Block>
+    polls: Association<User, Poll>
+    pollAnswers: Association<User, PollAnswer>
+    pollChosens: Association<User, PollAnswerChosen>
     pollComments: Association<User, PollComment>
   }
 
   static initModel(sequelize: Sequelize): typeof User {
-    User.init({
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        allowNull: false,
-        unique: true,
-        defaultValue: DataTypes.UUIDV4
-      },
-      fullname: {
-        type: DataTypes.STRING(100),
-        allowNull: true
-      },
-      email: {
-        type: DataTypes.STRING(100),
-        allowNull: false
-      },
-      password: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-      },
-      dob: {
-        type: DataTypes.DATE
-      },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-      },
-      phone: {
-        type: DataTypes.STRING(15),
-        unique: true,
-        allowNull: true
-      },
-      inviteCode: {
-        type: DataTypes.STRING(20),
-        unique: true,
-        allowNull: true
-      },
-      refUser: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        field: 'ref_user',
-        references: {
-          model: 'user',
-          key: 'id',
-        }
-      },
-      gender: {
-        type: DataTypes.STRING(10)
-      },
-      instagram: {
-        type: DataTypes.STRING(100)
-      },
-      mbtiId: {
-        type: DataTypes.UUID,
-      },
-      createdAt: {
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        type: DataTypes.DATE
-      },
-      deletedAt: {
-        type: DataTypes.DATE
-      }
-    }, {
-      sequelize,
-      tableName: ModelPgConstant.USER_MODEL,
-      hooks: {
-        beforeCreate(attributes: User): HookReturn {
-          if (!attributes.inviteCode) {
-            attributes.inviteCode = UserUtils.generateInviteCode()
-          }
-        }
-      },
-      indexes: [
-        {
+    User.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          allowNull: false,
           unique: true,
-          fields: ['email', 'username'],
-          using: 'BTREE',
+          defaultValue: DataTypes.UUIDV4,
+        },
+        fullname: {
+          type: DataTypes.STRING(100),
+          allowNull: true,
+        },
+        email: {
+          type: DataTypes.STRING(100),
+          allowNull: false,
+        },
+        password: {
+          type: DataTypes.STRING(255),
+          allowNull: true,
+        },
+        dob: {
+          type: DataTypes.DATE,
+        },
+        username: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+        },
+        phone: {
+          type: DataTypes.STRING(15),
+          unique: true,
+          allowNull: true,
+        },
+        inviteCode: {
+          type: DataTypes.STRING(20),
+          unique: true,
+          allowNull: true,
+        },
+        refUser: {
+          type: DataTypes.UUID,
+          allowNull: true,
+          field: 'ref_user',
+          references: {
+            model: 'user',
+            key: 'id',
+          },
+        },
+        gender: {
+          type: DataTypes.STRING(10),
+        },
+        instagram: {
+          type: DataTypes.STRING(100),
+        },
+        isAdmin: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+        },
+        mbtiId: {
+          type: DataTypes.UUID,
+          allowNull: true,
+          field: 'mbti_id',
+          references: {
+            model: 'mbti',
+            key: 'id',
+          },
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
+          type: DataTypes.DATE,
+        },
+      },
+      {
+        sequelize,
+        tableName: ModelPgConstant.USER_MODEL,
+        defaultScope: {
+          attributes: {
+            exclude: ['password', 'mbti_id'],
+          },
+        },
+        scopes: {
+          withPassword: {},
+        },
+        hooks: {
+          beforeCreate(attributes: User): HookReturn {
+            if (!attributes.inviteCode) {
+              attributes.inviteCode = UserUtils.generateInviteCode()
+            }
+          },
+        },
+        indexes: [
+          {
+            unique: false,
+            fields: ['email', 'username'],
+            using: 'BTREE',
+          },
+        ],
+      },
+    )
 
-        }
-      ]
-    })
-    
     return User
   }
 }

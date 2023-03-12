@@ -18,7 +18,6 @@ export interface Repository {
   private?: boolean | string
   html_url?: string
   [key: string]: any
-
 }
 
 export interface GithubHookInterface {
@@ -26,5 +25,4 @@ export interface GithubHookInterface {
   workflow_job?: WorkflowJob
   repository?: Repository
   [key: string]: any
-
 }

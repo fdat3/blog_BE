@@ -1,60 +1,56 @@
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
-import logger from '@/utils/logger.util'
 
 class AuthService {
-    private userRepository: UserRepository
-    private userSecurity: UserSecurity
+  private userRepository: UserRepository
+  private userSecurity: UserSecurity
 
-    constructor() {
-        this.userRepository = new UserRepository()
-        this.userSecurity = new UserSecurity()
-    }
+  constructor() {
+    this.userRepository = new UserRepository()
+    this.userSecurity = new UserSecurity()
+  }
 
-    public async findByUsername(username: string): Promise<any> {
-        const user = await this.userRepository.findByUsername(username)
-        return user
-    }
+  public async findByUsername(username: string): Promise<any> {
+    const user = await this.userRepository.findByUsername(username)
+    return user
+  }
 
-    public async findByEmail(email: string): Promise<any> {
-        const user = await this.userRepository.findByEmail(email)
-        return user
-    }
+  public async findByEmail(email: string): Promise<any> {
+    const user = await this.userRepository.findByEmail(email)
+    return user
+  }
 
-    public async findByPhone(phone: string): Promise<any> {
-        const user = await this.userRepository.findByPhone(phone)
-        return user
-    }
+  public async findByPhone(phone: string): Promise<any> {
+    const user = await this.userRepository.findByPhone(phone)
+    return user
+  }
 
-    public async findByEmailWithPassword(email: string): Promise<any> {
-        const user = await this.userRepository.findByEmailWithPassword(email)
-        return user
-    }
+  public async findByEmailWithPassword(email: string): Promise<any> {
+    const user = await this.userRepository.findByEmailWithPassword(email)
+    return user
+  }
 
-    public comparePassword(password: string, decryptedPassword: string): boolean {
-        return this.userSecurity.comparePassword(password, decryptedPassword)
-    }
+  public comparePassword(password: string, decryptedPassword: string): boolean {
+    return this.userSecurity.comparePassword(password, decryptedPassword)
+  }
 
-    public async createUser(user: any): Promise<any> {
-        logger.warn('Create user')
-        logger.warn({user})
-        const encryptedPassword = this.userSecurity.encrypt(user.password)
-        const newUser = {
-           ...user,
-            password: encryptedPassword
-        }
-        logger.info({newUser})
-        const savedUser = await this.userRepository.createUser(newUser)
-        return savedUser
+  public async createUser(user: any): Promise<any> {
+    const encryptedPassword = this.userSecurity.encrypt(user.password)
+    const newUser = {
+      ...user,
+      password: encryptedPassword,
     }
+    const savedUser = await this.userRepository.createUser(newUser)
+    return savedUser
+  }
 
-    public async generateAccessToken(
-        id: string,
-        isAdmin: boolean,
-    ): Promise<string> {
-        const token = this.userSecurity.generateAccessToken(id, isAdmin)
-        return token
-    }
+  public async generateAccessToken(
+    id: string,
+    isAdmin: boolean,
+  ): Promise<string> {
+    const token = this.userSecurity.generateAccessToken(id, isAdmin)
+    return token
+  }
 }
 
 export default AuthService

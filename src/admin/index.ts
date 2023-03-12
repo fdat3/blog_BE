@@ -12,15 +12,18 @@ import { sequelize } from '@/config/sql.config'
 
 AdminJS.registerAdapter({
   Database: AdminJSSequelize.Database,
-  Resource: AdminJSSequelize.Resource
+  Resource: AdminJSSequelize.Resource,
 })
 
 const DEFAULT_ADMIN = {
   email: 'admin@example.com',
-  password: 'password'
+  password: 'password',
 }
 
-const authenticate = async (email: string, password: string): Promise<any | null> => {
+const authenticate = async (
+  email: string,
+  password: string,
+): Promise<any | null> => {
   if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
     return Promise.resolve(DEFAULT_ADMIN)
   }
@@ -35,26 +38,24 @@ const runAdminPage = (app: Application, PORT: number): void => {
       {
         resource: Models.PollComment.initModel(sequelize),
         options: {
-          properties: {
-
-          }
-        }
+          properties: {},
+        },
       },
       // Models.PollAnswer.initModel(sequelize),
       Models.Mbti.initModel(sequelize),
       Models.ReportUser.initModel(sequelize),
       Models.ReportPoll.initModel(sequelize),
-    ]
+    ],
   })
 
   const ConnectSession = Connect(session)
   const sessionStore = new ConnectSession({
     conObject: {
       connectionString: `postgres://${Variable.POSTGRES_DATABASE_USERNAME}:${Variable.POSTGRES_DATABASE_PASSWORD}@${Variable.POSTGRES_DATABASE_URL}`,
-      ssl: process.env.NODE_ENV === 'production'
+      ssl: process.env.NODE_ENV === 'production',
     },
     tableName: 'session',
-    createTableIfMissing: true
+    createTableIfMissing: true,
   })
 
   const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
@@ -75,14 +76,16 @@ const runAdminPage = (app: Application, PORT: number): void => {
         secure: process.env.NODE_ENV === 'production',
       },
       name: 'adminjs',
-    }
+    },
   )
 
   process.env.NODE_ENV === 'development' && admin.watch()
 
   app.use(admin.options.rootPath, adminRouter)
 
-  logger.info(`AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`)
+  logger.info(
+    `AdminJS started on http://localhost:${PORT}${admin.options.rootPath}`,
+  )
 }
 
 export default runAdminPage

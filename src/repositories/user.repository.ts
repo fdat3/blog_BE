@@ -3,26 +3,24 @@
 import { User } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 import logger from '@/utils/logger.util'
+import mbtiRepository from '@/repositories/mbti.repository'
 
 class UserRepository {
-  public model;
+  public model
+  private mbtiRepository
   constructor() {
     this.model = User
+    this.mbtiRepository = new mbtiRepository()
   }
 
   public async findAll(): Promise<User[]> {
     try {
-      const users = await this.model.findAll({
-
-        // include: ['polls']
-      })
+      const users = await this.model.findAll({})
       return users
     } catch (e) {
       console.log(e)
       return []
-
     }
-
   }
 
   public async findById(id: string): Promise<User | null> {
@@ -67,16 +65,12 @@ class UserRepository {
     return user
   }
 
-  public async findByEmailWithPassword(
-    email: string,
-  ): Promise<User | null> {
-    const user = await User.findOne({ where: { email } })
+  public async findByEmailWithPassword(email: string): Promise<User | null> {
+    const user = await User.scope('withPassword').findOne({ where: { email } })
     return user
   }
 
-  public async findByPhoneWithPassword(
-    phone: string,
-  ): Promise<User | null> {
+  public async findByPhoneWithPassword(phone: string): Promise<User | null> {
     const user = await User.findOne({ where: { phone } })
     return user
   }
@@ -84,15 +78,18 @@ class UserRepository {
   public async createUser(user: any): Promise<User | null> {
     try {
       const result = await sequelize.transaction(async (transaction) => {
-        const newUser = await User.create({
-          ...user
-        }, {
-          transaction,
-        })
+        const newUser = await User.create(
+          {
+            ...user,
+          },
+          {
+            transaction,
+          },
+        )
         return newUser
       })
 
-      logger.info({result})
+      logger.info({ result })
 
       return result
     } catch (e) {
@@ -107,14 +104,17 @@ class UserRepository {
   ): Promise<User | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
-        await User.update({
-          username,
-        }, {
-          where: {
-            id,
+        await User.update(
+          {
+            username,
           },
-          transaction,
-        })
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
 
         return await User.findByPk(id)
       })
@@ -123,20 +123,20 @@ class UserRepository {
     }
   }
 
-  public async updateName(
-    id: string,
-    fullname: string,
-  ): Promise<User | null> {
+  public async updateName(id: string, fullname: string): Promise<User | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
-        await User.update({
-          fullname,
-        }, {
-          where: {
-            id,
+        await User.update(
+          {
+            fullname,
           },
-          transaction,
-        })
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
 
         return await User.findByPk(id)
       })
@@ -145,20 +145,20 @@ class UserRepository {
     }
   }
 
-  public async updateEmail(
-    id: string,
-    email: string,
-  ): Promise<User | null> {
+  public async updateEmail(id: string, email: string): Promise<User | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
-        await User.update({
-          email,
-        }, {
-          where: {
-            id,
+        await User.update(
+          {
+            email,
           },
-          transaction,
-        })
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
 
         return await User.findByPk(id)
       })
@@ -173,14 +173,17 @@ class UserRepository {
   ): Promise<User | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
-        await User.update({
-          password,
-        }, {
-          where: {
-            id,
+        await User.update(
+          {
+            password,
           },
-          transaction,
-        })
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
 
         return await User.findByPk(id)
       })
@@ -189,20 +192,20 @@ class UserRepository {
     }
   }
 
-  public async updatePhone(
-    id: string,
-    phone: string,
-  ): Promise<User | null> {
+  public async updatePhone(id: string, phone: string): Promise<User | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
-        await User.update({
-          phone,
-        }, {
-          where: {
-            id,
+        await User.update(
+          {
+            phone,
           },
-          transaction,
-        })
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
 
         return await User.findByPk(id)
       })
@@ -210,28 +213,6 @@ class UserRepository {
       return null
     }
   }
-
-  // public async updateAddress(
-  //     id: string,
-  //     address: string,
-  // ): Promise<User | null> {
-  //   try {
-  //     return await sequelize.transaction(async (transaction) => {
-  //       await User.update({
-  //         address
-  //       }, {
-  //         where: {
-  //           id
-  //         },
-  //         transaction
-  //       })
-  //
-  //       return await User.findByPk(id)
-  //     })
-  //   } catch (e) {
-  //     return null
-  //   }
-  // }
 
   public async deleteUser(id: string): Promise<User | null> {
     const user = await User.findByPk(id)
@@ -242,6 +223,55 @@ class UserRepository {
   public async getUsersStats(): Promise<User[] | null> {
     const users = await User.findAll()
     return users
+  }
+
+  public async updateAny(data: Partial<User>): Promise<User | null> {
+    const { id, ...body } = data
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+      include: [
+        {
+          association: 'mbti',
+        },
+      ],
+    })
+    if (!user) {
+      return null
+    }
+    try {
+      return sequelize.transaction(
+        async (transaction): Promise<User | null> => {
+          if (body?.mbtiId) {
+            await user.setMbti(body.mbtiId, {
+              transaction,
+            })
+            delete body?.mbtiId
+          }
+          if (Object.keys(body).length > 0) {
+            await user.update(body, { transaction })
+          }
+
+          return await this.model.findOne({
+            where: {
+              id: user.id,
+            },
+            include: [
+              {
+                association: 'mbti',
+              },
+            ],
+            raw: true,
+            nest: true,
+          })
+        },
+      )
+    } catch (err) {
+      console.log(err)
+      logger.error(err)
+      return null
+    }
   }
 }
 

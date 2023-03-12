@@ -5,10 +5,7 @@ class ServiceFirebase extends InstanceFirebase {
     super()
   }
 
-  sendSingleDevice(): void {
-
-  }
-
+  sendSingleDevice(): void {}
 }
 const firebaseService = new ServiceFirebase()
 export default firebaseService

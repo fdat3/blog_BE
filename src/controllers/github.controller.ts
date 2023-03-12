@@ -15,7 +15,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import { GithubHookInterface } from '@/interfaces/github.hook.interface'
 import axios, { AxiosResponse } from 'axios'
 
-const {GithubWebhook} = require('@inventivetalent/express-github-webhook');
+const { GithubWebhook } = require('@inventivetalent/express-github-webhook')
 
 class GithubHookController implements Controller {
   public path: string
@@ -31,7 +31,7 @@ class GithubHookController implements Controller {
     this.router = Router()
     this.webhookHandler = new GithubWebhook({
       // events: ['push', 'workflow_run', 'workflow_job', 'in_progress', 'completed'],
-      secret: 'ecc'
+      secret: 'ecc',
     })
 
     this.initialiseRoutes()
@@ -39,22 +39,19 @@ class GithubHookController implements Controller {
 
   private initialiseRoutes(): void {
     this.router.get(`${this.path}`, this.getHook)
-    this.router.post(
-      `${this.path}`, this.receiveHook
-    )
+    this.router.post(`${this.path}`, this.receiveHook)
   }
 
   private getHook = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<Response | void> => {
     try {
       console.log('hello')
       return res.json({
-        "message": "test"
+        message: 'test',
       })
-
     } catch (err: any) {
       return next(
         new HttpException(
@@ -69,15 +66,15 @@ class GithubHookController implements Controller {
   private receiveHook = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<Response | void> => {
     try {
       const { body } = req
       await this.sendToTelegram(body)
 
       return res.json({
-        "status": "success",
-        "message": "Sent to telegram message"
+        status: 'success',
+        message: 'Sent to telegram message',
       })
     } catch (err: any) {
       return next(
@@ -91,25 +88,21 @@ class GithubHookController implements Controller {
   }
 
   private sendToTelegram = async (
-    data: GithubHookInterface
+    data: GithubHookInterface,
   ): Promise<Response | any> => {
     const url: string = this.BASE_URL
     // filtering necessary keys in object
-    const {
-      action,
-      workflow_job,
-      repository
-    } = data
+    const { action, workflow_job, repository } = data
 
     const new_repository = {
       full_name: repository?.full_name,
       html_url: repository?.html_url,
-      private: repository?.private
+      private: repository?.private,
     }
 
     const body = {
       chat_id: this.ROOM,
-      parse_mode: "HTML",
+      parse_mode: 'HTML',
       disable_web_page_preview: true,
       allow_sending_without_reply: true,
       text: `<b>Action ${action.toUpperCase()}</b>
@@ -120,7 +113,7 @@ Created At: ${workflow_job?.created_at}
 Completed At: ${workflow_job?.completed_at}
 
 Repository: ${new_repository.full_name}
-url: <a>${new_repository.html_url}</a>`
+url: <a>${new_repository.html_url}</a>`,
     }
 
     try {
@@ -131,9 +124,6 @@ url: <a>${new_repository.html_url}</a>`
       console.log(err.message)
     }
   }
-
-
-
 }
 
 export default GithubHookController

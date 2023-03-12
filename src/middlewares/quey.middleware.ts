@@ -1,4 +1,4 @@
-import { ICrudOption } from '@/interfaces/controller.interface';
+import { ICrudOption } from '@/interfaces/controller.interface'
 import BaseMiddleware from '@/middlewares/base.middleware'
 import { Request } from 'express'
 import * as _ from 'lodash'
@@ -9,56 +9,56 @@ class QueryMiddleware extends BaseMiddleware {
   // }
 
   _parseFilter(req: Request | any): any {
-    let filter = req.query['filter'];
+    let filter = req.query['filter']
     try {
-      filter = JSON.parse(filter);
+      filter = JSON.parse(filter)
     } catch (ignore) {
-      filter = undefined;
+      filter = undefined
     }
-    return filter || {};
+    return filter || {}
   }
   /**
    * Format: [[key, order], [key, order]]
    */
   _parseOrder(req: Request | any): any {
-    let order = req.query['order'];
+    let order = req.query['order']
     try {
-      order = JSON.parse(order);
+      order = JSON.parse(order)
     } catch (ignore) {
-      order = undefined;
+      order = undefined
     }
-    return order || [['updated_at', 'asc']];
+    return order || [['updated_at', 'asc']]
   }
   _parseFields(req: Request | any): any {
-    let fields = req.query['fields'];
+    let fields = req.query['fields']
     try {
-      fields = JSON.parse(fields);
+      fields = JSON.parse(fields)
     } catch (ignore) {
-      fields = [];
+      fields = []
     }
     try {
-      return this._parseAttribute(fields);
+      return this._parseAttribute(fields)
     } catch (err) {
-      return null;
+      return null
     }
   }
   _parseAttribute(attrs: any): ICrudOption {
-    const attributes: any[] = [];
-    const includes: any[] = [];
-    let isGetAll = false;
-    let isSetParanoid = false;
-    let where: any = undefined;
+    const attributes: any[] = []
+    const includes: any[] = []
+    let isGetAll = false
+    let isSetParanoid = false
+    let where: any = undefined
     _.forEach(attrs, (f) => {
       if (typeof f === 'string') {
         switch (f) {
           case '$all':
-            isGetAll = true;
-            break;
+            isGetAll = true
+            break
           case '$paranoid':
-            isSetParanoid = true;
-            break;
+            isSetParanoid = true
+            break
           default:
-            attributes.push(f);
+            attributes.push(f)
         }
       } else if (typeof f === 'object' && !Array.isArray(f)) {
         _.forEach(
@@ -66,36 +66,36 @@ class QueryMiddleware extends BaseMiddleware {
           ((value: any, name: string): void => {
             switch (name) {
               case '$filter':
-                where = _.merge({}, where, value);
-                break;
+                where = _.merge({}, where, value)
+                break
               default:
                 includes.push({
                   [name]: value,
-                });
+                })
             }
-          }).bind(this)
-        );
+          }).bind(this),
+        )
       }
-    });
-    const include = this._parseInclude(includes);
+    })
+    const include = this._parseInclude(includes)
     const result: any = {
       include: include,
       distinct: includes ? true : false,
-    };
-    if (where) result.where = where;
+    }
+    if (where) result.where = where
     if (!isGetAll) {
-      result.attributes = attributes;
+      result.attributes = attributes
     }
     if (isSetParanoid) {
-      result.paranoid = false;
+      result.paranoid = false
     }
-    return result;
+    return result
   }
 
   _parseInclude(includes: any): any[] {
-    if (includes.length === 0) return includes;
+    if (includes.length === 0) return includes
 
-    const associates: any[] = [];
+    const associates: any[] = []
     _.forEach(
       includes,
       ((i: any): void => {
@@ -106,14 +106,14 @@ class QueryMiddleware extends BaseMiddleware {
               {
                 association: name,
               },
-              this._parseAttribute(attrs)
-            );
-            associates.push(associate);
-          }).bind(this)
-        );
-      }).bind(this)
-    );
-    return associates;
+              this._parseAttribute(attrs),
+            )
+            associates.push(associate)
+          }).bind(this),
+        )
+      }).bind(this),
+    )
+    return associates
   }
 }
 

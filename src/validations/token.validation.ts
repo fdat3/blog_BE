@@ -16,48 +16,48 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import logger from '@/utils/logger.util'
 
 export const verifyToken = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ): Promise<any> => {
-    const bearer = req.headers.authorization
-    logger.info(`bearer: ${bearer}`)
+  const bearer = req.headers.authorization
+  logger.info(`bearer: ${bearer}`)
 
-    if (!bearer) {
-        return next(
-            new HttpException(
-                ConstantHttpCode.UNAUTHORIZED,
-                ConstantHttpReason.UNAUTHORIZED,
-                ConstantMessage.TOKEN_NOT_VALID,
-            ),
-        )
+  if (!bearer) {
+    return next(
+      new HttpException(
+        ConstantHttpCode.UNAUTHORIZED,
+        ConstantHttpReason.UNAUTHORIZED,
+        ConstantMessage.TOKEN_NOT_VALID,
+      ),
+    )
+  }
+
+  if (!bearer || !bearer.startsWith('Bearer ')) {
+    return next(
+      new HttpException(
+        ConstantHttpCode.UNAUTHORIZED,
+        ConstantHttpReason.UNAUTHORIZED,
+        ConstantMessage.UNAUTHORIZED,
+      ),
+    )
+  }
+
+  const accessToken = bearer.split('Bearer ')[1].trim()
+
+  return jwt.verify(accessToken, Variable.JWT_SECRET, (err, user: any) => {
+    if (err) {
+      res.status(ConstantHttpCode.FORBIDDEN).json({
+        status: {
+          code: ConstantHttpCode.FORBIDDEN,
+          msg: ConstantHttpReason.FORBIDDEN,
+        },
+        msg: ConstantMessage.TOKEN_NOT_VALID,
+      })
     }
-
-    if (!bearer || !bearer.startsWith('Bearer ')) {
-        return next(
-            new HttpException(
-                ConstantHttpCode.UNAUTHORIZED,
-                ConstantHttpReason.UNAUTHORIZED,
-                ConstantMessage.UNAUTHORIZED,
-            ),
-        )
-    }
-
-    const accessToken = bearer.split('Bearer ')[1].trim()
-
-    return jwt.verify(accessToken, Variable.JWT_SECRET, (err, user: any) => {
-        if (err) {
-            res.status(ConstantHttpCode.FORBIDDEN).json({
-                status: {
-                    code: ConstantHttpCode.FORBIDDEN,
-                    msg: ConstantHttpReason.FORBIDDEN,
-                },
-                msg: ConstantMessage.TOKEN_NOT_VALID,
-            })
-        }
-        req.user = user
-        return next()
-    })
+    req.user = user
+    return next()
+  })
 }
 
 export default { verifyToken }

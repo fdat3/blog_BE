@@ -4,7 +4,7 @@ import {
   InferCreationAttributes,
   InferAttributes,
   Model,
-  Sequelize
+  Sequelize,
 } from 'sequelize'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
@@ -22,40 +22,43 @@ export class PollCategory extends Model<
   declare deletedAt: CreationOptional<Date>
 
   static initModel(sequelize: Sequelize): typeof PollCategory {
-    PollCategory.init({
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        unique: true,
-        defaultValue: DataTypes.UUIDV4
+    PollCategory.init(
+      {
+        id: {
+          type: DataTypes.UUID,
+          primaryKey: true,
+          unique: true,
+          defaultValue: DataTypes.UUIDV4,
+        },
+        label: {
+          type: DataTypes.STRING(100),
+          unique: true,
+        },
+        hashtag: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+        },
+        description: {
+          type: DataTypes.TEXT,
+        },
+        image: {
+          type: DataTypes.STRING(255),
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
+          type: DataTypes.DATE,
+        },
       },
-      label: {
-        type: DataTypes.STRING(100),
-        unique: true
+      {
+        sequelize,
+        tableName: ModelPgConstant.POLL_CATEGORY_MODEL,
       },
-      hashtag: {
-        type: DataTypes.ARRAY(DataTypes.STRING)
-      },
-      description: {
-        type: DataTypes.TEXT
-      },
-      image: {
-        type: DataTypes.STRING(255)
-      },
-      createdAt: {
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        type: DataTypes.DATE
-      },
-      deletedAt: {
-        type: DataTypes.DATE
-      }
-    }, {
-      sequelize,
-      tableName: ModelPgConstant.POLL_CATEGORY_MODEL
-    })
-    
+    )
+
     return PollCategory
   }
 }

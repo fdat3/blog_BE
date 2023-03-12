@@ -28,5 +28,5 @@ module.exports = {
     host: Variable.POSTGRES_DATABASE_URL,
     dialect: 'postgres',
     logging: false,
-  }
+  },
 }

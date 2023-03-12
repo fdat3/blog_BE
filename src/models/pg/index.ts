@@ -11,57 +11,60 @@ import { ReportUser } from './ReportUser'
 import { ReportPoll } from './ReportPoll'
 import { sequelize } from '@/config/sql.config'
 
-
 export function initModels(): any {
-  User.initModel(sequelize)
-  Poll.initModel(sequelize)
+  UserDevice.initModel(sequelize)
   PollAnswer.initModel(sequelize)
   PollAnswerChosen.initModel(sequelize)
   PollComment.initModel(sequelize)
   Mbti.initModel(sequelize)
   PollCategory.initModel(sequelize)
-  UserDevice.initModel(sequelize)
   Block.initModel(sequelize)
   ReportUser.initModel(sequelize)
   ReportPoll.initModel(sequelize)
+  User.initModel(sequelize)
+  Poll.initModel(sequelize)
 
   Mbti.hasMany(User, {
     as: 'users',
-    foreignKey: "mbti_id"
+    foreignKey: 'mbti_id',
   })
 
+  User.belongsTo(Mbti, {
+    as: 'mbti',
+    foreignKey: 'mbti_id',
+  })
 
   PollAnswer.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id'
+    foreignKey: 'poll_id',
   })
   PollAnswer.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   PollAnswer.hasMany(PollAnswerChosen, {
     as: 'chosens',
-    foreignKey: 'poll_answer_id'
+    foreignKey: 'poll_answer_id',
   })
   PollAnswerChosen.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   PollAnswerChosen.belongsTo(PollAnswer, {
     as: 'pollAnswer',
-    foreignKey: 'poll_anwser_id'
+    foreignKey: 'poll_anwser_id',
   })
   PollComment.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id'
+    foreignKey: 'poll_id',
   })
   PollComment.belongsTo(PollComment, {
     as: 'parent',
-    foreignKey: 'id'
+    foreignKey: 'id',
   })
   UserDevice.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   // Block.belongsTo(User, {
   //   as: 'user',
@@ -85,49 +88,43 @@ export function initModels(): any {
   // })
   ReportPoll.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   ReportPoll.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id'
+    foreignKey: 'poll_id',
   })
   Poll.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   Poll.belongsTo(PollCategory, {
     as: 'category',
-    foreignKey: 'category_id'
+    foreignKey: 'category_id',
   })
   Poll.belongsTo(ReportPoll, {
     as: 'report',
-    foreignKey: 'poll_id'
+    foreignKey: 'poll_id',
   })
   Poll.hasMany(PollComment, {
     as: 'comments',
-    foreignKey: 'poll_id'
+    foreignKey: 'poll_id',
   })
   Poll.hasMany(PollAnswer, {
     as: 'answer',
-    foreignKey: 'poll_id'
-  })
-  User.hasOne(Mbti, {
-    as: 'mbti',
-    sourceKey: 'mbti_id',
-    foreignKey: 'id'
+    foreignKey: 'poll_id',
   })
   User.hasMany(UserDevice, {
     as: 'devices',
     foreignKey: 'user_id',
-    hooks: false
   })
   User.hasMany(Block, {
     as: 'blockers',
-    foreignKey: 'blocked_id'
+    foreignKey: 'blocked_id',
   })
   User.hasMany(Block, {
     as: 'blockeds',
-    foreignKey: 'blocker_id'
+    foreignKey: 'blocker_id',
   })
   User.hasMany(Poll, {
     as: 'polls',
@@ -135,15 +132,15 @@ export function initModels(): any {
   })
   User.hasMany(PollAnswer, {
     as: 'pollAnswers',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   User.hasMany(PollAnswerChosen, {
     as: 'pollChoosens',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
   User.hasMany(PollComment, {
     as: 'pollComments',
-    foreignKey: 'user_id'
+    foreignKey: 'user_id',
   })
 
   return {
@@ -157,7 +154,7 @@ export function initModels(): any {
     UserDevice,
     Block,
     ReportUser,
-    ReportPoll
+    ReportPoll,
   }
 }
 
@@ -172,5 +169,5 @@ export {
   UserDevice,
   Block,
   ReportUser,
-  ReportPoll
+  ReportPoll,
 }

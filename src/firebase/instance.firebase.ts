@@ -1,10 +1,8 @@
-import { initializeApp } from 'firebase-admin/app';
+import { initializeApp } from 'firebase-admin/app'
 import FirebaseEnv from '@/env/firebase.env'
 
-
 class InstanceFirebase {
-
-  public app: any;
+  public app: any
 
   constructor() {
     this.initFirebase({
@@ -16,13 +14,14 @@ class InstanceFirebase {
       client_id: FirebaseEnv.FIREBASE_CLIENT_ID,
       auth_uri: FirebaseEnv.FIREBASE_AUTH_URI,
       token_uri: FirebaseEnv.FIREBASE_TOKEN_URI,
-      auth_provider_x509_cert_url: FirebaseEnv.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
-      client_x509_cert_url: FirebaseEnv.FIREBASE_CLIENT_X509_CERT_URL
+      auth_provider_x509_cert_url:
+        FirebaseEnv.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+      client_x509_cert_url: FirebaseEnv.FIREBASE_CLIENT_X509_CERT_URL,
     })
   }
 
-  public initFirebase({...config}: any): void {
-    this.app = initializeApp({...config})
+  public initFirebase({ ...config }: any): void {
+    this.app = initializeApp({ ...config })
   }
 }
 

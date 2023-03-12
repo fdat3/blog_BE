@@ -11,13 +11,11 @@ export interface WorkflowJob {
   completed_at: Date | string
 }
 
-
 export interface Repository {
   full_name: string
   private: boolean | string
   html_url: string
 }
-
 
 export interface TGithubhook {
   action: string
