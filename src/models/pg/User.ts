@@ -295,7 +295,7 @@ export class User extends Model<
         },
         indexes: [
           {
-            unique: false,
+            unique: true,
             fields: ['email', 'username'],
             using: 'BTREE',
           },

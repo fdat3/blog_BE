@@ -5,6 +5,16 @@ import {
   BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
+  HasManyGetAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyAddAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManyHasAssociationsMixin,
+  HasManyCountAssociationsMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
@@ -12,9 +22,11 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Poll } from './Poll'
+import type { PollCommentHashtag } from './PollCommentHashtag'
+import type { PollMention } from './PollMention'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type PollCommentAssociations = 'poll' | 'parent'
+type PollCommentAssociations = 'poll' | 'parent' | 'mentions' | 'hashtag'
 
 export class PollComment extends Model<
   InferAttributes<PollComment, { omit: PollCommentAssociations }>,
@@ -25,7 +37,6 @@ export class PollComment extends Model<
   declare userId: string | null
   declare content: string | null
   declare image: string | null
-  declare hashtag: string[] | null
   declare parentId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -43,9 +54,30 @@ export class PollComment extends Model<
   declare setParent: BelongsToSetAssociationMixin<PollComment, string>
   declare createParent: BelongsToCreateAssociationMixin<PollComment>
 
+  // PollComment hasMany PollMention (as Mentions)
+  declare mentions?: NonAttribute<PollMention[]>
+  declare getMentions: HasManyGetAssociationsMixin<PollMention>
+  declare setMentions: HasManySetAssociationsMixin<PollMention, string>
+  declare addMention: HasManyAddAssociationMixin<PollMention, string>
+  declare addMentions: HasManyAddAssociationsMixin<PollMention, string>
+  declare createMention: HasManyCreateAssociationMixin<PollMention>
+  declare removeMention: HasManyRemoveAssociationMixin<PollMention, string>
+  declare removeMentions: HasManyRemoveAssociationsMixin<PollMention, string>
+  declare hasMention: HasManyHasAssociationMixin<PollMention, string>
+  declare hasMentions: HasManyHasAssociationsMixin<PollMention, string>
+  declare countMentions: HasManyCountAssociationsMixin
+
+  // PollComment belongsTo PollCommentHashtag (as Hashtags)
+  declare hashtag?: NonAttribute<PollCommentHashtag>
+  declare getHashtag: BelongsToGetAssociationMixin<PollCommentHashtag>
+  declare setHashtag: BelongsToSetAssociationMixin<PollCommentHashtag, string>
+  declare createHashtag: BelongsToCreateAssociationMixin<PollCommentHashtag>
+
   declare static associations: {
     poll: Association<PollComment, Poll>
     parent: Association<PollComment, PollComment>
+    mentions: Association<PollComment, PollMention>
+    hashtag: Association<PollComment, PollCommentHashtag>
   }
 
   static initModel(sequelize: Sequelize): typeof PollComment {
@@ -68,9 +100,6 @@ export class PollComment extends Model<
         },
         image: {
           type: DataTypes.STRING(255),
-        },
-        hashtag: {
-          type: DataTypes.ARRAY(DataTypes.STRING),
         },
         parentId: {
           type: DataTypes.UUID,

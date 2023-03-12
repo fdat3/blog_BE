@@ -55,6 +55,7 @@ export const verifyToken = async (
         msg: ConstantMessage.TOKEN_NOT_VALID,
       })
     }
+
     req.user = user
     return next()
   })

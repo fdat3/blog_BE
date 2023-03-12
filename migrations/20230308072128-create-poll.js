@@ -30,10 +30,6 @@ module.exports = {
         type: DataTypes.STRING(200),
         field: 'image'
       },
-      hashtag: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        field: 'hashtag'
-      },
       canAddNewAnswer: {
         type: DataTypes.BOOLEAN,
         field: 'can_add_new_answer'

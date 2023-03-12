@@ -93,10 +93,11 @@ export const postgresTestConnectDB = async (): Promise<void> => {
 export const syncSequelize = async (): Promise<void> => {
   try {
     await sequelize.sync({
-      force: false,
-      alter: false,
+      force: true,
+      alter: true,
       logging: (sql: string) => {
-        process.env.LOGGING === 'true' && logger.http(sql)
+        // return process.env.LOGGING === 'true' && logger.http(sql)
+        logger.http(sql)
       },
     })
     logger.info('Sequelize sync has been established successfully.')

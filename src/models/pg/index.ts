@@ -9,7 +9,12 @@ import { UserDevice } from './UserDevice'
 import { Block } from './Block'
 import { ReportUser } from './ReportUser'
 import { ReportPoll } from './ReportPoll'
+import { Hashtag } from './Hashtag'
 import { sequelize } from '@/config/sql.config'
+import { PollHashtag } from '@/models/pg/PollHashtag'
+import { PollMention } from '@/models/pg/PollMention'
+import { PollCommentMention } from './PollCommentMention'
+import { PollCommentHashtag } from './PollCommentHashtag'
 
 export function initModels(): any {
   UserDevice.initModel(sequelize)
@@ -23,6 +28,11 @@ export function initModels(): any {
   ReportPoll.initModel(sequelize)
   User.initModel(sequelize)
   Poll.initModel(sequelize)
+  Hashtag.initModel(sequelize)
+  PollHashtag.initModel(sequelize)
+  PollMention.initModel(sequelize)
+  PollCommentMention.initModel(sequelize)
+  PollCommentHashtag.initModel(sequelize)
 
   Mbti.hasMany(User, {
     as: 'users',
@@ -102,8 +112,8 @@ export function initModels(): any {
     as: 'category',
     foreignKey: 'category_id',
   })
-  Poll.belongsTo(ReportPoll, {
-    as: 'report',
+  Poll.hasMany(ReportPoll, {
+    as: 'reports',
     foreignKey: 'poll_id',
   })
   Poll.hasMany(PollComment, {
@@ -142,6 +152,50 @@ export function initModels(): any {
     as: 'pollComments',
     foreignKey: 'user_id',
   })
+  Poll.hasMany(PollHashtag, {
+    as: 'poll_hashtag',
+    foreignKey: 'poll_id',
+  })
+  Hashtag.hasMany(PollHashtag, {
+    as: 'poll_hashtag',
+    foreignKey: 'hashtag_id',
+  })
+  PollHashtag.belongsTo(Poll, {
+    as: 'poll',
+    foreignKey: 'poll_id',
+  })
+  PollHashtag.belongsTo(Hashtag, {
+    as: 'hashtag',
+    foreignKey: 'hashtag_id',
+  })
+  PollMention.belongsTo(Poll, {
+    as: 'poll',
+    foreignKey: 'poll_id',
+  })
+  PollMention.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  PollCommentMention.belongsTo(PollComment, {
+    as: 'comment',
+    foreignKey: 'poll_comment_id',
+  })
+  PollCommentMention.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  PollCommentMention.belongsTo(User, {
+    as: 'mentioned',
+    foreignKey: 'mentioned_id',
+  })
+  PollCommentHashtag.belongsTo(PollComment, {
+    as: 'pollComment',
+    foreignKey: 'comment_id',
+  })
+  PollCommentHashtag.belongsTo(Hashtag, {
+    as: 'hashtag',
+    foreignKey: 'hashtag_id',
+  })
 
   return {
     User,
@@ -155,6 +209,10 @@ export function initModels(): any {
     Block,
     ReportUser,
     ReportPoll,
+    PollMention,
+    Hashtag,
+    PollCommentMention,
+    PollCommentHashtag,
   }
 }
 
@@ -170,4 +228,8 @@ export {
   Block,
   ReportUser,
   ReportPoll,
+  PollMention,
+  Hashtag,
+  PollCommentMention,
+  PollCommentHashtag,
 }

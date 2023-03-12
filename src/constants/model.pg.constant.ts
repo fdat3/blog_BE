@@ -10,6 +10,11 @@ class PgModel {
   public static readonly POLL_COMMENT: string = 'poll_comment'
   public static readonly REPORT_POLL: string = 'report_poll'
   public static readonly REPORT_USER: string = 'report_user'
+  public static readonly HASHTAG: string = 'hashtag'
+  public static readonly POLL_HASHTAG: string = 'poll_hashtag'
+  public static readonly POLL_MENTION: string = 'poll_mention'
+  public static readonly POLL_COMMENT_MENTION: string = 'poll_comment_mentions'
+  public static readonly POLL_COMMENT_HASHTAG: string = 'poll_comment_hashtag'
 }
 
 export default PgModel
