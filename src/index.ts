@@ -5,13 +5,14 @@ import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
+
 // const passport = require('passport')
 
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 import Controller from '@/interfaces/controller.interface'
 import mongoConnectDB from '@/config/db.config'
-import { postgresTestConnectDB, syncSequelize } from '@/config/sql.config'
+import { postgresTestConnectDB, sequelize, syncSequelize } from '@/config/sql.config'
 
 // variable
 import Variable from '@/env/variable.env'
@@ -31,10 +32,12 @@ import Versioning from '@/interfaces/versioning.interface'
 import { initModels } from '@/models/pg'
 
 const session = require('express-session')
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const swaggerUi = require('swagger-ui-express')
 import runAdminPage from '@/admin/.'
 import CamelCaseMiddleware from '@/middlewares/camelCase.middleware'
+import { DataTypes } from 'sequelize'
 
 class App {
   public app: Application
@@ -73,6 +76,7 @@ class App {
   }
 
   private initialiseConfig(): void {
+
     // this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(cookieParser())
@@ -85,6 +89,16 @@ class App {
     this.app.use(helmet())
     this.app.use(morgan('combined'))
     this.app.disable('x-powered-by')
+
+    sequelize.define("session", {
+      sid: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+      },
+      userId: DataTypes.STRING,
+      expires: DataTypes.DATE,
+      data: DataTypes.TEXT,
+    })
 
     // Session Config
     this.app.use(
@@ -100,6 +114,17 @@ class App {
           expires: this.SESSION_MAX_AGE,
         },
         proxy: true,
+        store: new SequelizeStore({
+          db: sequelize,
+          table: 'session',
+          extendDefaultFields: (defaults: any, session: any): any => {
+            return {
+              data: defaults.data,
+              expires: defaults.expires,
+              userId: session.userId,
+            };
+          }
+        })
       }),
     )
   }
