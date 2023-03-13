@@ -22,7 +22,10 @@ class UserRepository {
 
   public async findById(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
-    return user
+    if (user) {
+      return user.get({plain: true})
+    }
+    return null
   }
 
   public async findByUsername(username: string): Promise<Partial<User> | null> {
@@ -31,7 +34,10 @@ class UserRepository {
         username,
       },
     })
-    return user
+    if (user) {
+      return user.get({plain: true})
+    }
+    return null
   }
 
   public async findByEmail(email: string): Promise<Partial<User> | null> {
@@ -40,36 +46,52 @@ class UserRepository {
         email,
       },
     })
-    return user
+    if (user) {
+      return user.get({plain: true})
+    }
+    return null
   }
 
   public async findByPhone(phone: string): Promise<Partial<User> | null> {
     const user = await User.findOne({
       where: { phone },
     })
-    return user
+    if (user) {
+      return user.get({plain: true})
+    }
+    return null
   }
 
   public async findByIdWithPassword(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
-    return user
+    if (user) {
+      return user.get({plain: true})
+    }
+    return null
   }
 
   public async findByUsernameWithPassword(
     username: string,
   ): Promise<User | null> {
-    const user = await User.findOne({ where: { username } })
+    const user = await User.findOne({
+      where: { username },
+    })
     return user
   }
 
   public async findByEmailWithPassword(
     email: string,
   ): Promise<Partial<User> | null> {
-    const user = await User.scope('withPassword').findOne({ where: { email } })
-    if (user) {
-      return user.get({plain: true})
+    try {
+      const user = await User.scope('withPassword').findOne({ where: { email } })
+      if (user) {
+        return user.get({plain: true})
+      }
+      return null
+    } catch (err) {
+      logger.error(err)
+      return null
     }
-    return null
   }
 
   public async findByPhoneWithPassword(

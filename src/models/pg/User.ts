@@ -310,11 +310,15 @@ export class User extends Model<
         tableName: ModelPgConstant.USER_MODEL,
         defaultScope: {
           attributes: {
-            exclude: ['password', 'mbti_id'],
+            exclude: ['password', 'mbti_id', 'blocked_id' ],
           },
         },
         scopes: {
-          withPassword: {},
+          withPassword: {
+            attributes: {
+              exclude: ['mbti_id', 'blocked_id' ],
+            },
+          },
         },
         hooks: {
           beforeCreate(attributes: User): HookReturn {
