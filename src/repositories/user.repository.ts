@@ -23,7 +23,7 @@ class UserRepository {
   public async findById(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     if (user) {
-      return user.get({plain: true})
+      return user.get({ plain: true })
     }
     return null
   }
@@ -35,7 +35,7 @@ class UserRepository {
       },
     })
     if (user) {
-      return user.get({plain: true})
+      return user.get({ plain: true })
     }
     return null
   }
@@ -47,7 +47,7 @@ class UserRepository {
       },
     })
     if (user) {
-      return user.get({plain: true})
+      return user.get({ plain: true })
     }
     return null
   }
@@ -57,7 +57,7 @@ class UserRepository {
       where: { phone },
     })
     if (user) {
-      return user.get({plain: true})
+      return user.get({ plain: true })
     }
     return null
   }
@@ -65,7 +65,7 @@ class UserRepository {
   public async findByIdWithPassword(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     if (user) {
-      return user.get({plain: true})
+      return user.get({ plain: true })
     }
     return null
   }
@@ -83,9 +83,11 @@ class UserRepository {
     email: string,
   ): Promise<Partial<User> | null> {
     try {
-      const user = await User.scope('withPassword').findOne({ where: { email } })
+      const user = await User.scope('withPassword').findOne({
+        where: { email },
+      })
       if (user) {
-        return user.get({plain: true})
+        return user.get({ plain: true })
       }
       return null
     } catch (err) {
