@@ -3,17 +3,14 @@
 import { User } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 import logger from '@/utils/logger.util'
-import mbtiRepository from '@/repositories/mbti.repository'
 
 class UserRepository {
   public model
-  private mbtiRepository
   constructor() {
     this.model = User
-    this.mbtiRepository = new mbtiRepository()
   }
 
-  public async findAll(): Promise<User[]> {
+  public async findAll(): Promise<Partial<User[]>> {
     try {
       const users = await this.model.findAll({})
       return users
@@ -23,12 +20,12 @@ class UserRepository {
     }
   }
 
-  public async findById(id: string): Promise<User | null> {
+  public async findById(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     return user
   }
 
-  public async findByUsername(username: string): Promise<User | null> {
+  public async findByUsername(username: string): Promise<Partial<User> | null> {
     const user = await User.findOne({
       where: {
         username,
@@ -37,7 +34,7 @@ class UserRepository {
     return user
   }
 
-  public async findByEmail(email: string): Promise<User | null> {
+  public async findByEmail(email: string): Promise<Partial<User> | null> {
     const user = await User.findOne({
       where: {
         email,
@@ -46,14 +43,14 @@ class UserRepository {
     return user
   }
 
-  public async findByPhone(phone: string): Promise<User | null> {
+  public async findByPhone(phone: string): Promise<Partial<User> | null> {
     const user = await User.findOne({
       where: { phone },
     })
     return user
   }
 
-  public async findByIdWithPassword(id: string): Promise<User | null> {
+  public async findByIdWithPassword(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     return user
   }
@@ -65,20 +62,24 @@ class UserRepository {
     return user
   }
 
-  public async findByEmailWithPassword(email: string): Promise<User | null> {
+  public async findByEmailWithPassword(
+    email: string,
+  ): Promise<Partial<User> | null> {
     const user = await User.scope('withPassword').findOne({ where: { email } })
     return user
   }
 
-  public async findByPhoneWithPassword(phone: string): Promise<User | null> {
+  public async findByPhoneWithPassword(
+    phone: string,
+  ): Promise<Partial<User> | null> {
     const user = await User.findOne({ where: { phone } })
     return user
   }
 
-  public async createUser(user: any): Promise<User | null> {
+  public async createUser(user: any): Promise<Partial<User> | null> {
     try {
-      const result = await sequelize.transaction(async (transaction) => {
-        const newUser = await User.create(
+      const result: User = await sequelize.transaction(async (transaction) => {
+        const newUser: User = await User.create(
           {
             ...user,
           },
@@ -88,10 +89,7 @@ class UserRepository {
         )
         return newUser
       })
-
-      logger.info({ result })
-
-      return result
+      return result.get({ plain: true })
     } catch (e) {
       logger.error(e)
       return null
@@ -101,7 +99,7 @@ class UserRepository {
   public async updateUsername(
     id: string,
     username: string,
-  ): Promise<User | null> {
+  ): Promise<Partial<User> | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
         await User.update(
@@ -116,14 +114,19 @@ class UserRepository {
           },
         )
 
-        return await User.findByPk(id)
+        return await User.findByPk(id, {
+          plain: true,
+        })
       })
     } catch (e) {
       return null
     }
   }
 
-  public async updateName(id: string, fullname: string): Promise<User | null> {
+  public async updateName(
+    id: string,
+    fullname: string,
+  ): Promise<Partial<User> | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
         await User.update(
@@ -145,7 +148,10 @@ class UserRepository {
     }
   }
 
-  public async updateEmail(id: string, email: string): Promise<User | null> {
+  public async updateEmail(
+    id: string,
+    email: string,
+  ): Promise<Partial<User> | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
         await User.update(
@@ -170,7 +176,7 @@ class UserRepository {
   public async updatePassword(
     id: string,
     password: string,
-  ): Promise<User | null> {
+  ): Promise<Partial<User> | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
         await User.update(
@@ -192,7 +198,10 @@ class UserRepository {
     }
   }
 
-  public async updatePhone(id: string, phone: string): Promise<User | null> {
+  public async updatePhone(
+    id: string,
+    phone: string,
+  ): Promise<Partial<User> | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
         await User.update(
@@ -214,18 +223,18 @@ class UserRepository {
     }
   }
 
-  public async deleteUser(id: string): Promise<User | null> {
+  public async deleteUser(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     user?.destroy()
     return user
   }
 
-  public async getUsersStats(): Promise<User[] | null> {
+  public async getUsersStats(): Promise<Partial<User[]> | null> {
     const users = await User.findAll()
     return users
   }
 
-  public async updateAny(data: Partial<User>): Promise<User | null> {
+  public async updateAny(data: Partial<User>): Promise<Partial<User> | null> {
     const { id, ...body } = data
     const user = await User.findOne({
       where: {
@@ -242,7 +251,7 @@ class UserRepository {
     }
     try {
       return sequelize.transaction(
-        async (transaction): Promise<User | null> => {
+        async (transaction): Promise<Partial<User> | null> => {
           if (body?.mbtiId) {
             await user.setMbti(body.mbtiId, {
               transaction,

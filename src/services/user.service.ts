@@ -88,7 +88,7 @@ class UserService {
     return usersStats
   }
 
-  public async updateAny(data: User): Promise<User | null> {
+  public async updateAny(data: User): Promise<Partial<User> | null> {
     const result = await this.userRepository.updateAny(data)
     return result
   }

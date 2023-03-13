@@ -223,7 +223,7 @@ export class User extends Model<
     pollAnswers: Association<User, PollAnswer>
     pollChosens: Association<User, PollAnswerChosen>
     pollComments: Association<User, PollComment>
-    reports: Association<User, ReportUser>,
+    reports: Association<User, ReportUser>
     isReporteds: Association<User, ReportUser>
   }
 

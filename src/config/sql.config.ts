@@ -2,6 +2,7 @@ import { Sequelize, UpdateOptions } from 'sequelize'
 import VariableEnv from '@/env/variable.env'
 import logger from '@/utils/logger.util'
 import * as process from 'process'
+
 const sequelizeTransforms = require('sequelize-transforms')
 
 const {
@@ -96,8 +97,7 @@ export const syncSequelize = async (): Promise<void> => {
       force: false,
       alter: true,
       logging: (sql: string) => {
-        // return process.env.LOGGING === 'true' && logger.http(sql)
-        logger.http(sql)
+        process.env.LOGGING === 'true' && logger.http(sql)
       },
     })
     logger.info('Sequelize sync has been established successfully.')
