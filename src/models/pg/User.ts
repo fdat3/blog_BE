@@ -23,11 +23,11 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize'
-import type { Block } from './Block'
 import type { Mbti } from './Mbti'
 import type { Poll } from './Poll'
 import type { PollAnswer } from './PollAnswer'
 import type { PollAnswerChosen } from './PollAnswerChosen'
+import type { ReportUser } from './ReportUser'
 import type { PollComment } from './PollComment'
 import type { UserDevice } from './UserDevice'
 import ModelPgConstant from '@/constants/model.pg.constant'
@@ -44,6 +44,8 @@ type UserAssociations =
   | 'pollAnswers'
   | 'pollChosens'
   | 'pollComments'
+  | 'reports'
+  | 'isReporteds'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -185,16 +187,44 @@ export class User extends Model<
   declare hasPollComments: HasManyHasAssociationsMixin<PollComment, string>
   declare countPollComments: HasManyCountAssociationsMixin
 
+  // User hasMany ReportUser (as Reports)
+  declare reports?: NonAttribute<ReportUser[]>
+  declare getReports: HasManyGetAssociationsMixin<ReportUser>
+  declare setReports: HasManySetAssociationsMixin<ReportUser, string>
+  declare addReport: HasManyAddAssociationMixin<ReportUser, string>
+  declare addReports: HasManyAddAssociationsMixin<ReportUser, string>
+  declare createReport: HasManyCreateAssociationMixin<ReportUser>
+  declare removeReport: HasManyRemoveAssociationMixin<ReportUser, string>
+  declare removeReports: HasManyRemoveAssociationsMixin<ReportUser, string>
+  declare hasReport: HasManyHasAssociationMixin<ReportUser, string>
+  declare hasReports: HasManyHasAssociationsMixin<ReportUser, string>
+  declare countReports: HasManyCountAssociationsMixin
+
+  // User hasMany ReportUser (as IsReported)
+  declare isReporteds?: NonAttribute<ReportUser[]>
+  declare getIsReporteds: HasManyGetAssociationsMixin<ReportUser>
+  declare setIsReporteds: HasManySetAssociationsMixin<ReportUser, string>
+  declare addIsReported: HasManyAddAssociationMixin<ReportUser, string>
+  declare addIsReporteds: HasManyAddAssociationsMixin<ReportUser, string>
+  declare createIsReported: HasManyCreateAssociationMixin<ReportUser>
+  declare removeIsReported: HasManyRemoveAssociationMixin<ReportUser, string>
+  declare removeIsReporteds: HasManyRemoveAssociationsMixin<ReportUser, string>
+  declare hasIsReported: HasManyHasAssociationMixin<ReportUser, string>
+  declare hasIsReporteds: HasManyHasAssociationsMixin<ReportUser, string>
+  declare countIsReporteds: HasManyCountAssociationsMixin
+
   declare static associations: {
     ref: Association<User, User>
     mbti: Association<User, Mbti>
     devices: Association<User, UserDevice>
-    blockers: Association<User, Block>
-    blockeds: Association<User, Block>
+    // blockers: Association<User, Block>
+    // blockeds: Association<User, Block>
     polls: Association<User, Poll>
     pollAnswers: Association<User, PollAnswer>
     pollChosens: Association<User, PollAnswerChosen>
     pollComments: Association<User, PollComment>
+    reports: Association<User, ReportUser>,
+    isReporteds: Association<User, ReportUser>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

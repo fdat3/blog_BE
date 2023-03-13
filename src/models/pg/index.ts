@@ -76,26 +76,26 @@ export function initModels(): any {
     as: 'user',
     foreignKey: 'user_id',
   })
-  // Block.belongsTo(User, {
-  //   as: 'user',
-  //   foreignKey: 'blocker_id',
-  //   constraints: false
-  // })
-  // Block.hasOne(User, {
-  //   as: 'blocked',
-  //   foreignKey: 'blocked_id',
-  //   constraints: false
-  // })
-  // ReportUser.belongsTo(User, {
-  //   as: 'user',
-  //   foreignKey: 'reporter_id',
-  //   constraints: false
-  // })
-  // ReportUser.hasOne(User, {
-  //   as: 'reported',
-  //   foreignKey: 'reported_id',
-  //   constraints: false
-  // })
+  Block.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'blocker_id',
+    constraints: false,
+  })
+  Block.hasOne(User, {
+    as: 'blocked',
+    foreignKey: 'blocked_id',
+    constraints: false,
+  })
+  ReportUser.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'reporter_id',
+    constraints: false,
+  })
+  ReportUser.belongsTo(User, {
+    as: 'reported',
+    foreignKey: 'reported_id',
+    constraints: false,
+  })
   ReportPoll.belongsTo(User, {
     as: 'user',
     foreignKey: 'user_id',
@@ -196,7 +196,14 @@ export function initModels(): any {
     as: 'hashtag',
     foreignKey: 'hashtag_id',
   })
-
+  User.hasMany(ReportUser, {
+    as: 'reports',
+    foreignKey: 'user_id',
+  })
+  User.hasMany(ReportUser, {
+    as: 'isReporteds',
+    foreignKey: 'reported_id',
+  })
   return {
     User,
     Poll,
