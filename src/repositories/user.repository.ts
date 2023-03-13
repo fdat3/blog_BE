@@ -66,7 +66,10 @@ class UserRepository {
     email: string,
   ): Promise<Partial<User> | null> {
     const user = await User.scope('withPassword').findOne({ where: { email } })
-    return user
+    if (user) {
+      return user.get({plain: true})
+    }
+    return null
   }
 
   public async findByPhoneWithPassword(
