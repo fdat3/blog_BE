@@ -103,3 +103,5 @@ setTimeout(async () => {
   await socketServer.initSocketServer()
   console.log(`Socket server run on ${SocketServer.SOCKET_PORT}`)
 }, 0)
+
+// export {app}

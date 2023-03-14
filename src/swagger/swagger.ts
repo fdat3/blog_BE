@@ -25,16 +25,13 @@ const swaggerDefinition = {
   definitions: {}, // by default: empty object (Swagger 2.0)
   components: {}, // by default: empty object (OpenAPI 3.x)
 }
-const endpointsFiles: string[] = [
-  'build/controllers/auth.controller.js',
-  'build/controllers/user.controller.js',
-]
+const endpointsFiles: string[] = ['build/index.js']
 
 // const routers = []
 // console.log({endpointsFiles})
 const options = {
   swaggerDefinition,
-  apis: ['build/controllers/*.js'],
+  apis: ['build/bin/www'],
 }
 const swaggerSpec = swaggerJSDocs(options)
 

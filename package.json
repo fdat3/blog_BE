@@ -6,7 +6,7 @@
   "scripts": {
     "start": "yarn swagger_auto && node build/bin/www.js",
     "clean": "rm -rf build",
-    "build": "yarn build:compile && yarn build:types && yarn swagger_auto",
+    "build": "yarn clean && yarn build:compile && yarn build:types && yarn swagger_auto",
     "build:compile": "npx babel src --extensions .ts --out-dir build --source-maps",
     "build:types": "tsc",
     "dev": "yarn swagger_auto && concurrently yarn:dev:* --kill-others \"nodemon --exec node build/bin/www.js\"",
@@ -19,7 +19,8 @@
     "prepare": "husky install",
     "swagger_auto": "node build/swagger/swagger.js",
     "new_migrate": "npx sequelize-cli migration:generate",
-    "run_migrate": "npx sequelize-cli db:migrate"
+    "run_migrate": "npx sequelize-cli db:migrate",
+    "swagger": "tsoa spec"
   },
   "keywords": [],
   "author": "",
@@ -87,6 +88,7 @@
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "4.6.2",
     "tslib": "2.5.0",
+    "tsoa": "5.1.1",
     "uuid": "9.0.0",
     "winston": "3.8.2"
   },

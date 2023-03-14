@@ -34,11 +34,14 @@ const runAdminPage = (app: Application, PORT: number): void => {
   const admin = new AdminJS({
     resources: [
       Models.User.initModel(sequelize),
-      Models.Poll.initModel(sequelize),
+      // Models.Poll.initModel(sequelize),
       {
-        resource: Models.PollComment.initModel(sequelize),
+        resource: Models.Poll.initModel(sequelize),
         options: {
-          properties: {},
+          navigation: {
+            name: 'Users',
+            icon: 'User',
+          },
         },
       },
       // Models.PollAnswer.initModel(sequelize),
