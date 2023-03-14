@@ -13,18 +13,17 @@ import {
 } from 'sequelize'
 import type { PollAnswer } from './PollAnswer'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
-type PollAnswerChoosenAssociations = 'user' | 'pollAnswer'
+type PollAnswerChosenAssociations = 'user' | 'pollAnswer'
 
 export class PollAnswerChosen extends Model<
-  InferAttributes<PollAnswerChosen, { omit: PollAnswerChoosenAssociations }>,
+  InferAttributes<PollAnswerChosen, { omit: PollAnswerChosenAssociations }>,
   InferCreationAttributes<
     PollAnswerChosen,
-    { omit: PollAnswerChoosenAssociations }
+    { omit: PollAnswerChosenAssociations }
   >
 > {
-  declare id: CreationOptional<uuid>
+  declare id: CreationOptional<string>
   declare pollAnswerId: string | null
   declare userId: string | null
   declare createdAt: CreationOptional<Date>
@@ -53,14 +52,15 @@ export class PollAnswerChosen extends Model<
         id: {
           type: DataTypes.UUID,
           primaryKey: true,
-          allowNull: false,
           defaultValue: DataTypes.UUIDV4,
         },
         pollAnswerId: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
         },
         userId: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -71,7 +71,6 @@ export class PollAnswerChosen extends Model<
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL_ANSWER_CHOSEN,
       },
     )
 

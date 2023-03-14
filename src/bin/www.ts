@@ -14,7 +14,6 @@ import logger from '@/utils/logger.util'
 // controllers
 import AuthController from '@/controllers/auth.controller'
 import UserController from '@/controllers/user.controller'
-import MbtiController from '@/controllers/mbti.controller'
 // import GithubController from '@/controllers/github.controller'
 import dotenv from 'dotenv'
 import * as process from 'process'
@@ -29,7 +28,7 @@ logger.warn(
 )
 
 const { app } = new App({
-  v1: [new AuthController(), new UserController(), new MbtiController()],
+  v1: [new AuthController(), new UserController()],
 })
 
 /**

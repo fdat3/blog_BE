@@ -13,7 +13,6 @@ import {
 } from 'sequelize'
 import type { PollComment } from './PollComment'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCommentMentionAssociations = 'comment' | 'user' | 'mentioned'
 
@@ -30,7 +29,6 @@ export class PollCommentMention extends Model<
   declare pollCommentId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // PollCommentMention belongsTo PollComment (as Comment)
   declare comment?: NonAttribute<PollComment>
@@ -79,13 +77,9 @@ export class PollCommentMention extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL_COMMENT_MENTION,
       },
     )
 

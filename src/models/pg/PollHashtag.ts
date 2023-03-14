@@ -13,7 +13,6 @@ import {
 } from 'sequelize'
 import type { Hashtag } from './Hashtag'
 import type { Poll } from './Poll'
-import modelPgConstant from '@/constants/model.pg.constant'
 
 type PollHashtagAssociations = 'poll' | 'hashtag'
 
@@ -26,7 +25,6 @@ export class PollHashtag extends Model<
   declare hashtagId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // PollHashtag belongsTo Poll (as Poll)
   declare poll?: NonAttribute<Poll>
@@ -65,13 +63,9 @@ export class PollHashtag extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: modelPgConstant.POLL_HASHTAG,
       },
     )
 

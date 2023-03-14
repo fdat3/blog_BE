@@ -13,7 +13,6 @@ import {
 } from 'sequelize'
 import type { Poll } from './Poll'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type ReportPollAssociations = 'user' | 'poll'
 
@@ -21,13 +20,12 @@ export class ReportPoll extends Model<
   InferAttributes<ReportPoll, { omit: ReportPollAssociations }>,
   InferCreationAttributes<ReportPoll, { omit: ReportPollAssociations }>
 > {
-  declare id: CreationOptional<uuid>
+  declare id: CreationOptional<string>
   declare pollId: string | null
   declare userId: string | null
   declare reason: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // ReportPoll belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -51,8 +49,8 @@ export class ReportPoll extends Model<
       {
         id: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
+          defaultValue: DataTypes.UUIDV4,
         },
         pollId: {
           type: DataTypes.UUID,
@@ -69,13 +67,9 @@ export class ReportPoll extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.REPORT_POLL,
       },
     )
 

@@ -24,19 +24,19 @@ import {
 import type { Poll } from './Poll'
 import type { PollAnswerChosen } from './PollAnswerChosen'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
-type PollAnswerAssociations = 'poll' | 'user' | 'chosens'
+type PollAnswerAssociations = 'poll' | 'user' | 'choosens'
 
 export class PollAnswer extends Model<
   InferAttributes<PollAnswer, { omit: PollAnswerAssociations }>,
   InferCreationAttributes<PollAnswer, { omit: PollAnswerAssociations }>
 > {
-  declare id: CreationOptional<uuid>
+  declare id: CreationOptional<string>
   declare pollId: string | null
   declare userId: string | null
   declare content: string | null
   declare image: string | null
+  declare coord: Buffer | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
@@ -52,26 +52,26 @@ export class PollAnswer extends Model<
   declare setUser: BelongsToSetAssociationMixin<User, string>
   declare createUser: BelongsToCreateAssociationMixin<User>
 
-  // PollAnswer hasMany PollAnswerChosen (as Chosen)
-  declare chosens?: NonAttribute<PollAnswerChosen[]>
-  declare getChosens: HasManyGetAssociationsMixin<PollAnswerChosen>
-  declare setChosens: HasManySetAssociationsMixin<PollAnswerChosen, number>
-  declare addChosen: HasManyAddAssociationMixin<PollAnswerChosen, number>
-  declare addChosens: HasManyAddAssociationsMixin<PollAnswerChosen, number>
-  declare createChosen: HasManyCreateAssociationMixin<PollAnswerChosen>
-  declare removeChosen: HasManyRemoveAssociationMixin<PollAnswerChosen, number>
-  declare removeChosens: HasManyRemoveAssociationsMixin<
+  // PollAnswer hasMany PollAnswerChosen (as Choosen)
+  declare choosens?: NonAttribute<PollAnswerChosen[]>
+  declare getChoosens: HasManyGetAssociationsMixin<PollAnswerChosen>
+  declare setChoosens: HasManySetAssociationsMixin<PollAnswerChosen, string>
+  declare addChoosen: HasManyAddAssociationMixin<PollAnswerChosen, string>
+  declare addChoosens: HasManyAddAssociationsMixin<PollAnswerChosen, string>
+  declare createChoosen: HasManyCreateAssociationMixin<PollAnswerChosen>
+  declare removeChoosen: HasManyRemoveAssociationMixin<PollAnswerChosen, string>
+  declare removeChoosens: HasManyRemoveAssociationsMixin<
     PollAnswerChosen,
-    number
+    string
   >
-  declare hasChosen: HasManyHasAssociationMixin<PollAnswerChosen, number>
-  declare hasChosens: HasManyHasAssociationsMixin<PollAnswerChosen, number>
-  declare countChosens: HasManyCountAssociationsMixin
+  declare hasChoosen: HasManyHasAssociationMixin<PollAnswerChosen, string>
+  declare hasChoosens: HasManyHasAssociationsMixin<PollAnswerChosen, string>
+  declare countChoosens: HasManyCountAssociationsMixin
 
   declare static associations: {
     poll: Association<PollAnswer, Poll>
     user: Association<PollAnswer, User>
-    chosens: Association<PollAnswer, PollAnswerChosen>
+    choosens: Association<PollAnswer, PollAnswerChosen>
   }
 
   static initModel(sequelize: Sequelize): typeof PollAnswer {
@@ -97,6 +97,9 @@ export class PollAnswer extends Model<
         image: {
           type: DataTypes.STRING(255),
         },
+        coord: {
+          type: DataTypes.BLOB,
+        },
         createdAt: {
           type: DataTypes.DATE,
         },
@@ -106,7 +109,6 @@ export class PollAnswer extends Model<
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL_ANSWER,
       },
     )
 

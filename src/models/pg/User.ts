@@ -1,130 +1,127 @@
 import {
   Association,
-  BelongsToGetAssociationMixin,
-  BelongsToSetAssociationMixin,
   CreationOptional,
   DataTypes,
+  HasManyGetAssociationsMixin,
+  HasManySetAssociationsMixin,
   HasManyAddAssociationMixin,
   HasManyAddAssociationsMixin,
-  HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
-  HasManyGetAssociationsMixin,
-  HasManyHasAssociationMixin,
-  HasManyHasAssociationsMixin,
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
-  HasManySetAssociationsMixin,
-  HasOneCreateAssociationMixin,
+  HasManyHasAssociationMixin,
+  HasManyHasAssociationsMixin,
+  HasManyCountAssociationsMixin,
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
-  InferAttributes,
+  HasOneCreateAssociationMixin,
   InferCreationAttributes,
+  InferAttributes,
   Model,
   NonAttribute,
   Sequelize,
 } from 'sequelize'
-import type { Mbti } from './Mbti'
+import type { Block } from './Block'
+import type { Group } from './Group'
+import type { GroupMember } from './GroupMember'
 import type { Poll } from './Poll'
 import type { PollAnswer } from './PollAnswer'
 import type { PollAnswerChosen } from './PollAnswerChosen'
-import type { ReportUser } from './ReportUser'
 import type { PollComment } from './PollComment'
+import type { ReportUser } from './ReportUser'
 import type { UserDevice } from './UserDevice'
-import ModelPgConstant from '@/constants/model.pg.constant'
-import { HookReturn } from 'sequelize/types/hooks'
-import UserUtils from '@/utils/user.utils'
+import type { UserSetting } from './UserSetting'
 
 type UserAssociations =
-  | 'ref'
-  | 'mbti'
   | 'devices'
-  // 'blockers' |
-  // 'blockeds' |
+  | 'blockers'
+  | 'blockeds'
   | 'polls'
   | 'pollAnswers'
-  | 'pollChosens'
+  | 'pollChoosens'
   | 'pollComments'
   | 'reports'
   | 'isReporteds'
+  | 'myGroups'
+  | 'members'
+  | 'setting'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
   InferCreationAttributes<User, { omit: UserAssociations }>
 > {
-  declare id: CreationOptional<uuid>
+  declare id: CreationOptional<string>
   declare fullname: string
-  declare password: CreationOptional<string>
-  declare dob: CreationOptional<Date>
-  declare username: CreationOptional<string>
-  declare email: CreationOptional<string>
-  declare phone: CreationOptional<string>
-  declare inviteCode: CreationOptional<string>
-  declare refUser: CreationOptional<uuid>
+  declare password: string
+  declare dob: Date | null
+  declare username: string
+  declare email: string | null
+  declare phone: string | null
+  declare inviteCode: string | null
+  declare refCode: string | null
   declare gender: string | null
   declare instagram: string | null
-  declare mbtiId: CreationOptional<string>
-  declare isAdmin: CreationOptional<boolean>
+  declare mbti:
+    | 'INTJ'
+    | 'INTP'
+    | 'ENTJ'
+    | 'ENTP'
+    | 'INFJ'
+    | 'INFP'
+    | 'ENFJ'
+    | 'ENFP'
+    | 'ISTJ'
+    | 'ISFJ'
+    | 'ESTI'
+    | 'ESFJ'
+    | 'ISTP'
+    | 'ISFP'
+    | 'ESTP'
+    | 'ESFP'
+    | null
+  declare identify: string | null
+  declare isAdmin: boolean
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
-
-  // User hasOne Reference User (as refUser)
-  declare ref?: NonAttribute<User>
-  declare getRefUser: HasOneGetAssociationMixin<User>
-  declare setRefUser: CreationOptional<HasOneSetAssociationMixin<User, uuid>>
-  declare createRefUser: CreationOptional<HasOneCreateAssociationMixin<User>>
-
-  // User belongsTo Mbti (as mbti)
-  declare mbti: NonAttribute<Mbti>
-  declare getMbti: BelongsToGetAssociationMixin<Mbti>
-  declare setMbti: BelongsToSetAssociationMixin<Mbti, uuid>
 
   // User hasMany UserDevice (as Devices)
   declare devices?: NonAttribute<UserDevice[]>
   declare getDevices: HasManyGetAssociationsMixin<UserDevice>
-  declare setDevices: CreationOptional<
-    HasManySetAssociationsMixin<UserDevice, uuid>
-  >
-  declare addDevice: CreationOptional<
-    HasManyAddAssociationMixin<UserDevice, UserDevice>
-  >
-  declare addDevices: CreationOptional<
-    HasManyAddAssociationsMixin<UserDevice, UserDevice>
-  >
-  declare createDevice: CreationOptional<
-    HasManyCreateAssociationMixin<UserDevice>
-  >
-  declare removeDevice: HasManyRemoveAssociationMixin<UserDevice, number>
-  declare removeDevices: HasManyRemoveAssociationsMixin<UserDevice, number>
-  declare hasDevice: HasManyHasAssociationMixin<UserDevice, number>
-  declare hasDevices: HasManyHasAssociationsMixin<UserDevice, number>
+  declare setDevices: HasManySetAssociationsMixin<UserDevice, string>
+  declare addDevice: HasManyAddAssociationMixin<UserDevice, string>
+  declare addDevices: HasManyAddAssociationsMixin<UserDevice, string>
+  declare createDevice: HasManyCreateAssociationMixin<UserDevice>
+  declare removeDevice: HasManyRemoveAssociationMixin<UserDevice, string>
+  declare removeDevices: HasManyRemoveAssociationsMixin<UserDevice, string>
+  declare hasDevice: HasManyHasAssociationMixin<UserDevice, string>
+  declare hasDevices: HasManyHasAssociationsMixin<UserDevice, string>
   declare countDevices: HasManyCountAssociationsMixin
 
   // User hasMany Block (as Blockers)
-  // declare blockers?: NonAttribute<Block[]>
-  // declare getBlockers: HasManyGetAssociationsMixin<Block>
-  // declare setBlockers: HasManySetAssociationsMixin<Block, string>
-  // declare addBlocker: HasManyAddAssociationMixin<Block, string>
-  // declare addBlockers: HasManyAddAssociationsMixin<Block, string>
-  // declare createBlocker: HasManyCreateAssociationMixin<Block>
-  // declare removeBlocker: HasManyRemoveAssociationMixin<Block, string>
-  // declare removeBlockers: HasManyRemoveAssociationsMixin<Block, string>
-  // declare hasBlocker: HasManyHasAssociationMixin<Block, string>
-  // declare hasBlockers: HasManyHasAssociationsMixin<Block, string>
-  // declare countBlockers: HasManyCountAssociationsMixin
+  declare blockers?: NonAttribute<Block[]>
+  declare getBlockers: HasManyGetAssociationsMixin<Block>
+  declare setBlockers: HasManySetAssociationsMixin<Block, string>
+  declare addBlocker: HasManyAddAssociationMixin<Block, string>
+  declare addBlockers: HasManyAddAssociationsMixin<Block, string>
+  declare createBlocker: HasManyCreateAssociationMixin<Block>
+  declare removeBlocker: HasManyRemoveAssociationMixin<Block, string>
+  declare removeBlockers: HasManyRemoveAssociationsMixin<Block, string>
+  declare hasBlocker: HasManyHasAssociationMixin<Block, string>
+  declare hasBlockers: HasManyHasAssociationsMixin<Block, string>
+  declare countBlockers: HasManyCountAssociationsMixin
 
   // User hasMany Block (as Blocked)
-  // declare blockeds?: NonAttribute<Block[]>
-  // declare getBlockeds: HasManyGetAssociationsMixin<Block>
-  // declare setBlockeds: HasManySetAssociationsMixin<Block, string>
-  // declare addBlocked: HasManyAddAssociationMixin<Block, string>
-  // declare addBlockeds: HasManyAddAssociationsMixin<Block, string>
-  // declare createBlocked: HasManyCreateAssociationMixin<Block>
-  // declare removeBlocked: HasManyRemoveAssociationMixin<Block, string>
-  // declare removeBlockeds: HasManyRemoveAssociationsMixin<Block, string>
-  // declare hasBlocked: HasManyHasAssociationMixin<Block, string>
-  // declare hasBlockeds: HasManyHasAssociationsMixin<Block, string>
-  // declare countBlockeds: HasManyCountAssociationsMixin
+  declare blockeds?: NonAttribute<Block[]>
+  declare getBlockeds: HasManyGetAssociationsMixin<Block>
+  declare setBlockeds: HasManySetAssociationsMixin<Block, string>
+  declare addBlocked: HasManyAddAssociationMixin<Block, string>
+  declare addBlockeds: HasManyAddAssociationsMixin<Block, string>
+  declare createBlocked: HasManyCreateAssociationMixin<Block>
+  declare removeBlocked: HasManyRemoveAssociationMixin<Block, string>
+  declare removeBlockeds: HasManyRemoveAssociationsMixin<Block, string>
+  declare hasBlocked: HasManyHasAssociationMixin<Block, string>
+  declare hasBlockeds: HasManyHasAssociationsMixin<Block, string>
+  declare countBlockeds: HasManyCountAssociationsMixin
 
   // User hasMany Poll (as Polls)
   declare polls?: NonAttribute<Poll[]>
@@ -152,24 +149,24 @@ export class User extends Model<
   declare hasPollAnswers: HasManyHasAssociationsMixin<PollAnswer, string>
   declare countPollAnswers: HasManyCountAssociationsMixin
 
-  // User hasMany PollAnswerChosen (as PollChosen)
-  declare pollChosens?: NonAttribute<PollAnswerChosen[]>
-  declare getPollChosens: HasManyGetAssociationsMixin<PollAnswerChosen>
-  declare setPollChosens: HasManySetAssociationsMixin<PollAnswerChosen, number>
-  declare addPollChosen: HasManyAddAssociationMixin<PollAnswerChosen, number>
-  declare addPollChosens: HasManyAddAssociationsMixin<PollAnswerChosen, number>
-  declare createPollChosen: HasManyCreateAssociationMixin<PollAnswerChosen>
-  declare removePollChosen: HasManyRemoveAssociationMixin<
+  // User hasMany PollAnswerChosen (as PollChoosen)
+  declare pollChoosens?: NonAttribute<PollAnswerChosen[]>
+  declare getPollChoosens: HasManyGetAssociationsMixin<PollAnswerChosen>
+  declare setPollChoosens: HasManySetAssociationsMixin<PollAnswerChosen, string>
+  declare addPollChoosen: HasManyAddAssociationMixin<PollAnswerChosen, string>
+  declare addPollChoosens: HasManyAddAssociationsMixin<PollAnswerChosen, string>
+  declare createPollChoosen: HasManyCreateAssociationMixin<PollAnswerChosen>
+  declare removePollChoosen: HasManyRemoveAssociationMixin<
     PollAnswerChosen,
-    number
+    string
   >
-  declare removePollChosens: HasManyRemoveAssociationsMixin<
+  declare removePollChoosens: HasManyRemoveAssociationsMixin<
     PollAnswerChosen,
-    number
+    string
   >
-  declare hasPollChosen: HasManyHasAssociationMixin<PollAnswerChosen, number>
-  declare hasPollChosens: HasManyHasAssociationsMixin<PollAnswerChosen, number>
-  declare countPollChosens: HasManyCountAssociationsMixin
+  declare hasPollChoosen: HasManyHasAssociationMixin<PollAnswerChosen, string>
+  declare hasPollChoosens: HasManyHasAssociationsMixin<PollAnswerChosen, string>
+  declare countPollChoosens: HasManyCountAssociationsMixin
 
   // User hasMany PollComment (as PollComments)
   declare pollComments?: NonAttribute<PollComment[]>
@@ -213,18 +210,51 @@ export class User extends Model<
   declare hasIsReporteds: HasManyHasAssociationsMixin<ReportUser, string>
   declare countIsReporteds: HasManyCountAssociationsMixin
 
+  // User hasMany Group (as MyGroups)
+  declare myGroups?: NonAttribute<Group[]>
+  declare getMyGroups: HasManyGetAssociationsMixin<Group>
+  declare setMyGroups: HasManySetAssociationsMixin<Group, string>
+  declare addMyGroup: HasManyAddAssociationMixin<Group, string>
+  declare addMyGroups: HasManyAddAssociationsMixin<Group, string>
+  declare createMyGroup: HasManyCreateAssociationMixin<Group>
+  declare removeMyGroup: HasManyRemoveAssociationMixin<Group, string>
+  declare removeMyGroups: HasManyRemoveAssociationsMixin<Group, string>
+  declare hasMyGroup: HasManyHasAssociationMixin<Group, string>
+  declare hasMyGroups: HasManyHasAssociationsMixin<Group, string>
+  declare countMyGroups: HasManyCountAssociationsMixin
+
+  // User hasMany GroupMember (as Members)
+  declare members?: NonAttribute<GroupMember[]>
+  declare getMembers: HasManyGetAssociationsMixin<GroupMember>
+  declare setMembers: HasManySetAssociationsMixin<GroupMember, string>
+  declare addMember: HasManyAddAssociationMixin<GroupMember, string>
+  declare addMembers: HasManyAddAssociationsMixin<GroupMember, string>
+  declare createMember: HasManyCreateAssociationMixin<GroupMember>
+  declare removeMember: HasManyRemoveAssociationMixin<GroupMember, string>
+  declare removeMembers: HasManyRemoveAssociationsMixin<GroupMember, string>
+  declare hasMember: HasManyHasAssociationMixin<GroupMember, string>
+  declare hasMembers: HasManyHasAssociationsMixin<GroupMember, string>
+  declare countMembers: HasManyCountAssociationsMixin
+
+  // User hasOne UserSetting (as Settings)
+  declare setting?: NonAttribute<UserSetting>
+  declare getSetting: HasOneGetAssociationMixin<UserSetting>
+  declare setSetting: HasOneSetAssociationMixin<UserSetting, string>
+  declare createSetting: HasOneCreateAssociationMixin<UserSetting>
+
   declare static associations: {
-    ref: Association<User, User>
-    mbti: Association<User, Mbti>
     devices: Association<User, UserDevice>
-    // blockers: Association<User, Block>
-    // blockeds: Association<User, Block>
+    blockers: Association<User, Block>
+    blockeds: Association<User, Block>
     polls: Association<User, Poll>
     pollAnswers: Association<User, PollAnswer>
-    pollChosens: Association<User, PollAnswerChosen>
+    pollChoosens: Association<User, PollAnswerChosen>
     pollComments: Association<User, PollComment>
     reports: Association<User, ReportUser>
     isReporteds: Association<User, ReportUser>
+    myGroups: Association<User, Group>
+    members: Association<User, GroupMember>
+    setting: Association<User, UserSetting>
   }
 
   static initModel(sequelize: Sequelize): typeof User {
@@ -239,15 +269,11 @@ export class User extends Model<
         },
         fullname: {
           type: DataTypes.STRING(100),
-          allowNull: true,
-        },
-        email: {
-          type: DataTypes.STRING(100),
           allowNull: false,
         },
         password: {
           type: DataTypes.STRING(255),
-          allowNull: true,
+          allowNull: false,
         },
         dob: {
           type: DataTypes.DATE,
@@ -257,24 +283,22 @@ export class User extends Model<
           allowNull: false,
           unique: true,
         },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+        },
         phone: {
           type: DataTypes.STRING(15),
           unique: true,
-          allowNull: true,
         },
         inviteCode: {
           type: DataTypes.STRING(20),
           unique: true,
-          allowNull: true,
         },
-        refUser: {
-          type: DataTypes.UUID,
-          allowNull: true,
-          field: 'ref_user',
-          references: {
-            model: 'user',
-            key: 'id',
-          },
+        refCode: {
+          type: DataTypes.STRING(20),
+          unique: true,
         },
         gender: {
           type: DataTypes.STRING(10),
@@ -282,18 +306,32 @@ export class User extends Model<
         instagram: {
           type: DataTypes.STRING(100),
         },
+        mbti: {
+          type: DataTypes.ENUM(
+            'INTJ',
+            'INTP',
+            'ENTJ',
+            'ENTP',
+            'INFJ',
+            'INFP',
+            'ENFJ',
+            'ENFP',
+            'ISTJ',
+            'ISFJ',
+            'ESTI',
+            'ESFJ',
+            'ISTP',
+            'ISFP',
+            'ESTP',
+            'ESFP',
+          ),
+        },
+        identify: {
+          type: DataTypes.STRING(100),
+        },
         isAdmin: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
-        },
-        mbtiId: {
-          type: DataTypes.UUID,
-          allowNull: true,
-          field: 'mbti_id',
-          references: {
-            model: 'mbti',
-            key: 'id',
-          },
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -301,39 +339,9 @@ export class User extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.USER_MODEL,
-        defaultScope: {
-          attributes: {
-            exclude: ['password', 'mbti_id', 'blocked_id'],
-          },
-        },
-        scopes: {
-          withPassword: {
-            attributes: {
-              exclude: ['mbti_id', 'blocked_id'],
-            },
-          },
-        },
-        hooks: {
-          beforeCreate(attributes: User): HookReturn {
-            if (!attributes.inviteCode) {
-              attributes.inviteCode = UserUtils.generateInviteCode()
-            }
-          },
-        },
-        indexes: [
-          {
-            unique: true,
-            fields: ['email', 'username'],
-            using: 'BTREE',
-          },
-        ],
       },
     )
 

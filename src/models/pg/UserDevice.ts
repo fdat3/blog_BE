@@ -12,7 +12,6 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type UserDeviceAssociations = 'user'
 
@@ -20,15 +19,14 @@ export class UserDevice extends Model<
   InferAttributes<UserDevice, { omit: UserDeviceAssociations }>,
   InferCreationAttributes<UserDevice, { omit: UserDeviceAssociations }>
 > {
-  declare id: CreationOptional<uuid>
-  declare userId: uuid
-  declare fcmToken: CreationOptional<string>
-  declare deviceId: CreationOptional<string>
-  declare lastSession: CreationOptional<Date>
-  declare loginType: CreationOptional<string>
+  declare id: CreationOptional<string>
+  declare userId: string | null
+  declare fcmToken: string | null
+  declare deviceId: string | null
+  declare lastSession: Date | null
+  declare loginType: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // UserDevice belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -45,16 +43,12 @@ export class UserDevice extends Model<
       {
         id: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
-          allowNull: false,
+          defaultValue: DataTypes.UUIDV4,
         },
         userId: {
           type: DataTypes.UUID,
-          references: {
-            model: 'user',
-            key: 'id',
-          },
+          defaultValue: DataTypes.UUIDV4,
         },
         fcmToken: {
           type: DataTypes.STRING(255),
@@ -75,13 +69,9 @@ export class UserDevice extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.USER_DEVICE,
       },
     )
 

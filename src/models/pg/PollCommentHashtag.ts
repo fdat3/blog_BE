@@ -13,7 +13,6 @@ import {
 } from 'sequelize'
 import type { Hashtag } from './Hashtag'
 import type { PollComment } from './PollComment'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCommentHashtagAssociations = 'pollComment' | 'hashtag'
 
@@ -25,7 +24,7 @@ export class PollCommentHashtag extends Model<
   >
 > {
   declare id: CreationOptional<string>
-  declare commentId: string | null
+  declare pollCommentId: string | null
   declare hashtagId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -55,7 +54,7 @@ export class PollCommentHashtag extends Model<
           primaryKey: true,
           defaultValue: DataTypes.UUIDV4,
         },
-        commentId: {
+        pollCommentId: {
           type: DataTypes.UUID,
         },
         hashtagId: {
@@ -70,7 +69,6 @@ export class PollCommentHashtag extends Model<
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL_COMMENT_HASHTAG,
       },
     )
 

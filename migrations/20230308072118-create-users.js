@@ -2,7 +2,7 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('users', {
       id: {
         type: DataTypes.UUID,
         field: 'id',
@@ -14,11 +14,6 @@ module.exports = {
       fullname: {
         type: DataTypes.STRING(100),
         field: 'fullname',
-        allowNull: false
-      },
-      email: {
-        type: DataTypes.STRING(100),
-        field: 'email',
         allowNull: false
       },
       password: {
@@ -59,19 +54,25 @@ module.exports = {
         type: DataTypes.STRING(100),
         field: 'instagram'
       },
-      mbtiId: {
-        type: DataTypes.UUID,
-        field: 'mbti_id',
+      mbti: {
+        type: DataTypes.ENUM('INTJ', 'INTP', 'ENTJ', 'ENTP', 'INFJ', 'INFP', 'ENFJ', 'ENFP', 'ISTJ', 'ISFJ', 'ESTI', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP'),
+        field: 'mbti'
+      },
+      identify: {
+        type: DataTypes.STRING(100),
+        field: 'identify'
+      },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
       },
       createdAt: {
         type: DataTypes.DATE,
-        field: 'created_at',
-        defaultValue: DataTypes.NOW
+        field: 'created_at'
       },
       updatedAt: {
         type: DataTypes.DATE,
-        field: 'updated_at',
-        defaultValue: DataTypes.NOW
+        field: 'updated_at'
       },
       deletedAt: {
         type: DataTypes.DATE,
@@ -80,6 +81,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('user');
+    await queryInterface.dropTable('users');
   },
 };

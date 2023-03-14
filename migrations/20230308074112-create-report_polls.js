@@ -2,20 +2,24 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('poll_answer_chosen', {
+    await queryInterface.createTable('report_polls', {
       id: {
         type: DataTypes.UUID,
         field: 'id',
         primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: DataTypes.UUIDV4
       },
-      pollAnswerId: {
+      pollId: {
         type: DataTypes.UUID,
-        field: 'poll_answer_id',
+        field: 'poll_id'
       },
       userId: {
         type: DataTypes.UUID,
-        field: 'user_id',
+        field: 'user_id'
+      },
+      reason: {
+        type: DataTypes.STRING,
+        field: 'reason'
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -32,6 +36,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('poll_answer_chosen');
+    await queryInterface.dropTable('report_polls');
   },
 };

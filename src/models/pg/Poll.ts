@@ -21,21 +21,22 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize'
+import type { Like } from './Like'
 import type { PollCategory } from './PollCategory'
 import type { PollComment } from './PollComment'
 import type { PollHashtag } from './PollHashtag'
 import type { PollMention } from './PollMention'
 import type { ReportPoll } from './ReportPoll'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollAssociations =
   | 'user'
   | 'category'
-  | 'report'
+  | 'reports'
   | 'comments'
   | 'pollHashtags'
   | 'mentions'
+  | 'likes'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -50,9 +51,9 @@ export class Poll extends Model<
   declare canAddNewAnswer: boolean | null
   declare anonymousPoll: boolean | null
   declare viewCount: number | null
+  declare type: 'TEXT' | 'IMAGE' | 'LOCATION' | 'TRENDY_TALK' | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // Poll belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -66,11 +67,18 @@ export class Poll extends Model<
   declare setCategory: BelongsToSetAssociationMixin<PollCategory, string>
   declare createCategory: BelongsToCreateAssociationMixin<PollCategory>
 
-  // Poll belongsTo ReportPoll (as Reports)
-  declare report?: NonAttribute<ReportPoll>
-  declare getReport: BelongsToGetAssociationMixin<ReportPoll>
-  declare setReport: BelongsToSetAssociationMixin<ReportPoll, number>
-  declare createReport: BelongsToCreateAssociationMixin<ReportPoll>
+  // Poll hasMany ReportPoll (as Reports)
+  declare reports?: NonAttribute<ReportPoll[]>
+  declare getReports: HasManyGetAssociationsMixin<ReportPoll>
+  declare setReports: HasManySetAssociationsMixin<ReportPoll, string>
+  declare addReport: HasManyAddAssociationMixin<ReportPoll, string>
+  declare addReports: HasManyAddAssociationsMixin<ReportPoll, string>
+  declare createReport: HasManyCreateAssociationMixin<ReportPoll>
+  declare removeReport: HasManyRemoveAssociationMixin<ReportPoll, string>
+  declare removeReports: HasManyRemoveAssociationsMixin<ReportPoll, string>
+  declare hasReport: HasManyHasAssociationMixin<ReportPoll, string>
+  declare hasReports: HasManyHasAssociationsMixin<ReportPoll, string>
+  declare countReports: HasManyCountAssociationsMixin
 
   // Poll hasMany PollComment (as Comments)
   declare comments?: NonAttribute<PollComment[]>
@@ -114,13 +122,27 @@ export class Poll extends Model<
   declare hasMentions: HasManyHasAssociationsMixin<PollMention, string>
   declare countMentions: HasManyCountAssociationsMixin
 
+  // Poll hasMany Like (as Likes)
+  declare likes?: NonAttribute<Like[]>
+  declare getLikes: HasManyGetAssociationsMixin<Like>
+  declare setLikes: HasManySetAssociationsMixin<Like, string>
+  declare addLike: HasManyAddAssociationMixin<Like, string>
+  declare addLikes: HasManyAddAssociationsMixin<Like, string>
+  declare createLike: HasManyCreateAssociationMixin<Like>
+  declare removeLike: HasManyRemoveAssociationMixin<Like, string>
+  declare removeLikes: HasManyRemoveAssociationsMixin<Like, string>
+  declare hasLike: HasManyHasAssociationMixin<Like, string>
+  declare hasLikes: HasManyHasAssociationsMixin<Like, string>
+  declare countLikes: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
-    report: Association<Poll, ReportPoll>
+    reports: Association<Poll, ReportPoll>
     comments: Association<Poll, PollComment>
     pollHashtags: Association<Poll, PollHashtag>
     mentions: Association<Poll, PollMention>
+    likes: Association<Poll, Like>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {
@@ -151,12 +173,17 @@ export class Poll extends Model<
         },
         canAddNewAnswer: {
           type: DataTypes.BOOLEAN,
+          defaultValue: true,
         },
         anonymousPoll: {
           type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
         viewCount: {
           type: DataTypes.BIGINT,
+        },
+        type: {
+          type: DataTypes.ENUM('TEXT', 'IMAGE', 'LOCATION', 'TRENDY_TALK'),
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -164,13 +191,9 @@ export class Poll extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL,
       },
     )
 

@@ -2,17 +2,25 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('mbti', {
+    await queryInterface.createTable('report_users', {
       id: {
         type: DataTypes.UUID,
         field: 'id',
         primaryKey: true,
+        unique: true,
         defaultValue: DataTypes.UUIDV4
       },
-      label: {
-        type: DataTypes.STRING(20),
-        field: 'label',
-        unique: true
+      reporterId: {
+        type: DataTypes.UUID,
+        field: 'reporter_id'
+      },
+      reportedId: {
+        type: DataTypes.UUID,
+        field: 'reported_id'
+      },
+      reason: {
+        type: DataTypes.TEXT,
+        field: 'reason'
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -29,6 +37,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('mbti');
+    await queryInterface.dropTable('report_users');
   },
 };

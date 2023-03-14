@@ -2,16 +2,30 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('hash_tags', {
+    await queryInterface.createTable('poll_categories', {
       id: {
         type: DataTypes.UUID,
         field: 'id',
         primaryKey: true,
+        unique: true,
         defaultValue: DataTypes.UUIDV4
       },
-      name: {
-        type: DataTypes.STRING(200),
-        field: 'name'
+      label: {
+        type: DataTypes.STRING(100),
+        field: 'label',
+        unique: true
+      },
+      hashtag: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        field: 'hashtag'
+      },
+      description: {
+        type: DataTypes.TEXT,
+        field: 'description'
+      },
+      image: {
+        type: DataTypes.STRING(255),
+        field: 'image'
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -28,6 +42,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('hash_tags');
+    await queryInterface.dropTable('poll_categories');
   },
 };

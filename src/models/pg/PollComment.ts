@@ -21,12 +21,17 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize'
+import type { Like } from './Like'
 import type { Poll } from './Poll'
 import type { PollCommentHashtag } from './PollCommentHashtag'
-import type { PollMention } from './PollMention'
-import ModelPgConstant from '@/constants/model.pg.constant'
+import type { PollCommentMention } from './PollCommentMention'
 
-type PollCommentAssociations = 'poll' | 'parent' | 'mentions' | 'hashtag'
+type PollCommentAssociations =
+  | 'poll'
+  | 'parent'
+  | 'mentions'
+  | 'hashtags'
+  | 'likes'
 
 export class PollComment extends Model<
   InferAttributes<PollComment, { omit: PollCommentAssociations }>,
@@ -40,7 +45,6 @@ export class PollComment extends Model<
   declare parentId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // PollComment belongsTo Poll (as Poll)
   declare poll?: NonAttribute<Poll>
@@ -54,30 +58,63 @@ export class PollComment extends Model<
   declare setParent: BelongsToSetAssociationMixin<PollComment, string>
   declare createParent: BelongsToCreateAssociationMixin<PollComment>
 
-  // PollComment hasMany PollMention (as Mentions)
-  declare mentions?: NonAttribute<PollMention[]>
-  declare getMentions: HasManyGetAssociationsMixin<PollMention>
-  declare setMentions: HasManySetAssociationsMixin<PollMention, string>
-  declare addMention: HasManyAddAssociationMixin<PollMention, string>
-  declare addMentions: HasManyAddAssociationsMixin<PollMention, string>
-  declare createMention: HasManyCreateAssociationMixin<PollMention>
-  declare removeMention: HasManyRemoveAssociationMixin<PollMention, string>
-  declare removeMentions: HasManyRemoveAssociationsMixin<PollMention, string>
-  declare hasMention: HasManyHasAssociationMixin<PollMention, string>
-  declare hasMentions: HasManyHasAssociationsMixin<PollMention, string>
+  // PollComment hasMany PollCommentMention (as Mentions)
+  declare mentions?: NonAttribute<PollCommentMention[]>
+  declare getMentions: HasManyGetAssociationsMixin<PollCommentMention>
+  declare setMentions: HasManySetAssociationsMixin<PollCommentMention, string>
+  declare addMention: HasManyAddAssociationMixin<PollCommentMention, string>
+  declare addMentions: HasManyAddAssociationsMixin<PollCommentMention, string>
+  declare createMention: HasManyCreateAssociationMixin<PollCommentMention>
+  declare removeMention: HasManyRemoveAssociationMixin<
+    PollCommentMention,
+    string
+  >
+  declare removeMentions: HasManyRemoveAssociationsMixin<
+    PollCommentMention,
+    string
+  >
+  declare hasMention: HasManyHasAssociationMixin<PollCommentMention, string>
+  declare hasMentions: HasManyHasAssociationsMixin<PollCommentMention, string>
   declare countMentions: HasManyCountAssociationsMixin
 
-  // PollComment belongsTo PollCommentHashtag (as Hashtags)
-  declare hashtag?: NonAttribute<PollCommentHashtag>
-  declare getHashtag: BelongsToGetAssociationMixin<PollCommentHashtag>
-  declare setHashtag: BelongsToSetAssociationMixin<PollCommentHashtag, string>
-  declare createHashtag: BelongsToCreateAssociationMixin<PollCommentHashtag>
+  // PollComment hasMany PollCommentHashtag (as Hashtags)
+  declare hashtags?: NonAttribute<PollCommentHashtag[]>
+  declare getHashtags: HasManyGetAssociationsMixin<PollCommentHashtag>
+  declare setHashtags: HasManySetAssociationsMixin<PollCommentHashtag, string>
+  declare addHashtag: HasManyAddAssociationMixin<PollCommentHashtag, string>
+  declare addHashtags: HasManyAddAssociationsMixin<PollCommentHashtag, string>
+  declare createHashtag: HasManyCreateAssociationMixin<PollCommentHashtag>
+  declare removeHashtag: HasManyRemoveAssociationMixin<
+    PollCommentHashtag,
+    string
+  >
+  declare removeHashtags: HasManyRemoveAssociationsMixin<
+    PollCommentHashtag,
+    string
+  >
+  declare hasHashtag: HasManyHasAssociationMixin<PollCommentHashtag, string>
+  declare hasHashtags: HasManyHasAssociationsMixin<PollCommentHashtag, string>
+  declare countHashtags: HasManyCountAssociationsMixin
+
+  // PollComment hasMany Like (as Likes)
+  declare likes?: NonAttribute<Like[]>
+  declare getLikes: HasManyGetAssociationsMixin<Like>
+  declare setLikes: HasManySetAssociationsMixin<Like, string>
+  declare addLike: HasManyAddAssociationMixin<Like, string>
+  declare addLikes: HasManyAddAssociationsMixin<Like, string>
+  declare createLike: HasManyCreateAssociationMixin<Like>
+  declare removeLike: HasManyRemoveAssociationMixin<Like, string>
+  declare removeLikes: HasManyRemoveAssociationsMixin<Like, string>
+  declare hasLike: HasManyHasAssociationMixin<Like, string>
+  declare hasLikes: HasManyHasAssociationsMixin<Like, string>
+  declare countLikes: HasManyCountAssociationsMixin
 
   declare static associations: {
     poll: Association<PollComment, Poll>
     parent: Association<PollComment, PollComment>
-    mentions: Association<PollComment, PollMention>
-    hashtag: Association<PollComment, PollCommentHashtag>
+    mentions: Association<PollComment, PollCommentMention>
+    hashtags: Association<PollComment, PollCommentHashtag>
+    likes: Association<PollComment, Like>
   }
 
   static initModel(sequelize: Sequelize): typeof PollComment {
@@ -91,9 +128,11 @@ export class PollComment extends Model<
         },
         pollId: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
         },
         userId: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
         },
         content: {
           type: DataTypes.TEXT,
@@ -103,6 +142,7 @@ export class PollComment extends Model<
         },
         parentId: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -110,13 +150,9 @@ export class PollComment extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL_COMMENT,
       },
     )
 

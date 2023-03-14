@@ -5,9 +5,6 @@ import {
   BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
@@ -15,7 +12,6 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type BlockAssociations = 'user' | 'blocked'
 
@@ -23,13 +19,12 @@ export class Block extends Model<
   InferAttributes<Block, { omit: BlockAssociations }>,
   InferCreationAttributes<Block, { omit: BlockAssociations }>
 > {
-  declare id: CreationOptional<uuid>
-  declare blockerId: uuid | null
-  declare blockedId: uuid | null
-  declare reason?: string | null
+  declare id: CreationOptional<string>
+  declare blockerId: string | null
+  declare blockedId: string | null
+  declare reason: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // Block belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -37,11 +32,11 @@ export class Block extends Model<
   declare setUser: BelongsToSetAssociationMixin<User, string>
   declare createUser: BelongsToCreateAssociationMixin<User>
 
-  // Block hasOne User (as Blocked)
+  // Block belongsTo User (as Blocked)
   declare blocked?: NonAttribute<User>
-  declare getBlocked: HasOneGetAssociationMixin<User>
-  declare setBlocked: HasOneSetAssociationMixin<User, string>
-  declare createBlocked: HasOneCreateAssociationMixin<User>
+  declare getBlocked: BelongsToGetAssociationMixin<User>
+  declare setBlocked: BelongsToSetAssociationMixin<User, string>
+  declare createBlocked: BelongsToCreateAssociationMixin<User>
 
   declare static associations: {
     user: Association<Block, User>
@@ -59,10 +54,10 @@ export class Block extends Model<
         },
         blockerId: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV1,
         },
         blockedId: {
           type: DataTypes.UUID,
-          field: 'blocked_id',
         },
         reason: {
           type: DataTypes.TEXT,
@@ -73,13 +68,9 @@ export class Block extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.BLOCK,
       },
     )
 

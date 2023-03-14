@@ -279,12 +279,6 @@ class UserRepository {
     try {
       return sequelize.transaction(
         async (transaction): Promise<Partial<User> | null> => {
-          if (body?.mbtiId) {
-            await user.setMbti(body.mbtiId, {
-              transaction,
-            })
-            delete body?.mbtiId
-          }
           if (Object.keys(body).length > 0) {
             await user.update(body, { transaction })
           }

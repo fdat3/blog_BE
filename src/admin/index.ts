@@ -45,7 +45,6 @@ const runAdminPage = (app: Application, PORT: number): void => {
         },
       },
       // Models.PollAnswer.initModel(sequelize),
-      Models.Mbti.initModel(sequelize),
       Models.ReportUser.initModel(sequelize),
       Models.ReportPoll.initModel(sequelize),
     ],

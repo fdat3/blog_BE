@@ -9,9 +9,9 @@ module.exports = {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
       },
-      commentId: {
+      pollCommentId: {
         type: DataTypes.UUID,
-        field: 'comment_id'
+        field: 'poll_comment_id'
       },
       hashtagId: {
         type: DataTypes.UUID,

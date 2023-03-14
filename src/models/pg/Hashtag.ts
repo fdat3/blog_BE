@@ -6,17 +6,15 @@ import {
   Model,
   Sequelize,
 } from 'sequelize'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 export class Hashtag extends Model<
   InferAttributes<Hashtag>,
   InferCreationAttributes<Hashtag>
 > {
-  declare id: CreationOptional<uuid>
-  declare name: string
+  declare id: CreationOptional<string>
+  declare name: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   static initModel(sequelize: Sequelize): typeof Hashtag {
     Hashtag.init(
@@ -35,13 +33,9 @@ export class Hashtag extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.HASHTAG,
       },
     )
 

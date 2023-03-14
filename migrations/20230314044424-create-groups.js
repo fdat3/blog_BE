@@ -2,24 +2,34 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('comment_mentions', {
+    await queryInterface.createTable('groups', {
       id: {
         type: DataTypes.UUID,
         field: 'id',
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
       },
-      userId: {
-        type: DataTypes.UUID,
-        field: 'user_id'
+      name: {
+        type: DataTypes.STRING(200),
+        field: 'name'
       },
-      mentionedId: {
-        type: DataTypes.UUID,
-        field: 'mentioned_id'
+      password: {
+        type: DataTypes.TEXT,
+        field: 'password'
       },
-      pollCommentId: {
+      isVisible: {
+        type: DataTypes.BOOLEAN,
+        field: 'is_visible',
+        defaultValue: true
+      },
+      isPrivate: {
+        type: DataTypes.BOOLEAN,
+        field: 'is_private',
+        defaultValue: true
+      },
+      ownerId: {
         type: DataTypes.UUID,
-        field: 'poll_comment_id'
+        field: 'owner_id'
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -36,6 +46,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('comment_mentions');
+    await queryInterface.dropTable('groups');
   },
 };

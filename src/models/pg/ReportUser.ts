@@ -5,9 +5,6 @@ import {
   BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
@@ -15,7 +12,6 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
 type ReportUserAssociations = 'user' | 'reported'
 
@@ -23,13 +19,12 @@ export class ReportUser extends Model<
   InferAttributes<ReportUser, { omit: ReportUserAssociations }>,
   InferCreationAttributes<ReportUser, { omit: ReportUserAssociations }>
 > {
-  declare id: CreationOptional<uuid>
+  declare id: CreationOptional<string>
   declare reporterId: string | null
   declare reportedId: string | null
   declare reason: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
 
   // ReportUser belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -37,11 +32,11 @@ export class ReportUser extends Model<
   declare setUser: BelongsToSetAssociationMixin<User, string>
   declare createUser: BelongsToCreateAssociationMixin<User>
 
-  // ReportUser hasOne User (as Reported)
+  // ReportUser belongsTo User (as Reported)
   declare reported?: NonAttribute<User>
-  declare getReported: HasOneGetAssociationMixin<User>
-  declare setReported: HasOneSetAssociationMixin<User, string>
-  declare createReported: HasOneCreateAssociationMixin<User>
+  declare getReported: BelongsToGetAssociationMixin<User>
+  declare setReported: BelongsToSetAssociationMixin<User, string>
+  declare createReported: BelongsToCreateAssociationMixin<User>
 
   declare static associations: {
     user: Association<ReportUser, User>
@@ -72,13 +67,9 @@ export class ReportUser extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.REPORT_USER,
       },
     )
 

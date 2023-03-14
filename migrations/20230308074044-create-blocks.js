@@ -2,7 +2,7 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('report_user', {
+    await queryInterface.createTable('blocks', {
       id: {
         type: DataTypes.UUID,
         field: 'id',
@@ -10,13 +10,14 @@ module.exports = {
         unique: true,
         defaultValue: DataTypes.UUIDV4
       },
-      reporterId: {
+      blockerId: {
         type: DataTypes.UUID,
-        field: 'reporter_id'
+        field: 'blocker_id',
+        defaultValue: DataTypes.UUIDV1
       },
-      reportedId: {
+      blockedId: {
         type: DataTypes.UUID,
-        field: 'reported_id'
+        field: 'blocked_id'
       },
       reason: {
         type: DataTypes.TEXT,
@@ -37,6 +38,6 @@ module.exports = {
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('report_user');
+    await queryInterface.dropTable('blocks');
   },
 };

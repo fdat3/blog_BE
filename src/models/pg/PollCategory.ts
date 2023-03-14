@@ -1,16 +1,30 @@
 import {
+  Association,
   CreationOptional,
   DataTypes,
+  HasManyGetAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyAddAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManyHasAssociationsMixin,
+  HasManyCountAssociationsMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
+  NonAttribute,
   Sequelize,
 } from 'sequelize'
-import ModelPgConstant from '@/constants/model.pg.constant'
+import type { Poll } from './Poll'
+
+type PollCategoryAssociations = 'polls'
 
 export class PollCategory extends Model<
-  InferAttributes<PollCategory>,
-  InferCreationAttributes<PollCategory>
+  InferAttributes<PollCategory, { omit: PollCategoryAssociations }>,
+  InferCreationAttributes<PollCategory, { omit: PollCategoryAssociations }>
 > {
   declare id: CreationOptional<string>
   declare label: string | null
@@ -19,7 +33,23 @@ export class PollCategory extends Model<
   declare image: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
-  declare deletedAt: CreationOptional<Date>
+
+  // PollCategory hasMany Poll (as Polls)
+  declare polls?: NonAttribute<Poll[]>
+  declare getPolls: HasManyGetAssociationsMixin<Poll>
+  declare setPolls: HasManySetAssociationsMixin<Poll, string>
+  declare addPoll: HasManyAddAssociationMixin<Poll, string>
+  declare addPolls: HasManyAddAssociationsMixin<Poll, string>
+  declare createPoll: HasManyCreateAssociationMixin<Poll>
+  declare removePoll: HasManyRemoveAssociationMixin<Poll, string>
+  declare removePolls: HasManyRemoveAssociationsMixin<Poll, string>
+  declare hasPoll: HasManyHasAssociationMixin<Poll, string>
+  declare hasPolls: HasManyHasAssociationsMixin<Poll, string>
+  declare countPolls: HasManyCountAssociationsMixin
+
+  declare static associations: {
+    polls: Association<PollCategory, Poll>
+  }
 
   static initModel(sequelize: Sequelize): typeof PollCategory {
     PollCategory.init(
@@ -49,13 +79,9 @@ export class PollCategory extends Model<
         updatedAt: {
           type: DataTypes.DATE,
         },
-        deletedAt: {
-          type: DataTypes.DATE,
-        },
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POLL_CATEGORY_MODEL,
       },
     )
 
