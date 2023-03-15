@@ -83,6 +83,7 @@ export class User extends Model<
   declare isAdmin: boolean
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // User hasMany UserDevice (as Devices)
   declare devices?: NonAttribute<UserDevice[]>
@@ -337,6 +338,9 @@ export class User extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

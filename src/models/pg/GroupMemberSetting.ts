@@ -28,6 +28,7 @@ export class GroupMemberSetting extends Model<
   declare setting_2: boolean | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // GroupMemberSetting belongsTo GroupMember (as Member)
   declare member?: NonAttribute<GroupMember>
@@ -61,6 +62,9 @@ export class GroupMemberSetting extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

@@ -28,6 +28,7 @@ export class PollAnswerChosen extends Model<
   declare userId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // PollAnswerChosen belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -66,6 +67,9 @@ export class PollAnswerChosen extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

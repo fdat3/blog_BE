@@ -54,6 +54,7 @@ export class Poll extends Model<
   declare type: 'TEXT' | 'IMAGE' | 'LOCATION' | 'TRENDY_TALK' | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // Poll belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -189,6 +190,9 @@ export class Poll extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

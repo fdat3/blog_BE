@@ -28,6 +28,7 @@ export class PollCommentHashtag extends Model<
   declare hashtagId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // PollCommentHashtag belongsTo PollComment (as PollComment)
   declare pollComment?: NonAttribute<PollComment>
@@ -64,6 +65,9 @@ export class PollCommentHashtag extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

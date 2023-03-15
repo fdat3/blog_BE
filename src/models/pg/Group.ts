@@ -42,6 +42,7 @@ export class Group extends Model<
   declare ownerId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // Group belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -103,6 +104,9 @@ export class Group extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

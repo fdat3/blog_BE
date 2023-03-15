@@ -25,6 +25,7 @@ export class UserSetting extends Model<
   declare setting_2: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // UserSetting belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -57,6 +58,9 @@ export class UserSetting extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

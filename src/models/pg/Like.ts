@@ -27,6 +27,7 @@ export class Like extends Model<
   declare pollCommentId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // Like belongsTo Poll (as Poll)
   declare poll?: NonAttribute<Poll>
@@ -73,6 +74,9 @@ export class Like extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

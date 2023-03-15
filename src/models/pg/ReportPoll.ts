@@ -26,6 +26,7 @@ export class ReportPoll extends Model<
   declare reason: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // ReportPoll belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -65,6 +66,9 @@ export class ReportPoll extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

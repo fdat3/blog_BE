@@ -25,6 +25,7 @@ export class Block extends Model<
   declare reason: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // Block belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -66,6 +67,9 @@ export class Block extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

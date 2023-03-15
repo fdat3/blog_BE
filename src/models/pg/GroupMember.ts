@@ -30,6 +30,7 @@ export class GroupMember extends Model<
   declare role: 'OWNER' | 'MEMBER' | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // GroupMember belongsTo Group (as Group)
   declare group?: NonAttribute<Group>
@@ -76,6 +77,9 @@ export class GroupMember extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

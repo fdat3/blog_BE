@@ -25,6 +25,7 @@ export class Session extends Model<
   declare data: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // Session belongsTo User (as User)
   declare user?: NonAttribute<User>
@@ -56,6 +57,9 @@ export class Session extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

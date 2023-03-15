@@ -29,6 +29,7 @@ export class PollCommentMention extends Model<
   declare pollCommentId: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // PollCommentMention belongsTo PollComment (as Comment)
   declare comment?: NonAttribute<PollComment>
@@ -75,6 +76,9 @@ export class PollCommentMention extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

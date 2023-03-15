@@ -15,6 +15,7 @@ export class Hashtag extends Model<
   declare name: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   static initModel(sequelize: Sequelize): typeof Hashtag {
     Hashtag.init(
@@ -31,6 +32,9 @@ export class Hashtag extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

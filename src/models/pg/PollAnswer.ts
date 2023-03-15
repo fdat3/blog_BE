@@ -39,6 +39,7 @@ export class PollAnswer extends Model<
   declare coord: Buffer | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // PollAnswer belongsTo Poll (as Poll)
   declare poll?: NonAttribute<Poll>
@@ -104,6 +105,9 @@ export class PollAnswer extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

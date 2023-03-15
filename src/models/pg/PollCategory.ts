@@ -33,6 +33,7 @@ export class PollCategory extends Model<
   declare image: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
+  declare deletedAt: CreationOptional<Date>
 
   // PollCategory hasMany Poll (as Polls)
   declare polls?: NonAttribute<Poll[]>
@@ -77,6 +78,9 @@ export class PollCategory extends Model<
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },
