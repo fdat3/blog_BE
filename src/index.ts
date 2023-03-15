@@ -7,7 +7,6 @@ import cors from 'cors'
 import helmet from 'helmet'
 
 // const passport = require('passport')
-
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 import Controller from '@/interfaces/controller.interface'
@@ -33,15 +32,14 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 
 import morgan from 'morgan'
 import Versioning from '@/interfaces/versioning.interface'
-import { initModels } from '@/models/pg'
+import { initModels, Session } from '@/models/pg'
+import runAdminPage from '@/admin/.'
+import CamelCaseMiddleware from '@/middlewares/camelCase.middleware'
 
 const session = require('express-session')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 const swaggerUi = require('swagger-ui-express')
-import runAdminPage from '@/admin/.'
-import CamelCaseMiddleware from '@/middlewares/camelCase.middleware'
-import { DataTypes } from 'sequelize'
 
 class App {
   public app: Application
@@ -94,16 +92,6 @@ class App {
     this.app.use(morgan('combined'))
     this.app.disable('x-powered-by')
 
-    sequelize.define('session', {
-      sid: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
-      userId: DataTypes.STRING,
-      expires: DataTypes.DATE,
-      data: DataTypes.TEXT,
-    })
-
     // Session Config
     this.app.use(
       session({
@@ -120,7 +108,7 @@ class App {
         proxy: true,
         store: new SequelizeStore({
           db: sequelize,
-          table: 'session',
+          table: Session,
           extendDefaultFields: (defaults: any, session: any): any => {
             return {
               data: defaults.data,
