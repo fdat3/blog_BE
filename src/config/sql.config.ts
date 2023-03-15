@@ -94,7 +94,7 @@ export const postgresTestConnectDB = async (): Promise<void> => {
 export const syncSequelize = async (): Promise<void> => {
   try {
     await sequelize.sync({
-      force: true,
+      force: process.env.NODE_ENV === 'local',
       alter: true,
       logging: (sql: string) => {
         process.env.LOGGING === 'true' && logger.http(sql)
