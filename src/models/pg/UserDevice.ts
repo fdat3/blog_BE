@@ -1,12 +1,12 @@
 import {
   Association,
+  BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
-  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  InferCreationAttributes,
   InferAttributes,
+  InferCreationAttributes,
   Model,
   NonAttribute,
   Sequelize,
@@ -70,6 +70,7 @@ export class UserDevice extends Model<
             'NAVER',
             'KAKAO',
           ),
+          defaultValue: 'NORMAL',
         },
         createdAt: {
           type: DataTypes.DATE,
