@@ -4,20 +4,29 @@ import { User } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 import logger from '@/utils/logger.util'
 import { DeviceInterface } from '@/interfaces/auth.interface'
+import { ICrudOption } from '@/interfaces/controller.interface'
+import BaseController from '@/controllers/base.controller'
+import baseController from '@/controllers/base.controller'
 
 class UserRepository {
-  public model
+  private model
+  private baseController = new BaseController()
+
   constructor() {
     this.model = User
   }
 
-  public async findAll(): Promise<Partial<User[]>> {
+  public async findAll(
+    queryInfo?: ICrudOption,
+  ): Promise<{ rows: Partial<User[]>; count: number } | null> {
     try {
-      const users = await this.model.findAll({})
+      const users = await this.model.findAndCountAll(
+        baseController.applyFindOptions(queryInfo),
+      )
       return users
     } catch (e) {
       console.log(e)
-      return []
+      return null
     }
   }
 

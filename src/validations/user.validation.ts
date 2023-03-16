@@ -18,12 +18,17 @@ class UserValidation {
   public login = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
+    device: Joi.object({
+      loginType: Joi.string().required(),
+      fcmToken: Joi.string().required(),
+      deviceId: Joi.string().required(),
+    }).required(),
   })
 
   public sns = Joi.object({
     token: Joi.string().required(),
     device: Joi.object({
-      loginType: Joi.string().required(),
+      loginType: Joi.string(),
       fcmToken: Joi.string().required(),
       deviceId: Joi.string().required(),
     }),

@@ -84,8 +84,6 @@ class AuthController implements Controller {
   ): Promise<Response | void> => {
     try {
       const { username, fullname, email, password, phone, device } = req.body
-      logger.info(req.body)
-      logger.info({ device })
 
       const usernameValidated = this.validate.validateUsername(username)
       if (!usernameValidated) {
@@ -229,7 +227,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { email, password } = req.body
+      const { email, password, device } = req.body
 
       const emailValidated = this.validate.validateEmail(email)
       if (!emailValidated) {
@@ -276,6 +274,9 @@ class AuthController implements Controller {
           ),
         )
       }
+
+      // TODO: Create or update device session
+      console.log(device)
 
       const accessToken = await this.authService.generateAccessToken(
         user.id,

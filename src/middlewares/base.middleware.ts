@@ -1,7 +1,8 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
+import { Request } from '@/interfaces/controller.interface'
 
 class BaseMiddleware {
-  onError(res: Response, err: any): void {
+  public onError(res: Response, err: any): void {
     if (!err.options) {
       res.status(err.options.code).json(err.options)
     } else {
@@ -9,7 +10,7 @@ class BaseMiddleware {
     }
   }
 
-  async use(
+  protected async use(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -21,7 +22,8 @@ class BaseMiddleware {
     return next()
   }
 
-  run(option?: any) {
+  run(option?: any): any {
+    console.log('is it run?')
     return (req: Request, res: Response, next: NextFunction): any =>
       this.use
         .bind(this)(req, res, next, option)

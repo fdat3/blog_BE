@@ -1,6 +1,7 @@
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
 import { User } from '@/models/pg'
+import { ICrudOption } from '@/interfaces/controller.interface'
 
 class UserService {
   private userRepository: UserRepository
@@ -15,8 +16,8 @@ class UserService {
     return this.userSecurity.comparePassword(password, encryptedPassword)
   }
 
-  public async findAll(): Promise<any> {
-    const users = await this.userRepository.findAll()
+  public async findAll(queryInfo?: ICrudOption): Promise<any> {
+    const users = await this.userRepository.findAll(queryInfo)
     return users
   }
 

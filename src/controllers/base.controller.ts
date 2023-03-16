@@ -1,6 +1,7 @@
-import { Response, Request } from 'express'
+import { Request, Response } from 'express'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import * as _ from 'lodash'
+import { FindOptions } from 'sequelize'
 
 export interface TokenInfo {
   payload?: any
@@ -79,6 +80,21 @@ class BaseController {
         limit: option.limit,
       },
     })
+  }
+
+  public static applyFindOptions(
+    option: ICrudOption = {},
+  ): Partial<FindOptions> {
+    const query: Partial<FindOptions<any>> = {
+      where: option.filter,
+      limit: option.limit,
+      offset: option.offset,
+      order: option.order,
+      attributes: option.attributes,
+      include: option.include,
+      paranoid: option.paranoid,
+    }
+    return query
   }
 }
 

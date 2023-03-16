@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import express, { Router } from 'express'
 
 interface Controller {
   path: string
@@ -10,7 +10,7 @@ export default Controller
 export interface ICrudOption {
   filter?: any
   limit?: number
-  offset: number
+  offset?: number
   scope?: string[]
   order?: any[]
   attributes?: any[]
@@ -20,6 +20,12 @@ export interface ICrudOption {
   transaction?: any
 
   [key: string]: any
+}
+
+export interface Request extends express.Request {
+  queryInfo?: ICrudOption
+
+  [x: string]: any
 }
 
 export interface ICrudExecOption {

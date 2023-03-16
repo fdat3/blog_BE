@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response, Router } from 'express'
+import { NextFunction, Response, Router } from 'express'
 
-import Controller from '@/interfaces/controller.interface'
+import Controller, { Request } from '@/interfaces/controller.interface'
 
 import UserService from '@/services/user.service'
 import Validate from '@/validations/user.validation'
@@ -104,7 +104,7 @@ class UserController implements Controller {
 
     this.router.get(
       `${this.path}${ConstantAPI.USER_GET_ALL}`,
-      // this.authenticated.verifyTokenAndAdmin,
+      [this.queryMiddleware.run()],
       this.getAllUsers,
     )
 
@@ -784,7 +784,9 @@ class UserController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const users = await this.userService.findAll()
+      const { queryInfo } = _req
+      console.log({ queryInfo })
+      const users = await this.userService.findAll(queryInfo)
       if (!users || users.lenght == 0) {
         return next(
           new HttpException(
@@ -800,9 +802,7 @@ class UserController implements Controller {
           code: ConstantHttpCode.OK,
           msg: ConstantHttpReason.OK,
         },
-        data: {
-          users,
-        },
+        data: users,
       })
     } catch (err: any) {
       next(

@@ -1,12 +1,44 @@
 import { ICrudOption } from '@/interfaces/controller.interface'
 import BaseMiddleware from '@/middlewares/base.middleware'
-import { Request } from 'express'
+import express, { Request } from 'express'
 import * as _ from 'lodash'
 
 class QueryMiddleware extends BaseMiddleware {
   // async use(req: Request, res: Response, next: NextFunction){
   //
   // }
+  constructor() {
+    super()
+  }
+
+  protected async use(
+    req: any,
+    res: Response | any,
+    next: express.NextFunction,
+  ): Promise<any> {
+    const filter = this._parseFilter(req)
+    const order = this._parseOrder(req)
+    const page = parseInt(req.query['page'] || 1)
+    const limit = parseInt(req.query['limit'] || 10)
+    const offset = parseInt(req.query['offset']) || (page - 1) * limit
+    const fields = this._parseFields(req)
+
+    if (fields.attributes != undefined) {
+      fields.attributes = _.union(['id', 'updated_at'], fields.attributes)
+    }
+
+    req.queryInfo = _.merge(
+      {
+        filter,
+        limit,
+        page,
+        offset,
+        order,
+      },
+      fields,
+    )
+    next()
+  }
 
   _parseFilter(req: Request | any): any {
     let filter = req.query['filter']
