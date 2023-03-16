@@ -356,6 +356,11 @@ export class User extends Model<
             }
           },
         },
+        defaultScope: {
+          attributes: {
+            exclude: ['password'],
+          },
+        },
       },
     )
 
