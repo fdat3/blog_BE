@@ -8,11 +8,25 @@ class UserValidation {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
     phone: Joi.string().min(10).max(15).required(),
+    device: Joi.object({
+      loginType: Joi.string().required(),
+      fcmToken: Joi.string().required(),
+      deviceId: Joi.string().required(),
+    }),
   })
 
   public login = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
+  })
+
+  public sns = Joi.object({
+    token: Joi.string().required(),
+    device: Joi.object({
+      loginType: Joi.string().required(),
+      fcmToken: Joi.string().required(),
+      deviceId: Joi.string().required(),
+    }),
   })
 
   public updateUsername = Joi.object({

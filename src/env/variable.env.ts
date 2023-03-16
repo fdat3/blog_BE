@@ -42,7 +42,7 @@ class Variable {
   public static readonly SESSION_KEYS: string = process.env.SESSION_KEYS!
 
   public static readonly SESSION_MAX_AGE: number = Number(
-    process.env.SESSION_MAX_AGE,
+    process.env.SESSION_MAX_AGE!,
   )!
 
   // public static readonly SESSION_COOKIE: string = process.env.SESSION_COOKIE!;
@@ -64,7 +64,7 @@ class Variable {
   // public static readonly SESSION_ROLLING: string = process.env.SESSION_ROLLING!;
   //
   public static readonly SESSION_RESAVE: boolean = Boolean(
-    process.env.SESSION_RESAVE,
+    process.env.SESSION_RESAVE!,
   )!
   //
   // public static readonly SESSION_SAVE_UNINITIALIZED: string = process.env.SESSION_SAVE_UNINITIALIZED!;
@@ -84,6 +84,8 @@ class Variable {
   // public static readonly SESSION_DESTROY: string = process.env.SESSION_DESTROY!;
   //
   // public static readonly SESSION_TOUCH: string = process.env.SESSION_TOUCH!;
+
+  public static readonly APPLE_ID: string = process.env.APPLE_ID!
 
   constructor() {
     this.initialise()

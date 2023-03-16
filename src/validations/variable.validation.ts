@@ -18,6 +18,7 @@ const validate = (): void => {
     SESSION_NAME: str(),
     SESSION_KEYS: str(),
     SESSION_MAX_AGE: num(),
+    APPLE_ID: str(),
   })
 }
 

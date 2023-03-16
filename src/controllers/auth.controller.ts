@@ -20,6 +20,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 
 // logger
 import logger from '@/utils/logger.util'
+import { SNSEnum } from '@/enums/auth.enum'
 
 class AuthController implements Controller {
   public path: string
@@ -48,6 +49,32 @@ class AuthController implements Controller {
       validationMiddleware(this.validate.login),
       this.login,
     )
+
+    this.router.post(
+      `${this.path}${ConstantAPI.AUTH_KAKAO}`,
+      validationMiddleware(this.validate.sns),
+      this.kakaoLogin,
+    )
+    this.router.post(
+      `${this.path}${ConstantAPI.AUTH_NAVER}`,
+      validationMiddleware(this.validate.sns),
+      this.naverLogin,
+    )
+    this.router.post(
+      `${this.path}${ConstantAPI.AUTH_FACEBOOK}`,
+      validationMiddleware(this.validate.sns),
+      this.facebookLogin,
+    )
+    this.router.post(
+      `${this.path}${ConstantAPI.AUTH_GOOGLE}`,
+      validationMiddleware(this.validate.sns),
+      this.googleLogin,
+    )
+    this.router.post(
+      `${this.path}${ConstantAPI.AUTH_APPLE}`,
+      validationMiddleware(this.validate.sns),
+      this.appleLogin,
+    )
   }
 
   private register = async (
@@ -56,7 +83,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { username, fullname, email, password, phone } = req.body
+      const { username, fullname, email, password, phone, device } = req.body
       logger.info(req.body)
 
       const usernameValidated = this.validate.validateUsername(username)
@@ -160,7 +187,7 @@ class AuthController implements Controller {
         phone,
       }
 
-      const user = await this.authService.createUser(newUserData)
+      const user = await this.authService.createUser(newUserData, device)
       if (!user) {
         return next(
           new HttpException(
@@ -266,6 +293,172 @@ class AuthController implements Controller {
         msg: ConstantMessage.USER_LOGIN_SUCCESS,
         data: {
           user: newUser,
+          accessToken,
+        },
+      })
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
+        ),
+      )
+    }
+  }
+
+  private facebookLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const user = await this.authService.snsLogin(req.body, SNSEnum.FACEBOOK)
+
+      const accessToken = await this.authService.generateAccessToken(
+        user.id,
+        user.isAdmin,
+      )
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
+          accessToken,
+        },
+      })
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
+        ),
+      )
+    }
+  }
+  private kakaoLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const user = await this.authService.snsLogin(req.body, SNSEnum.KAKAO)
+
+      const accessToken = await this.authService.generateAccessToken(
+        user.id,
+        user.isAdmin,
+      )
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
+          accessToken,
+        },
+      })
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
+        ),
+      )
+    }
+  }
+  private naverLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const user = await this.authService.snsLogin(req.body, SNSEnum.NAVER)
+
+      const accessToken = await this.authService.generateAccessToken(
+        user.id,
+        user.isAdmin,
+      )
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
+          accessToken,
+        },
+      })
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
+        ),
+      )
+    }
+  }
+  private googleLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const user = await this.authService.snsLogin(req.body, SNSEnum.GOOGLE)
+
+      const accessToken = await this.authService.generateAccessToken(
+        user.id,
+        user.isAdmin,
+      )
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
+          accessToken,
+        },
+      })
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
+        ),
+      )
+    }
+  }
+  private appleLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const user = await this.authService.snsLogin(req.body, SNSEnum.APPLE)
+
+      const accessToken = await this.authService.generateAccessToken(
+        user.id,
+        user.isAdmin,
+      )
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
           accessToken,
         },
       })

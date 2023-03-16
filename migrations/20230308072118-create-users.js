@@ -19,7 +19,7 @@ module.exports = {
       password: {
         type: DataTypes.STRING(255),
         field: 'password',
-        allowNull: false
+        allowNull: true
       },
       dob: {
         type: DataTypes.DATE,

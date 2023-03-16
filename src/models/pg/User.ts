@@ -31,6 +31,7 @@ import type { PollComment } from './PollComment'
 import type { ReportUser } from './ReportUser'
 import type { UserDevice } from './UserDevice'
 import type { UserSetting } from './UserSetting'
+import UserUtils from '@/utils/user.utils'
 
 type UserAssociations =
   | 'devices'
@@ -264,7 +265,6 @@ export class User extends Model<
         id: {
           type: DataTypes.UUID,
           primaryKey: true,
-          allowNull: false,
           unique: true,
           defaultValue: DataTypes.UUIDV4,
         },
@@ -274,7 +274,7 @@ export class User extends Model<
         },
         password: {
           type: DataTypes.STRING(255),
-          allowNull: false,
+          allowNull: true,
         },
         dob: {
           type: DataTypes.DATE,
@@ -346,6 +346,16 @@ export class User extends Model<
       },
       {
         sequelize,
+        hooks: {
+          beforeCreate: (instance: any): void => {
+            if (!instance.inviteCode) {
+              instance.inviteCode = UserUtils.generateInviteCode()
+            }
+            if (!instance.username) {
+              instance.username = UserUtils.generateUserName()
+            }
+          },
+        },
       },
     )
 

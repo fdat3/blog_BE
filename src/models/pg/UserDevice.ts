@@ -21,10 +21,10 @@ export class UserDevice extends Model<
 > {
   declare id: CreationOptional<string>
   declare userId: string | null
-  declare fcmToken: string | null
-  declare deviceId: string | null
-  declare lastSession: Date | null
-  declare loginType: string | null
+  declare fcmToken: CreationOptional<string>
+  declare deviceId: CreationOptional<string>
+  declare lastSession: CreationOptional<string>
+  declare loginType: CreationOptional<string>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -62,7 +62,14 @@ export class UserDevice extends Model<
           defaultValue: DataTypes.NOW,
         },
         loginType: {
-          type: DataTypes.STRING,
+          type: DataTypes.ENUM(
+            'NORMAL',
+            'APPLE',
+            'FACEBOOK',
+            'GOOGLE',
+            'NAVER',
+            'KAKAO',
+          ),
         },
         createdAt: {
           type: DataTypes.DATE,

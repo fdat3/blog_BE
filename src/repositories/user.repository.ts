@@ -3,6 +3,7 @@
 import { User } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 import logger from '@/utils/logger.util'
+import { DeviceInterface } from '@/interfaces/auth.interface'
 
 class UserRepository {
   public model
@@ -103,7 +104,10 @@ class UserRepository {
     return user
   }
 
-  public async createUser(user: any): Promise<Partial<User> | null> {
+  public async createUser(
+    user: any,
+    device: DeviceInterface,
+  ): Promise<Partial<User> | null> {
     try {
       const result: User = await sequelize.transaction(async (transaction) => {
         const newUser: User = await User.create(
@@ -114,6 +118,11 @@ class UserRepository {
             transaction,
           },
         )
+
+        await newUser.createDevice({
+          ...device,
+        })
+
         return newUser
       })
       return result.get({ plain: true })

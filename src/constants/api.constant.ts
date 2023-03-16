@@ -11,6 +11,11 @@ class Api {
   public static readonly AUTH: string = '/auth'
   public static readonly AUTH_REGISTER: string = '/register'
   public static readonly AUTH_LOGIN: string = '/login'
+  public static readonly AUTH_KAKAO: string = '/kakao'
+  public static readonly AUTH_NAVER: string = '/naver'
+  public static readonly AUTH_FACEBOOK: string = '/facebook'
+  public static readonly AUTH_GOOGLE: string = '/google'
+  public static readonly AUTH_APPLE: string = '/apple'
 
   // users
   public static readonly USERS: string = '/users'
