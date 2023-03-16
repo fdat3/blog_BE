@@ -787,7 +787,7 @@ class UserController implements Controller {
       const { queryInfo } = _req
       console.log({ queryInfo })
       const users = await this.userService.findAll(queryInfo)
-      if (!users || users.lenght == 0) {
+      if (!users || users.rows.lenght == 0) {
         return next(
           new HttpException(
             ConstantHttpCode.NOT_FOUND,
@@ -796,14 +796,7 @@ class UserController implements Controller {
           ),
         )
       }
-
-      return res.status(ConstantHttpCode.OK).json({
-        status: {
-          code: ConstantHttpCode.OK,
-          msg: ConstantHttpReason.OK,
-        },
-        data: users,
-      })
+      this.baseController.onSuccessAsList(res, users, undefined, queryInfo)
     } catch (err: any) {
       next(
         new HttpException(

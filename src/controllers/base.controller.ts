@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import * as _ from 'lodash'
 import { FindOptions } from 'sequelize'
+import ConstantHttpCode from '@/constants/http.code.constant'
+import ConstantHttpReason from '@/constants/http.reason.constant'
 
 export interface TokenInfo {
   payload?: any
@@ -66,7 +68,8 @@ class BaseController {
     }
     const page = _.floor((option?.offset || 0) / (option.limit || 10)) + 1
     res.json({
-      code: 200,
+      code: ConstantHttpCode.OK,
+      msg: ConstantHttpReason.OK,
       results: Object.assign(
         {
           objects,
