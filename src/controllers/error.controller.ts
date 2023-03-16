@@ -6,7 +6,7 @@ class ErrorController {
 
     const errorString = `
 <strong>Environment:</strong> <b>${Variable.NODE_ENV.toUpperCase()}</b>
-<span><i>At: ${new Date()}</i></span>
+<i>At: ${new Date()}</i>
     
 <strong>Error detail:</strong>
 
