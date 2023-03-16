@@ -785,7 +785,6 @@ class UserController implements Controller {
   ): Promise<Response | void> => {
     try {
       const { queryInfo } = _req
-      console.log({ queryInfo })
       const users = await this.userService.findAll(queryInfo)
       if (!users || users.rows.lenght == 0) {
         return next(
