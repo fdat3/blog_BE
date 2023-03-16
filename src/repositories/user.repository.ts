@@ -106,7 +106,7 @@ class UserRepository {
 
   public async createUser(
     user: any,
-    device: DeviceInterface,
+    device?: DeviceInterface,
   ): Promise<Partial<User> | null> {
     try {
       const result: User = await sequelize.transaction(async (transaction) => {
@@ -119,9 +119,11 @@ class UserRepository {
           },
         )
 
-        await newUser.createDevice({
-          ...device,
-        })
+        if (device) {
+          await newUser.createDevice({
+            ...device,
+          })
+        }
 
         return newUser
       })

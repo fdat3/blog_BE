@@ -85,6 +85,7 @@ class AuthController implements Controller {
     try {
       const { username, fullname, email, password, phone, device } = req.body
       logger.info(req.body)
+      logger.info({ device })
 
       const usernameValidated = this.validate.validateUsername(username)
       if (!usernameValidated) {
@@ -211,6 +212,7 @@ class AuthController implements Controller {
         data: newUser,
       })
     } catch (err: any) {
+      console.log(err)
       return next(
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,

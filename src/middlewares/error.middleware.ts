@@ -7,6 +7,8 @@ import ConstantHttpReason from '../constants/http.reason.constant'
 
 // message constant
 import ConstantMessage from '@/constants/message.constant'
+import ErrorController from '@/controllers/error.controller'
+import logger from '@/utils/logger.util'
 
 const errorMiddleware = (
   error: HttpException,
@@ -15,6 +17,16 @@ const errorMiddleware = (
   next: NextFunction,
 ): Response | void => {
   try {
+    setTimeout(() => {
+      ErrorController.sendErrorToTelegram(error)
+        .then(async (result) => {
+          const res = await result.json()
+          console.log(res)
+        })
+        .catch((err) => {
+          logger.error(err)
+        })
+    }, 0)
     const statusCode =
       error.statusCode || ConstantHttpCode.INTERNAL_SERVER_ERROR
     const statusMsg =

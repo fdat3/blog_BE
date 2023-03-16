@@ -17,6 +17,7 @@ import UserController from '@/controllers/user.controller'
 // import GithubController from '@/controllers/github.controller'
 import dotenv from 'dotenv'
 import * as process from 'process'
+import ErrorController from '@/controllers/error.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -65,6 +66,16 @@ const socketServer = new SocketServer(app)
  * Event listener for HTTP server "error" event.
  */
 const onError = (error: any): void => {
+  console.error(error)
+  setTimeout(() => {
+    ErrorController.sendErrorToTelegram(error)
+      .then((result) => {
+        logger.info(result.json())
+      })
+      .catch((err) => {
+        logger.error(err)
+      })
+  }, 0)
   if (error.syscall !== 'listen') {
     throw error
   }

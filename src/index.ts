@@ -13,7 +13,7 @@ import Controller from '@/interfaces/controller.interface'
 import mongoConnectDB from '@/config/db.config'
 import {
   postgresTestConnectDB,
-  sequelize,
+  // sequelize,
   syncSequelize,
 } from '@/config/sql.config'
 
@@ -32,18 +32,21 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 
 import morgan from 'morgan'
 import Versioning from '@/interfaces/versioning.interface'
-import { initModels, Session } from '@/models/pg'
+import {
+  initModels,
+  // Session
+} from '@/models/pg'
 import runAdminPage from '@/admin/.'
 import CamelCaseMiddleware from '@/middlewares/camelCase.middleware'
 
 const session = require('express-session')
-const SequelizeStore = require('connect-session-sequelize')(session.Store)
+// const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 const swaggerUi = require('swagger-ui-express')
 
 class App {
   public app: Application
-  // private readonly MONGO_DATABASE_URL: string;
+  private readonly MONGO_DATABASE_URL: string
   // private POSTGRES_DATABASE_URL: string;
   // private POSTGRES_DATABASE_NAME: string;
   // private POSTGRES_DATABASE_USERNAME: string;
@@ -57,7 +60,7 @@ class App {
 
   constructor(versioning: Versioning) {
     this.app = express()
-    // this.MONGO_DATABASE_URL = Variable.MONGO_DATABASE_URL;
+    this.MONGO_DATABASE_URL = Variable.MONGO_DATABASE_URL
     // this.POSTGRES_DATABASE_URL = Variable.POSTGRES_DATABASE_URL;
     // this.POSTGRES_DATABASE_NAME = Variable.POSTGRES_DATABASE_NAME;
     // this.POSTGRES_DATABASE_USERNAME = Variable.POSTGRES_DATABASE_USERNAME;
@@ -69,7 +72,7 @@ class App {
     this.SESSION_RESAVE = Variable.SESSION_RESAVE
     this.PORT = Variable.PORT
     runAdminPage(this.app, this.PORT)
-    // this.initialiseDatabaseConnection(this.MONGO_DATABASE_URL).then();
+    this.initialiseDatabaseConnection(this.MONGO_DATABASE_URL).then()
     this.initialisePostgresConnection().then()
     this.initialiseConfig()
     this.initialiseRoutes()
@@ -106,17 +109,17 @@ class App {
           expires: this.SESSION_MAX_AGE,
         },
         proxy: true,
-        store: new SequelizeStore({
-          db: sequelize,
-          table: Session,
-          extendDefaultFields: (defaults: any, session: any): any => {
-            return {
-              data: defaults.data,
-              expires: defaults.expires,
-              userId: session.userId,
-            }
-          },
-        }),
+        // store: new SequelizeStore({
+        //   db: sequelize,
+        //   table: Session,
+        //   extendDefaultFields: (defaults: any, session: any): any => {
+        //     return {
+        //       data: defaults.data,
+        //       expires: defaults.expires,
+        //       userId: session.userId,
+        //     }
+        //   },
+        // }),
       }),
     )
   }

@@ -14,7 +14,7 @@ const levels = {
 }
 
 const level = (): string => {
-  const env = Variable.NODE_ENV || 'development'
+  const env = Variable?.NODE_ENV || 'development'
   const isDevelopment = ['development', 'local'].includes(env)
   return isDevelopment ? 'debug' : 'warn'
 }

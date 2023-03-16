@@ -39,7 +39,7 @@ class AuthService {
     return this.userSecurity.comparePassword(password, decryptedPassword)
   }
 
-  public async createUser(user: any, device: any): Promise<any> {
+  public async createUser(user: any, device?: any): Promise<any> {
     const encryptedPassword = this.userSecurity.encrypt(user.password)
     const newUser = {
       ...user,

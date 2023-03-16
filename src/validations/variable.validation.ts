@@ -19,6 +19,8 @@ const validate = (): void => {
     SESSION_KEYS: str(),
     SESSION_MAX_AGE: num(),
     APPLE_ID: str(),
+    TELEGRAM_URL: str(),
+    TELEGRAM_ROOM: str(),
   })
 }
 
