@@ -24,6 +24,7 @@ import { Follow } from './Follow'
 import { UserPoint } from './UserPoint'
 import { UserPointHistory } from './UserPointHistory'
 import { sequelize } from '@/config/sql.config'
+import { GlobalPoint } from '@/models/pg/GlobalPoint'
 
 export {
   User,
@@ -51,6 +52,7 @@ export {
   Follow,
   UserPoint,
   UserPointHistory,
+  GlobalPoint,
 }
 
 export const initModels = (): any => {
@@ -79,6 +81,7 @@ export const initModels = (): any => {
   Follow.initModel(sequelize)
   UserPoint.initModel(sequelize)
   UserPointHistory.initModel(sequelize)
+  GlobalPoint.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -375,5 +378,6 @@ export const initModels = (): any => {
     Follow,
     UserPoint,
     UserPointHistory,
+    GlobalPoint,
   }
 }
