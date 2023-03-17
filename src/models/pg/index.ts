@@ -22,6 +22,7 @@ import { GroupSetting } from './GroupSetting'
 import { UserSetting } from './UserSetting'
 import { Follow } from './Follow'
 import { UserPoint } from './UserPoint'
+import { UserPointHistory } from './UserPointHistory'
 import { sequelize } from '@/config/sql.config'
 
 export {
@@ -49,6 +50,7 @@ export {
   UserSetting,
   Follow,
   UserPoint,
+  UserPointHistory,
 }
 
 export const initModels = (): any => {
@@ -76,6 +78,7 @@ export const initModels = (): any => {
   UserSetting.initModel(sequelize)
   Follow.initModel(sequelize)
   UserPoint.initModel(sequelize)
+  UserPointHistory.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -337,6 +340,14 @@ export const initModels = (): any => {
     as: 'user',
     foreignKey: 'user_id',
   })
+  UserPoint.hasMany(UserPointHistory, {
+    as: 'histories',
+    foreignKey: 'user_point_id',
+  })
+  UserPointHistory.belongsTo(UserPoint, {
+    as: 'parent',
+    foreignKey: 'user_point_id',
+  })
 
   return {
     User,
@@ -363,5 +374,6 @@ export const initModels = (): any => {
     UserSetting,
     Follow,
     UserPoint,
+    UserPointHistory,
   }
 }
