@@ -20,6 +20,7 @@ import { GroupMember } from './GroupMember'
 import { GroupMemberSetting } from './GroupMemberSetting'
 import { GroupSetting } from './GroupSetting'
 import { UserSetting } from './UserSetting'
+import { Follow } from './Follow'
 import { sequelize } from '@/config/sql.config'
 
 export {
@@ -45,6 +46,7 @@ export {
   GroupMemberSetting,
   GroupSetting,
   UserSetting,
+  Follow,
 }
 
 export const initModels = (): any => {
@@ -70,6 +72,7 @@ export const initModels = (): any => {
   GroupMemberSetting.initModel(sequelize)
   GroupSetting.initModel(sequelize)
   UserSetting.initModel(sequelize)
+  Follow.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -118,6 +121,14 @@ export const initModels = (): any => {
   User.hasOne(UserSetting, {
     as: 'setting',
     foreignKey: 'user_id',
+  })
+  User.hasMany(Follow, {
+    as: 'followings',
+    foreignKey: 'user_id',
+  })
+  User.hasMany(Follow, {
+    as: 'followeds',
+    foreignKey: 'followed_id',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -306,6 +317,14 @@ export const initModels = (): any => {
   UserSetting.belongsTo(User, {
     as: 'user',
     foreignKey: 'user_id',
+  })
+  Follow.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  Follow.belongsTo(User, {
+    as: 'followed',
+    foreignKey: 'followed_id',
   })
 
   return {

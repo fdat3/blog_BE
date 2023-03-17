@@ -20,7 +20,7 @@ class UserSecurity {
 
   public generateAccessToken(id: string, isAdmin: boolean): string {
     const token = jwt.sign({ id, isAdmin }, Variable.JWT_SECRET, {
-      expiresIn: '3d',
+      expiresIn: '30m',
     })
 
     return `Bearer ${token}`

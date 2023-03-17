@@ -31,6 +31,7 @@ import type { PollComment } from './PollComment'
 import type { ReportUser } from './ReportUser'
 import type { UserDevice } from './UserDevice'
 import type { UserSetting } from './UserSetting'
+import type { Follow } from './Follow'
 import UserUtils from '@/utils/user.utils'
 
 type UserAssociations =
@@ -46,6 +47,8 @@ type UserAssociations =
   | 'myGroups'
   | 'members'
   | 'setting'
+  | 'followings'
+  | 'followeds'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -243,6 +246,32 @@ export class User extends Model<
   declare getSetting: HasOneGetAssociationMixin<UserSetting>
   declare setSetting: HasOneSetAssociationMixin<UserSetting, string>
   declare createSetting: HasOneCreateAssociationMixin<UserSetting>
+
+  // User hasMany Follow (as Following)
+  declare followings?: NonAttribute<Follow[]>
+  declare getFollowings: HasManyGetAssociationsMixin<Follow>
+  declare setFollowings: HasManySetAssociationsMixin<Follow, string>
+  declare addFollowing: HasManyAddAssociationMixin<Follow, string>
+  declare addFollowings: HasManyAddAssociationsMixin<Follow, string>
+  declare createFollowing: HasManyCreateAssociationMixin<Follow>
+  declare removeFollowing: HasManyRemoveAssociationMixin<Follow, string>
+  declare removeFollowings: HasManyRemoveAssociationsMixin<Follow, string>
+  declare hasFollowing: HasManyHasAssociationMixin<Follow, string>
+  declare hasFollowings: HasManyHasAssociationsMixin<Follow, string>
+  declare countFollowings: HasManyCountAssociationsMixin
+
+  // User hasMany Follow (as Followed)
+  declare followeds?: NonAttribute<Follow[]>
+  declare getFolloweds: HasManyGetAssociationsMixin<Follow>
+  declare setFolloweds: HasManySetAssociationsMixin<Follow, string>
+  declare addFollowed: HasManyAddAssociationMixin<Follow, string>
+  declare addFolloweds: HasManyAddAssociationsMixin<Follow, string>
+  declare createFollowed: HasManyCreateAssociationMixin<Follow>
+  declare removeFollowed: HasManyRemoveAssociationMixin<Follow, string>
+  declare removeFolloweds: HasManyRemoveAssociationsMixin<Follow, string>
+  declare hasFollowed: HasManyHasAssociationMixin<Follow, string>
+  declare hasFolloweds: HasManyHasAssociationsMixin<Follow, string>
+  declare countFolloweds: HasManyCountAssociationsMixin
 
   declare static associations: {
     devices: Association<User, UserDevice>

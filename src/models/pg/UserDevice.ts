@@ -24,7 +24,14 @@ export class UserDevice extends Model<
   declare fcmToken: CreationOptional<string>
   declare deviceId: CreationOptional<string>
   declare lastSession: CreationOptional<string>
-  declare loginType: CreationOptional<string>
+  declare loginType:
+    | 'NORMAL'
+    | 'APPLE'
+    | 'KAKAO'
+    | 'GOOGLE'
+    | 'FACEBOOK'
+    | 'NAVER'
+    | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
