@@ -22,6 +22,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Block } from './Block'
+import type { ContactList } from './ContactList'
 import type { Group } from './Group'
 import type { GroupMember } from './GroupMember'
 import type { Poll } from './Poll'
@@ -55,20 +56,22 @@ type UserAssociations =
   | 'followeds'
   | 'point'
   | 'searchHistories'
+  | 'contacts'
+  | 'contactInfos'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
   InferCreationAttributes<User, { omit: UserAssociations }>
 > {
   declare id: CreationOptional<string>
-  declare fullname: string
-  declare password: string
-  declare dob: Date | null
-  declare username: string
-  declare email: string | null
-  declare phone: string | null
-  declare inviteCode: string | null
-  declare refCode: string | null
+  declare fullname: CreationOptional<string>
+  declare password: CreationOptional<string>
+  declare dob: CreationOptional<Date>
+  declare username: CreationOptional<string>
+  declare email: CreationOptional<string>
+  declare phone: CreationOptional<string>
+  declare inviteCode: CreationOptional<string>
+  declare refCode: CreationOptional<string>
   declare gender: string | null
   declare instagram: string | null
   declare mbti:
@@ -89,8 +92,8 @@ export class User extends Model<
     | 'ESTP'
     | 'ESFP'
     | null
-  declare identify: string | null
-  declare isAdmin: boolean
+  declare identify: CreationOptional<string>
+  declare isAdmin: CreationOptional<boolean>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -338,6 +341,35 @@ export class User extends Model<
   declare hasSearchHistories: HasManyHasAssociationsMixin<SearchHistory, string>
   declare countSearchHistories: HasManyCountAssociationsMixin
 
+  // User hasMany ContactList (as Contacts)
+  declare contacts?: NonAttribute<ContactList[]>
+  declare getContacts: HasManyGetAssociationsMixin<ContactList>
+  declare setContacts: HasManySetAssociationsMixin<ContactList, string>
+  declare addContact: HasManyAddAssociationMixin<ContactList, string>
+  declare addContacts: HasManyAddAssociationsMixin<ContactList, string>
+  declare createContact: HasManyCreateAssociationMixin<ContactList>
+  declare removeContact: HasManyRemoveAssociationMixin<ContactList, string>
+  declare removeContacts: HasManyRemoveAssociationsMixin<ContactList, string>
+  declare hasContact: HasManyHasAssociationMixin<ContactList, string>
+  declare hasContacts: HasManyHasAssociationsMixin<ContactList, string>
+  declare countContacts: HasManyCountAssociationsMixin
+
+  // User hasMany ContactList (as ContactInfo)
+  declare contactInfos?: NonAttribute<ContactList[]>
+  declare getContactInfos: HasManyGetAssociationsMixin<ContactList>
+  declare setContactInfos: HasManySetAssociationsMixin<ContactList, string>
+  declare addContactInfo: HasManyAddAssociationMixin<ContactList, string>
+  declare addContactInfos: HasManyAddAssociationsMixin<ContactList, string>
+  declare createContactInfo: HasManyCreateAssociationMixin<ContactList>
+  declare removeContactInfo: HasManyRemoveAssociationMixin<ContactList, string>
+  declare removeContactInfos: HasManyRemoveAssociationsMixin<
+    ContactList,
+    string
+  >
+  declare hasContactInfo: HasManyHasAssociationMixin<ContactList, string>
+  declare hasContactInfos: HasManyHasAssociationsMixin<ContactList, string>
+  declare countContactInfos: HasManyCountAssociationsMixin
+
   declare static associations: {
     devices: Association<User, UserDevice>
     blockers: Association<User, Block>
@@ -356,6 +388,8 @@ export class User extends Model<
     point: Association<User, UserPoint>
     recommentCategories: Association<User, RecommendedCategoryList>
     searchHistories: Association<User, SearchHistory>
+    contacts: Association<User, ContactList>
+    contactInfos: Association<User, ContactList>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

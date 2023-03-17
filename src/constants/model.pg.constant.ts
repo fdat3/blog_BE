@@ -28,6 +28,7 @@ class PgModel {
   public static readonly RECOMMEND_CATEGORY_LIST: string =
     'recommended_category_lists'
   public static readonly SEARCH_HISTORY: string = 'search_histories'
+  public static readonly CONTACT_LIST: string = 'contact_lists'
 }
 
 export default PgModel

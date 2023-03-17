@@ -27,6 +27,7 @@ import { sequelize } from '@/config/sql.config'
 import { GlobalPoint } from '@/models/pg/GlobalPoint'
 import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
 import { SearchHistory } from '@/models/pg/SearchHistory'
+import { ContactList } from './ContactList'
 
 export {
   User,
@@ -57,6 +58,7 @@ export {
   GlobalPoint,
   RecommendedCategoryList,
   SearchHistory,
+  ContactList,
 }
 
 export const initModels = (): any => {
@@ -88,6 +90,7 @@ export const initModels = (): any => {
   GlobalPoint.initModel(sequelize)
   RecommendedCategoryList.initModel(sequelize)
   SearchHistory.initModel(sequelize)
+  ContactList.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -152,6 +155,14 @@ export const initModels = (): any => {
   User.hasMany(RecommendedCategoryList, {
     as: 'recommentCategories',
     foreignKey: 'user_id',
+  })
+  User.hasMany(ContactList, {
+    as: 'contacts',
+    foreignKey: 'user_id',
+  })
+  User.hasMany(ContactList, {
+    as: 'contactInfos',
+    foreignKey: 'contact_id',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -377,6 +388,14 @@ export const initModels = (): any => {
     as: 'user',
     foreignKey: 'user_id',
   })
+  ContactList.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  ContactList.belongsTo(User, {
+    as: 'contactInfo',
+    foreignKey: 'contact_id',
+  })
 
   return {
     User,
@@ -407,5 +426,6 @@ export const initModels = (): any => {
     GlobalPoint,
     RecommendedCategoryList,
     SearchHistory,
+    ContactList,
   }
 }
