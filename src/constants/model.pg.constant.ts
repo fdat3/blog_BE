@@ -25,6 +25,8 @@ class PgModel {
   public static readonly GROUP_MEMBERS: string = 'group_members'
   public static readonly GROUP_MEMBERS_SETTING: string = 'group_member_settings'
   public static readonly GLOBAL_POINT: string = 'global_points'
+  public static readonly RECOMMEND_CATEGORY_LIST: string =
+    'recommended_category_lists'
 }
 
 export default PgModel

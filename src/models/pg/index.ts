@@ -25,6 +25,7 @@ import { UserPoint } from './UserPoint'
 import { UserPointHistory } from './UserPointHistory'
 import { sequelize } from '@/config/sql.config'
 import { GlobalPoint } from '@/models/pg/GlobalPoint'
+import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
 
 export {
   User,
@@ -53,6 +54,7 @@ export {
   UserPoint,
   UserPointHistory,
   GlobalPoint,
+  RecommendedCategoryList,
 }
 
 export const initModels = (): any => {
@@ -82,6 +84,7 @@ export const initModels = (): any => {
   UserPoint.initModel(sequelize)
   UserPointHistory.initModel(sequelize)
   GlobalPoint.initModel(sequelize)
+  RecommendedCategoryList.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -141,6 +144,10 @@ export const initModels = (): any => {
   })
   User.hasOne(UserPoint, {
     as: 'point',
+    foreignKey: 'user_id',
+  })
+  User.hasMany(RecommendedCategoryList, {
+    as: 'recommentCategories',
     foreignKey: 'user_id',
   })
   Poll.belongsTo(User, {
@@ -213,6 +220,10 @@ export const initModels = (): any => {
   })
   PollCategory.hasMany(Poll, {
     as: 'polls',
+    foreignKey: 'poll_category_id',
+  })
+  PollCategory.hasMany(RecommendedCategoryList, {
+    as: 'recommends',
     foreignKey: 'poll_category_id',
   })
   UserDevice.belongsTo(User, {
@@ -351,6 +362,14 @@ export const initModels = (): any => {
     as: 'parent',
     foreignKey: 'user_point_id',
   })
+  RecommendedCategoryList.belongsTo(PollCategory, {
+    as: 'category',
+    foreignKey: 'poll_category_id',
+  })
+  RecommendedCategoryList.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
 
   return {
     User,
@@ -379,5 +398,6 @@ export const initModels = (): any => {
     UserPoint,
     UserPointHistory,
     GlobalPoint,
+    RecommendedCategoryList,
   }
 }
