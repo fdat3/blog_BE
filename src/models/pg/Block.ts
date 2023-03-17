@@ -12,6 +12,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type BlockAssociations = 'user' | 'blocked'
 
@@ -75,6 +76,7 @@ export class Block extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.BLOCK,
       },
     )
 

@@ -12,6 +12,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { UserPoint } from './UserPoint'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type UserPointHistoryAssociations = 'parent'
 
@@ -53,6 +54,7 @@ export class UserPointHistory extends Model<
         },
         point: {
           type: DataTypes.INTEGER,
+          defaultValue: 0,
         },
         type: {
           type: DataTypes.ENUM('WITHDRAW', 'GAME', 'DAILY_ATTENDANCE'),
@@ -69,6 +71,7 @@ export class UserPointHistory extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.USER_POINT_HISTORY,
       },
     )
 

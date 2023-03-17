@@ -13,6 +13,7 @@ import {
 } from 'sequelize'
 import type { Hashtag } from './Hashtag'
 import type { PollComment } from './PollComment'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCommentHashtagAssociations = 'pollComment' | 'hashtag'
 
@@ -73,6 +74,7 @@ export class PollCommentHashtag extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.POLL_COMMENT_HASHTAG,
       },
     )
 

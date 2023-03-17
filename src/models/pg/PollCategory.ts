@@ -19,6 +19,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Poll } from './Poll'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCategoryAssociations = 'polls'
 
@@ -86,6 +87,7 @@ export class PollCategory extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.POLL_CATEGORY_MODEL,
       },
     )
 

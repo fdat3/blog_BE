@@ -25,6 +25,7 @@ import type { Like } from './Like'
 import type { Poll } from './Poll'
 import type { PollCommentHashtag } from './PollCommentHashtag'
 import type { PollCommentMention } from './PollCommentMention'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCommentAssociations =
   | 'poll'
@@ -157,6 +158,7 @@ export class PollComment extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.POLL_COMMENT,
       },
     )
 

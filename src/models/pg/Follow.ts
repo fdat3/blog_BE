@@ -12,6 +12,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type FollowAssociations = 'user' | 'followed'
 
@@ -55,7 +56,7 @@ export class Follow extends Model<
           type: DataTypes.UUID,
         },
         followedId: {
-          type: DataTypes.STRING,
+          type: DataTypes.UUID,
         },
         deletedAt: {
           type: DataTypes.DATE,
@@ -69,6 +70,7 @@ export class Follow extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.FOLLOW,
       },
     )
 

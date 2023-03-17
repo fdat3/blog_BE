@@ -28,6 +28,7 @@ import type { PollHashtag } from './PollHashtag'
 import type { PollMention } from './PollMention'
 import type { ReportPoll } from './ReportPoll'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollAssociations =
   | 'user'
@@ -198,6 +199,7 @@ export class Poll extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.POLL,
       },
     )
 

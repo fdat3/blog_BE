@@ -12,6 +12,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type UserDeviceAssociations = 'user'
 
@@ -91,6 +92,7 @@ export class UserDevice extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.USER_DEVICE,
       },
     )
 

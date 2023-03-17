@@ -15,7 +15,8 @@ module.exports = {
       },
       point: {
         type: DataTypes.INTEGER,
-        field: 'point'
+        field: 'point',
+        defaultValue: 0
       },
       type: {
         type: DataTypes.ENUM('WITHDRAW', 'GAME', 'DAILY_ATTENDANCE'),

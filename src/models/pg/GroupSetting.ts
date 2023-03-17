@@ -12,6 +12,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Group } from './Group'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type GroupSettingAssociations = 'group'
 
@@ -68,6 +69,7 @@ export class GroupSetting extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.GROUP_SETTINGS,
       },
     )
 

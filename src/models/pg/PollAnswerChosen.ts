@@ -13,6 +13,7 @@ import {
 } from 'sequelize'
 import type { PollAnswer } from './PollAnswer'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollAnswerChosenAssociations = 'user' | 'pollAnswer'
 
@@ -75,6 +76,7 @@ export class PollAnswerChosen extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.POLL_ANSWER_CHOSEN,
       },
     )
 

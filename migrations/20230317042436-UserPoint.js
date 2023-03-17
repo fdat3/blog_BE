@@ -14,8 +14,9 @@ module.exports = {
         field: 'user_id'
       },
       totalPoint: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        field: 'total_point'
+        type: DataTypes.INTEGER,
+        field: 'total_point',
+        defaultValue: 0
       },
       deletedAt: {
         type: DataTypes.DATE,

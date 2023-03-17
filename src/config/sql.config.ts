@@ -61,7 +61,6 @@ export const sequelize = new Sequelize(
           }
         },
         beforeUpdate: function (instance: any): void {
-          instance.updatedAt = new Date()
           // Slugify
           if (instance?.slug && instance.slug === '') {
             instance.slug = instance.slug

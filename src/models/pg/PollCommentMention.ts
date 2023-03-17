@@ -13,6 +13,7 @@ import {
 } from 'sequelize'
 import type { PollComment } from './PollComment'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCommentMentionAssociations = 'comment' | 'user' | 'mentioned'
 
@@ -84,6 +85,7 @@ export class PollCommentMention extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.POLL_COMMENT_MENTION,
       },
     )
 

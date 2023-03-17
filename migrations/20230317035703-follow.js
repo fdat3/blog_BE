@@ -12,10 +12,9 @@ module.exports = {
       userId: {
         type: DataTypes.UUID,
         field: 'user_id',
-        defaultValue: DataTypes.UUIDV4
       },
       followedId: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
         field: 'followed_id'
       },
       deletedAt: {

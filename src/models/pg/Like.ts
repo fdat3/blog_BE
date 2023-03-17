@@ -14,6 +14,7 @@ import {
 import type { Poll } from './Poll'
 import type { PollComment } from './PollComment'
 import type { User } from './User'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type LikeAssociations = 'poll' | 'comment' | 'user'
 
@@ -82,6 +83,7 @@ export class Like extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.LIKES,
       },
     )
 

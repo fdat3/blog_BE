@@ -6,6 +6,7 @@ import {
   Model,
   Sequelize,
 } from 'sequelize'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 export class Hashtag extends Model<
   InferAttributes<Hashtag>,
@@ -40,6 +41,7 @@ export class Hashtag extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.HASHTAG,
       },
     )
 
