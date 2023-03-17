@@ -27,6 +27,7 @@ class PgModel {
   public static readonly GLOBAL_POINT: string = 'global_points'
   public static readonly RECOMMEND_CATEGORY_LIST: string =
     'recommended_category_lists'
+  public static readonly SEARCH_HISTORY: string = 'search_histories'
 }
 
 export default PgModel

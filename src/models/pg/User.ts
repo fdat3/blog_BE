@@ -2,21 +2,21 @@ import {
   Association,
   CreationOptional,
   DataTypes,
-  HasManyGetAssociationsMixin,
-  HasManySetAssociationsMixin,
   HasManyAddAssociationMixin,
   HasManyAddAssociationsMixin,
+  HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
-  HasManyRemoveAssociationMixin,
-  HasManyRemoveAssociationsMixin,
+  HasManyGetAssociationsMixin,
   HasManyHasAssociationMixin,
   HasManyHasAssociationsMixin,
-  HasManyCountAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasOneCreateAssociationMixin,
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
-  InferCreationAttributes,
   InferAttributes,
+  InferCreationAttributes,
   Model,
   NonAttribute,
   Sequelize,
@@ -35,6 +35,8 @@ import type { Follow } from './Follow'
 import type { UserPoint } from './UserPoint'
 import UserUtils from '@/utils/user.utils'
 import ModelPgConstant from '@/constants/model.pg.constant'
+import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
+import { SearchHistory } from '@/models/pg/SearchHistory'
 
 type UserAssociations =
   | 'devices'
@@ -52,6 +54,7 @@ type UserAssociations =
   | 'followings'
   | 'followeds'
   | 'point'
+  | 'searchHistories'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -282,6 +285,59 @@ export class User extends Model<
   declare setPoint: HasOneSetAssociationMixin<UserPoint, string>
   declare createPoint: HasOneCreateAssociationMixin<UserPoint>
 
+  // User hasMany RecommendedCategoryList (as RecommentCategory)
+  declare recommentCategories?: NonAttribute<RecommendedCategoryList[]>
+  declare getRecommentCategories: HasManyGetAssociationsMixin<RecommendedCategoryList>
+  declare setRecommentCategories: HasManySetAssociationsMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare addRecommentCategory: HasManyAddAssociationMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare addRecommentCategories: HasManyAddAssociationsMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare createRecommentCategory: HasManyCreateAssociationMixin<RecommendedCategoryList>
+  declare removeRecommentCategory: HasManyRemoveAssociationMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare removeRecommentCategories: HasManyRemoveAssociationsMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare hasRecommentCategory: HasManyHasAssociationMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare hasRecommentCategories: HasManyHasAssociationsMixin<
+    RecommendedCategoryList,
+    string
+  >
+  declare countRecommentCategories: HasManyCountAssociationsMixin
+
+  // User hasMany SearchHistory (as SearchHistory)
+  declare searchHistories?: NonAttribute<SearchHistory[]>
+  declare getSearchHistories: HasManyGetAssociationsMixin<SearchHistory>
+  declare setSearchHistories: HasManySetAssociationsMixin<SearchHistory, string>
+  declare addSearchHistory: HasManyAddAssociationMixin<SearchHistory, string>
+  declare addSearchHistories: HasManyAddAssociationsMixin<SearchHistory, string>
+  declare createSearchHistory: HasManyCreateAssociationMixin<SearchHistory>
+  declare removeSearchHistory: HasManyRemoveAssociationMixin<
+    SearchHistory,
+    string
+  >
+  declare removeSearchHistories: HasManyRemoveAssociationsMixin<
+    SearchHistory,
+    string
+  >
+  declare hasSearchHistory: HasManyHasAssociationMixin<SearchHistory, string>
+  declare hasSearchHistories: HasManyHasAssociationsMixin<SearchHistory, string>
+  declare countSearchHistories: HasManyCountAssociationsMixin
+
   declare static associations: {
     devices: Association<User, UserDevice>
     blockers: Association<User, Block>
@@ -298,6 +354,8 @@ export class User extends Model<
     followings: Association<User, Follow>
     followeds: Association<User, Follow>
     point: Association<User, UserPoint>
+    recommentCategories: Association<User, RecommendedCategoryList>
+    searchHistories: Association<User, SearchHistory>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

@@ -26,6 +26,7 @@ import { UserPointHistory } from './UserPointHistory'
 import { sequelize } from '@/config/sql.config'
 import { GlobalPoint } from '@/models/pg/GlobalPoint'
 import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
+import { SearchHistory } from '@/models/pg/SearchHistory'
 
 export {
   User,
@@ -55,6 +56,7 @@ export {
   UserPointHistory,
   GlobalPoint,
   RecommendedCategoryList,
+  SearchHistory,
 }
 
 export const initModels = (): any => {
@@ -85,6 +87,7 @@ export const initModels = (): any => {
   UserPointHistory.initModel(sequelize)
   GlobalPoint.initModel(sequelize)
   RecommendedCategoryList.initModel(sequelize)
+  SearchHistory.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -370,6 +373,10 @@ export const initModels = (): any => {
     as: 'user',
     foreignKey: 'user_id',
   })
+  SearchHistory.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
 
   return {
     User,
@@ -399,5 +406,6 @@ export const initModels = (): any => {
     UserPointHistory,
     GlobalPoint,
     RecommendedCategoryList,
+    SearchHistory,
   }
 }
