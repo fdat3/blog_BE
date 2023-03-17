@@ -32,6 +32,7 @@ import type { ReportUser } from './ReportUser'
 import type { UserDevice } from './UserDevice'
 import type { UserSetting } from './UserSetting'
 import type { Follow } from './Follow'
+import type { UserPoint } from './UserPoint'
 import UserUtils from '@/utils/user.utils'
 
 type UserAssociations =
@@ -49,6 +50,7 @@ type UserAssociations =
   | 'setting'
   | 'followings'
   | 'followeds'
+  | 'point'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -273,6 +275,12 @@ export class User extends Model<
   declare hasFolloweds: HasManyHasAssociationsMixin<Follow, string>
   declare countFolloweds: HasManyCountAssociationsMixin
 
+  // User hasOne UserPoint (as Point)
+  declare point?: NonAttribute<UserPoint>
+  declare getPoint: HasOneGetAssociationMixin<UserPoint>
+  declare setPoint: HasOneSetAssociationMixin<UserPoint, string>
+  declare createPoint: HasOneCreateAssociationMixin<UserPoint>
+
   declare static associations: {
     devices: Association<User, UserDevice>
     blockers: Association<User, Block>
@@ -286,6 +294,9 @@ export class User extends Model<
     myGroups: Association<User, Group>
     members: Association<User, GroupMember>
     setting: Association<User, UserSetting>
+    followings: Association<User, Follow>
+    followeds: Association<User, Follow>
+    point: Association<User, UserPoint>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

@@ -1,50 +1,43 @@
 import {
   Association,
+  BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
-  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  InferCreationAttributes,
   InferAttributes,
+  InferCreationAttributes,
   Model,
   NonAttribute,
   Sequelize,
 } from 'sequelize'
 import type { User } from './User'
 
-type FollowAssociations = 'user' | 'followed'
+type UserPointAssociations = 'user'
 
-export class Follow extends Model<
-  InferAttributes<Follow, { omit: FollowAssociations }>,
-  InferCreationAttributes<Follow, { omit: FollowAssociations }>
+export class UserPoint extends Model<
+  InferAttributes<UserPoint, { omit: UserPointAssociations }>,
+  InferCreationAttributes<UserPoint, { omit: UserPointAssociations }>
 > {
   declare id: CreationOptional<string>
   declare userId: string | null
-  declare followedId: string | null
-  declare deletedAt: CreationOptional<Date>
+  declare totalPoint: number | null
+  declare deletedAt: Date | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // Follow belongsTo User (as User)
+  // UserPoint belongsTo User (as User)
   declare user?: NonAttribute<User>
   declare getUser: BelongsToGetAssociationMixin<User>
   declare setUser: BelongsToSetAssociationMixin<User, string>
   declare createUser: BelongsToCreateAssociationMixin<User>
 
-  // Follow belongsTo User (as Followed)
-  declare followed?: NonAttribute<User>
-  declare getFollowed: BelongsToGetAssociationMixin<User>
-  declare setFollowed: BelongsToSetAssociationMixin<User, string>
-  declare createFollowed: BelongsToCreateAssociationMixin<User>
-
   declare static associations: {
-    user: Association<Follow, User>
-    followed: Association<Follow, User>
+    user: Association<UserPoint, User>
   }
 
-  static initModel(sequelize: Sequelize): typeof Follow {
-    Follow.init(
+  static initModel(sequelize: Sequelize): typeof UserPoint {
+    UserPoint.init(
       {
         id: {
           type: DataTypes.UUID,
@@ -54,8 +47,9 @@ export class Follow extends Model<
         userId: {
           type: DataTypes.UUID,
         },
-        followedId: {
-          type: DataTypes.STRING,
+        totalPoint: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
         },
         deletedAt: {
           type: DataTypes.DATE,
@@ -69,9 +63,10 @@ export class Follow extends Model<
       },
       {
         sequelize,
+        hooks: {},
       },
     )
 
-    return Follow
+    return UserPoint
   }
 }
