@@ -23,6 +23,7 @@ import {
 } from 'sequelize'
 import type { User } from './User'
 import type { UserPointHistory } from './UserPointHistory'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type UserPointAssociations = 'user' | 'histories'
 
@@ -91,6 +92,7 @@ export class UserPoint extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.USER_POINTS,
         hooks: {},
       },
     )

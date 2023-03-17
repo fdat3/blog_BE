@@ -34,6 +34,7 @@ import type { UserSetting } from './UserSetting'
 import type { Follow } from './Follow'
 import type { UserPoint } from './UserPoint'
 import UserUtils from '@/utils/user.utils'
+import ModelPgConstant from '@/constants/model.pg.constant'
 
 type UserAssociations =
   | 'devices'
@@ -386,6 +387,7 @@ export class User extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.USER,
         hooks: {
           beforeCreate: (instance: any): void => {
             if (!instance.inviteCode) {
