@@ -16,6 +16,10 @@ module.exports = {
         field: 'fullname',
         allowNull: false
       },
+      email: {
+        type: DataTypes.STRING(100),
+        field: 'email',
+      },
       password: {
         type: DataTypes.STRING(255),
         field: 'password',

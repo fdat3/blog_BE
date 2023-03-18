@@ -18,6 +18,7 @@ import UserController from '@/controllers/user.controller'
 import dotenv from 'dotenv'
 import * as process from 'process'
 import ErrorController from '@/controllers/error.controller'
+// import ImageController from '@/controllers/image.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -29,7 +30,11 @@ logger.warn(
 )
 
 const { app } = new App({
-  v1: [new AuthController(), new UserController()],
+  v1: [
+    new AuthController(),
+    new UserController(),
+    // new ImageController(),
+  ],
 })
 
 /**

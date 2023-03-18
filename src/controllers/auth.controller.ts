@@ -1,7 +1,10 @@
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router, NextFunction } from 'express'
 
 import AuthService from '@/services/auth.service'
-import Controller from '@/interfaces/controller.interface'
+import Controller, {
+  Request,
+  Response,
+} from '@/interfaces/controller.interface'
 
 import Validate from '@/validations/user.validation'
 import validationMiddleware from '@/middlewares/validation.middleware'
@@ -275,8 +278,9 @@ class AuthController implements Controller {
         )
       }
 
-      // TODO: Create or update device session
-      console.log(device)
+      if (device) {
+        await this.authService.setDevice(user, device)
+      }
 
       const accessToken = await this.authService.generateAccessToken(
         user.id,
@@ -287,6 +291,8 @@ class AuthController implements Controller {
       const newUser = { ...user }
 
       delete newUser.password
+
+      req.session.user = user
 
       return res.status(ConstantHttpCode.OK).json({
         status: {

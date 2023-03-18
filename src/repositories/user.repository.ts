@@ -1,6 +1,6 @@
 // import User from "@/models/mongo/user.model";
 // import UserInterface from "@/interfaces/user.interface";
-import { User } from '@/models/pg'
+import { User, UserDevice } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 import logger from '@/utils/logger.util'
 import { DeviceInterface } from '@/interfaces/auth.interface'
@@ -287,11 +287,6 @@ class UserRepository {
       where: {
         id,
       },
-      include: [
-        {
-          association: 'mbti',
-        },
-      ],
     })
     if (!user) {
       return null
@@ -321,6 +316,23 @@ class UserRepository {
       console.log(err)
       logger.error(err)
       return null
+    }
+  }
+
+  public async addDevice(user: User, device: UserDevice): Promise<void> {
+    try {
+      await UserDevice.findOrCreate({
+        where: {
+          ...device,
+        },
+        defaults: {
+          ...device,
+          userId: user.id,
+        },
+      })
+    } catch (err) {
+      logger.error('Error while create new device')
+      logger.error(err)
     }
   }
 }

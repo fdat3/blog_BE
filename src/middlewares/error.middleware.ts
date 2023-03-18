@@ -1,3 +1,4 @@
+import Variable from '@/env/variable.env'
 import { Request, Response, NextFunction } from 'express'
 import HttpException from '@/utils/exceptions/http.exceptions'
 
@@ -17,16 +18,13 @@ const errorMiddleware = (
   next: NextFunction,
 ): Response | void => {
   try {
-    setTimeout(() => {
-      ErrorController.sendErrorToTelegram(error)
-        .then(async (result) => {
-          const res = await result.json()
-          console.log(res)
-        })
-        .catch((err) => {
+    if (Variable.NODE_ENV !== 'local') {
+      setTimeout(() => {
+        ErrorController.sendErrorToTelegram(error).catch((err) => {
           logger.error(err)
         })
-    }, 0)
+      }, 0)
+    }
     const statusCode =
       error.statusCode || ConstantHttpCode.INTERNAL_SERVER_ERROR
     const statusMsg =

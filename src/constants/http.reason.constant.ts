@@ -132,6 +132,7 @@ class HttpReason {
 
   public static readonly NETWORK_CONNECT_TIMEOUT_ERROR: string =
     'Network Connect Timeout Error'
+  public static readonly UPLOAD_FILE: string = 'Please upload a file'
 }
 
 export default HttpReason

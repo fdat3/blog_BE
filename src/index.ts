@@ -5,7 +5,9 @@ import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
-
+import Redis from 'ioredis'
+const session = require('express-session')
+import RedisStore from 'connect-redis'
 // const passport = require('passport')
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
@@ -36,10 +38,9 @@ import {
   initModels,
   // Session
 } from '@/models/pg'
-import runAdminPage from '@/admin/.'
+// import runAdminPage from '@/admin/.'
 import CamelCaseMiddleware from '@/middlewares/camelCase.middleware'
 
-const session = require('express-session')
 // const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 const swaggerUi = require('swagger-ui-express')
@@ -47,31 +48,31 @@ const swaggerUi = require('swagger-ui-express')
 class App {
   public app: Application
   private readonly MONGO_DATABASE_URL: string
-  // private POSTGRES_DATABASE_URL: string;
-  // private POSTGRES_DATABASE_NAME: string;
-  // private POSTGRES_DATABASE_USERNAME: string;
-  // private POSTGRES_DATABASE_PASSWORD: string;
   private readonly SESSION_SECRET: string
   private readonly SESSION_NAME: string
   private readonly SESSION_KEYS: string
   private readonly SESSION_MAX_AGE: number
   private readonly SESSION_RESAVE: boolean
   private readonly PORT: number
+  private clientRedis
+  private redisStore
 
   constructor(versioning: Versioning) {
+    this.clientRedis = new Redis()
+    this.redisStore = new RedisStore({
+      client: this.clientRedis,
+      prefix: 'trendypoll:',
+    })
     this.app = express()
+
     this.MONGO_DATABASE_URL = Variable.MONGO_DATABASE_URL
-    // this.POSTGRES_DATABASE_URL = Variable.POSTGRES_DATABASE_URL;
-    // this.POSTGRES_DATABASE_NAME = Variable.POSTGRES_DATABASE_NAME;
-    // this.POSTGRES_DATABASE_USERNAME = Variable.POSTGRES_DATABASE_USERNAME;
-    // this.POSTGRES_DATABASE_PASSWORD = Variable.POSTGRES_DATABASE_PASSWORD;
     this.SESSION_SECRET = Variable.SESSION_SECRET
     this.SESSION_NAME = Variable.SESSION_NAME
     this.SESSION_KEYS = Variable.SESSION_KEYS
     this.SESSION_MAX_AGE = Variable.SESSION_MAX_AGE
     this.SESSION_RESAVE = Variable.SESSION_RESAVE
     this.PORT = Variable.PORT
-    runAdminPage(this.app, this.PORT)
+    // runAdminPage(this.app, this.PORT)
     this.initialiseDatabaseConnection(this.MONGO_DATABASE_URL).then()
     this.initialisePostgresConnection().then()
     this.initialiseConfig()
@@ -81,19 +82,30 @@ class App {
   }
 
   private initialiseConfig(): void {
-    // this.app.use(express.json())
-    this.app.use(express.urlencoded({ extended: true }))
+    this.app.set('trust proxy', 1)
+    this.app.use(
+      express.urlencoded({
+        extended: false,
+        limit: '50mb',
+      }),
+    )
     this.app.use(cookieParser())
     this.app.use(compression())
     this.app.use(cors())
     this.app.use(helmet())
-    // this.app.use(passport.initialise())
-    // this.app.use(passport.session())
-    this.app.use(bodyParser.json())
+    this.app.use(
+      bodyParser.json({
+        limit: '50mb',
+      }),
+    )
     this.app.use(CamelCaseMiddleware.convertCamelCase)
 
     this.app.use(morgan('combined'))
     this.app.disable('x-powered-by')
+
+    if (this.app.get('env') === 'production') {
+      this.app.set('trust proxy', 1) // trust first proxy
+    }
 
     // Session Config
     this.app.use(
@@ -102,24 +114,14 @@ class App {
         keys: this.SESSION_KEYS.split(','), // key for encrypting cookie
         secret: this.SESSION_SECRET,
         resave: this.SESSION_RESAVE,
+        store: this.redisStore,
         saveUninitialized: true,
         cookie: {
-          secure: true,
+          secure: process.env.NODE_ENV === 'production',
           httpOnly: true,
           expires: this.SESSION_MAX_AGE,
         },
-        proxy: true,
-        // store: new SequelizeStore({
-        //   db: sequelize,
-        //   table: Session,
-        //   extendDefaultFields: (defaults: any, session: any): any => {
-        //     return {
-        //       data: defaults.data,
-        //       expires: defaults.expires,
-        //       userId: session.userId,
-        //     }
-        //   },
-        // }),
+        proxy: process.env.NODE_ENV === 'production',
       }),
     )
   }

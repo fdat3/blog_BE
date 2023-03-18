@@ -1,3 +1,5 @@
+import { UserDevice } from './../models/pg/UserDevice'
+import { User } from '@/models/pg'
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
 import SNSService from '@/services/sns.service'
@@ -106,6 +108,10 @@ class AuthService {
       return !!user
     }
     return false
+  }
+
+  public async setDevice(user: User, device: UserDevice): Promise<void> {
+    await this.userRepository.addDevice(user, device)
   }
 }
 

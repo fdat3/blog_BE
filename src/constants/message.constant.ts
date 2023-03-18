@@ -56,6 +56,7 @@ class Message {
 
   public static readonly LABEL_NOT_VALID: string = 'Label is not valid'
   public static readonly MBTI_NOT_CREATED: string = 'MBTI not created!'
+  public static readonly UPLOAD_FILE: string = 'Please upload a file!'
   public static readonly MBTI_HAS_BEEN_CREATED: string =
     'MBTI has been created!'
 }

@@ -1,6 +1,9 @@
-import { NextFunction, Response, Router } from 'express'
+import { NextFunction, Router } from 'express'
 
-import Controller, { Request } from '@/interfaces/controller.interface'
+import Controller, {
+  Request,
+  Response,
+} from '@/interfaces/controller.interface'
 
 import UserService from '@/services/user.service'
 import Validate from '@/validations/user.validation'
@@ -81,13 +84,6 @@ class UserController implements Controller {
       validationMiddleware(this.validate.updatePhone),
       this.updatePhone,
     )
-
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.USER_UPDATE_ADDRESS}`,
-    //     this.authenticated.verifyTokenAndAuthorization,
-    //     validationMiddleware(this.validate.updateAddress
-    //     this.updateAddress,
-    // )
 
     this.router.post(
       `${this.path}${ConstantAPI.USER_DELETE}`,

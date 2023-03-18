@@ -21,6 +21,10 @@ const validate = (): void => {
     APPLE_ID: str(),
     TELEGRAM_URL: str(),
     TELEGRAM_ROOM: str(),
+    AWS_BUCKET_NAME: str(),
+    AWS_BUCKET_REGION: str(),
+    AWS_ACCESS_KEY_ID: str(),
+    AWS_ACCESS_SECRET_KEY: str(),
   })
 }
 

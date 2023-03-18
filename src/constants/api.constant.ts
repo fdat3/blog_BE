@@ -6,6 +6,12 @@ class Api {
   public static readonly API: string = '/api'
 
   public static readonly HOOK: string = '/hook'
+  public static readonly IMAGE: string = '/images'
+  public static readonly IMAGE_UPLOAD: string = '/upload'
+  public static readonly IMAGE_UPLOAD_RESIZE: string = '/upload/:size'
+  public static readonly IMAGE_UPLOAD_MULTIPLE: string = '/upload/multiple'
+  public static readonly IMAGE_UPLOAD_MULTIPLE_RESIZE: string =
+    '/upload/multiple/:thumbnail_size/:size'
 
   // auth
   public static readonly AUTH: string = '/auth'

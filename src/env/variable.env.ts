@@ -92,6 +92,13 @@ class Variable {
   // public static readonly SESSION_TOUCH: string = process.env.SESSION_TOUCH!;
 
   public static readonly APPLE_ID: string = process.env.APPLE_ID!
+  public static readonly AWS_BUCKET_NAME: string = process.env.AWS_BUCKET_NAME!
+  public static readonly AWS_BUCKET_REGION: string =
+    process.env.AWS_BUCKET_REGION!
+  public static readonly AWS_ACCESS_KEY_ID: string =
+    process.env.AWS_ACCESS_KEY_ID!
+  public static readonly AWS_ACCESS_SECRET_KEY: string =
+    process.env.AWS_ACCESS_SECRET_KEY!
 
   constructor() {
     this.initialise()

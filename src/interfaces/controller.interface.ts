@@ -28,6 +28,10 @@ export interface Request extends express.Request {
   [x: string]: any
 }
 
+export interface Response extends express.Response {
+  [x: string]: any
+}
+
 export interface ICrudExecOption {
   allowNull?: boolean
   msg?: string

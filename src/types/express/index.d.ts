@@ -11,3 +11,9 @@ declare global {
     } & { status(code: number): TypedResponse<T> }
   }
 }
+
+declare module 'express-session' {
+  interface SessionData {
+    user: User
+  }
+}

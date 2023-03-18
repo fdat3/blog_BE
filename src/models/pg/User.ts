@@ -495,6 +495,9 @@ export class User extends Model<
             exclude: ['password'],
           },
         },
+        scopes: {
+          withPassword: {},
+        },
       },
     )
 
