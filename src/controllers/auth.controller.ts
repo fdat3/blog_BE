@@ -280,6 +280,7 @@ class AuthController implements Controller {
 
       if (device) {
         await this.authService.setDevice(user, device)
+        req.session.device = device
       }
 
       const accessToken = await this.authService.generateAccessToken(
@@ -292,7 +293,7 @@ class AuthController implements Controller {
 
       delete newUser.password
 
-      req.session.user = user
+      req.session.user = newUser
 
       return res.status(ConstantHttpCode.OK).json({
         status: {

@@ -1,4 +1,4 @@
-import { User } from '@/models/pg'
+import { User, UserDevice } from '@/models/pg'
 
 declare global {
   namespace Express {
@@ -14,6 +14,7 @@ declare global {
 
 declare module 'express-session' {
   interface SessionData {
-    user: User
+    user?: User
+    device?: UserDevice
   }
 }
