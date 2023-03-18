@@ -1,7 +1,8 @@
 import Variable from '@/env/variable.env'
+import HttpException from '@/utils/exceptions/http.exceptions'
 
 class ErrorController {
-  public static async sendErrorToTelegram(error: Error | any): Promise<any> {
+  public static async sendErrorToTelegram(error: HttpException): Promise<any> {
     const fullUrl = `${Variable.TELEGRAM_URL}/sendMessage`
 
     const errorString = `
@@ -9,9 +10,10 @@ class ErrorController {
 <i>At: ${new Date()}</i>
     
 <strong>Error detail:</strong>
-
 <pre>${error}</pre>
-    `
+
+<pre>${error.stack}</pre>
+`
 
     const errorBody = {
       chat_id: Variable.TELEGRAM_ROOM,

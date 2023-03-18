@@ -1,5 +1,4 @@
-import Variable from '@/env/variable.env'
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import HttpException from '@/utils/exceptions/http.exceptions'
 
 // http constant
@@ -10,6 +9,7 @@ import ConstantHttpReason from '../constants/http.reason.constant'
 import ConstantMessage from '@/constants/message.constant'
 import ErrorController from '@/controllers/error.controller'
 import logger from '@/utils/logger.util'
+import * as process from 'process'
 
 const errorMiddleware = (
   error: HttpException,
@@ -18,7 +18,10 @@ const errorMiddleware = (
   next: NextFunction,
 ): Response | void => {
   try {
-    if (Variable.NODE_ENV !== 'local') {
+    if (
+      process?.env?.NODE_ENV &&
+      ['production', 'development', 'local'].includes(process.env.NODE_ENV)
+    ) {
       setTimeout(() => {
         ErrorController.sendErrorToTelegram(error).catch((err) => {
           logger.error(err)
@@ -26,10 +29,10 @@ const errorMiddleware = (
       }, 0)
     }
     const statusCode =
-      error.statusCode || ConstantHttpCode.INTERNAL_SERVER_ERROR
+      error.statusCode ?? ConstantHttpCode.INTERNAL_SERVER_ERROR
     const statusMsg =
-      error.statusMsg || ConstantHttpReason.INTERNAL_SERVER_ERROR
-    const msg = error.msg || ConstantMessage.SOMETHING_WENT_WRONG
+      error.statusMsg ?? ConstantHttpReason.INTERNAL_SERVER_ERROR
+    const msg = error.msg ?? ConstantMessage.SOMETHING_WENT_WRONG
 
     return res.status(statusCode).send({
       status: {

@@ -68,7 +68,8 @@ module.exports = {
       },
       isAdmin: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true
+        field: 'is_admin',
+        defaultValue: false
       },
       createdAt: {
         type: DataTypes.DATE,
