@@ -10,6 +10,7 @@ import {
 import appleSignin from 'apple-signin-auth'
 import logger from '@/utils/logger.util'
 import Variable from '@/env/variable.env'
+import fetch from 'node-fetch'
 
 class SNSService {
   private FACEBOOK_URL = (token: string): string =>
@@ -72,7 +73,7 @@ class SNSService {
         method: 'GET',
       })
       if (response.ok) {
-        const googleData: Promise<Partial<GoogleResponseInterface>> =
+        const googleData: Promise<Partial<GoogleResponseInterface> | any> =
           response.json()
         return googleData
       }
@@ -92,8 +93,8 @@ class SNSService {
         method: 'GET',
       })
       if (response.ok) {
-        const facebookData: Promise<Partial<FacebookResponseInterface>> =
-          await response.json()
+        const facebookData: Promise<Partial<FacebookResponseInterface> | any> =
+          response.json()
         return facebookData
       }
     } catch (err) {

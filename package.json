@@ -1,12 +1,12 @@
 {
-  "name": "base_backend",
+  "name": "trendypoll",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This is the Trendypoll Backend",
+  "main": "build/bin/www.js",
   "scripts": {
     "start": "yarn swagger_auto && node build/bin/www.js",
     "clean": "rm -rf build",
-    "build": "yarn clean && yarn build:compile && yarn build:types && yarn swagger_auto",
+    "build": "yarn clean && yarn build:compile && yarn build:types",
     "build:compile": "npx babel src --extensions .ts --out-dir build --source-maps",
     "build:types": "tsc",
     "dev": "yarn swagger_auto && concurrently yarn:dev:* --kill-others \"nodemon --exec node build/bin/www.js\"",
@@ -23,7 +23,7 @@
     "swagger": "tsoa spec"
   },
   "keywords": [],
-  "author": "",
+  "author": "@nhanlethanh1198",
   "license": "ISC",
   "dependencies": {
     "@adminjs/express": "5.1.0",
@@ -74,6 +74,7 @@
     "mongoose": "6.8.3",
     "morgan": "1.10.0",
     "multer": "1.4.5-lts.1",
+    "node-fetch": "3.3.1",
     "passport": "0.6.0",
     "passport-local": "1.0.0",
     "pg": "8.8.0",
@@ -147,7 +148,7 @@
     "typescript": "^4.9.4"
   },
   "engines": {
-    "node": ">=17.0.0",
+    "node": ">=16.0.0",
     "yarn": ">=1.20.0",
     "npm": ">=8.10.0"
   },
