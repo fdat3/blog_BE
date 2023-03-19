@@ -1,5 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express'
-import { execFile } from 'child_process'
+import { NextFunction, Request, Response, Router } from 'express'
 import probe from 'probe-image-size'
 import Controller from '@/interfaces/controller.interface'
 // import HttpException from '@/utils/exceptions/http.exceptions'
@@ -17,8 +16,9 @@ import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 import ConstantMessage from '@/constants/message.constant'
 
-const sharp = require('sharp')
-const gifsicle = require('gifsicle')
+import Jimp from 'jimp'
+import imagemin from 'imagemin'
+import imageminGifsicle from 'imagemin-gifsicle'
 
 const TYPE_IMAGE_PNG = '.png'
 const TYPE_IMAGE_GIF = '.gif'
@@ -137,21 +137,19 @@ class ImageController implements Controller {
     )
   }
 
-  private resizeGif(filename: any, originalFilePath: any): Promise<any> {
-    return new Promise((resolve): void => {
-      const output = 'images/resized-' + filename
-      execFile(
-        gifsicle,
-        ['--resize-fit-width', '300', '-o', output, originalFilePath],
-        (gifErr: any) => {
-          // console.timeEnd('execute time');
-          if (gifErr) {
-            logger.error(gifErr)
-            throw gifErr
-          }
-          resolve('success')
-        },
-      )
+  private resizeGif(originalFilePath: any): Promise<any> {
+    return new Promise((resolve, reject): void => {
+      // const output = 'images/resized-' + filename
+      try {
+        imagemin([originalFilePath], {
+          destination: 'images/',
+          plugins: [imageminGifsicle()],
+        })
+        resolve('success')
+      } catch (err) {
+        logger.error(err)
+        reject(err)
+      }
     })
   }
 
@@ -160,7 +158,7 @@ class ImageController implements Controller {
     newFilePath: string,
     maxSize: number,
   ): Promise<any> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const input = require('fs').createReadStream(originalFilePath)
       probe(input).then((result: any) => {
         let newWidth = maxSize
@@ -176,19 +174,18 @@ class ImageController implements Controller {
           }
           newWidth = Math.round((newHeight * result.width) / result.height)
         }
-        sharp(originalFilePath)
-          .resize(newWidth, newHeight)
-          .toFile(newFilePath, (err: any) => {
-            if (err) {
-              logger.error('resize image failed')
-              logger.error(err)
-            }
-            resolve('resize image successfully')
+
+        Jimp.read(originalFilePath)
+          .then((image: Jimp): void => {
+            image.resize(newWidth, newHeight).write(newFilePath)
+          })
+          .catch((error): void => {
+            logger.error(error)
+            reject(error)
           })
 
-        // terminate input, depends on stream type,
-        // this example is for fs streams only.
         input.destroy()
+        resolve('completed')
       })
     })
   }
@@ -219,7 +216,7 @@ class ImageController implements Controller {
     const size = req.params.size ? parseInt(req.params.size) : 400
 
     if (getTypeImage === 'gif') {
-      await this.resizeGif(file.filename, path)
+      await this.resizeGif(path)
     } else {
       await this.resizeImage(file.path, FILE_IMAGE_PATH + fileName, size)
     }
