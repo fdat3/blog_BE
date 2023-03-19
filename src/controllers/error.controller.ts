@@ -1,6 +1,7 @@
 import Variable from '@/env/variable.env'
 import HttpException from '@/utils/exceptions/http.exceptions'
 import logger from '@/utils/logger.util'
+import fetch from 'node-fetch'
 
 class ErrorController {
   public static async sendErrorToTelegram(error: HttpException): Promise<any> {
