@@ -24,7 +24,11 @@ const validate = (): void => {
     AWS_BUCKET_NAME: str(),
     AWS_BUCKET_REGION: str(),
     AWS_ACCESS_KEY_ID: str(),
-    AWS_ACCESS_SECRET_KEY: str(),
+    REDIS_HOST: str(),
+    REDIS_PORT: num(),
+    REDIS_USERNAME: str(),
+    REDIS_PASSWORD: str(),
+    REDIS_DB: str(),
   })
 }
 

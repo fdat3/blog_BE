@@ -61,17 +61,8 @@ class SocketServer {
     })
 
     const subClient = await pubClient.duplicate()
-    // pubClient.on('error', (err) => {
-    //   console.log(err)
-    // })
-    // subClient.on('error', (err) => {
-    //   console.log(err)
-    // })
     Promise.all([pubClient.connect(), subClient.connect()])
       .then(() => {
-        // pubClient.on('error', (...args) => {
-        //   console.log(args)
-        // })
         server.adapter(createAdapter(pubClient, subClient))
         logger.info('Socket With Redis cache connected!')
       })

@@ -99,6 +99,11 @@ class Variable {
     process.env.AWS_ACCESS_KEY_ID!
   public static readonly AWS_ACCESS_SECRET_KEY: string =
     process.env.AWS_ACCESS_SECRET_KEY!
+  public static readonly REDIS_HOST: string = process.env.REDIS_HOST!
+  public static readonly REDIS_PORT: number = Number(process.env.REDIS_PORT!)!
+  public static readonly REDIS_USERNAME: string = process.env.REDIS_USERNAME!
+  public static readonly REDIS_PASSWORD: string = process.env.REDIS_PASSWORD!
+  public static readonly REDIS_DB: string = process.env.REDIS_DB!
 
   constructor() {
     this.initialise()
