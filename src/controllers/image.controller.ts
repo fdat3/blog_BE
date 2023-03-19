@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express'
-import probe from 'probe-image-size'
+import path from 'path'
+import probe, { ProbeResult } from 'probe-image-size'
 import Controller from '@/interfaces/controller.interface'
+import CryptoJS from 'crypto-js'
 // import HttpException from '@/utils/exceptions/http.exceptions'
 import ConstantAPI from '@/constants/api.constant'
 // import ConstantMessage from '@/constants/message.constant'
@@ -19,10 +21,13 @@ import ConstantMessage from '@/constants/message.constant'
 import Jimp from 'jimp'
 import imagemin from 'imagemin'
 import imageminGifsicle from 'imagemin-gifsicle'
+import bodyParser from 'body-parser'
+import * as fs from 'fs'
 
-const TYPE_IMAGE_PNG = '.png'
-const TYPE_IMAGE_GIF = '.gif'
-const FILE_IMAGE_PATH = Path.FILE_IMAGE_DESTINATION
+const TYPE_IMAGE_PNG: string = '.png'
+const TYPE_IMAGE_GIF: string = '.gif'
+const FOLDER_APP_NAME: string = 'trendypoll/'
+const FILE_IMAGE_PATH: string = Path.FILE_IMAGE_DESTINATION
 const AWS_BUCKET_NAME: string = Variable.AWS_BUCKET_NAME
 const AWS_BUCKET_REGION: string = Variable.AWS_BUCKET_REGION
 const AWS_ACCESS_KEY_ID: string = Variable.AWS_ACCESS_KEY_ID
@@ -77,6 +82,94 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+async function resizeImagev2(
+  originalFilePath: string,
+  newFilePath: string,
+  maxSize: number,
+): Promise<void> {
+  const input = require('fs').createReadStream(originalFilePath)
+  await probe(input).then((result: ProbeResult): void => {
+    let newWidth = maxSize
+    let newHeight = maxSize
+    if (result.width > result.height) {
+      if (result.width < newWidth) {
+        newWidth = result.width
+      }
+      newHeight = Math.round((newWidth * result.height) / result.width)
+    } else {
+      if (result.height < newHeight) {
+        newHeight = result.width
+      }
+      newWidth = Math.round((newHeight * result.width) / result.height)
+    }
+
+    Jimp.read(originalFilePath)
+      .then(async (image: Jimp): Promise<void> => {
+        await image.resize(newWidth, newHeight).write(newFilePath)
+      })
+      .catch((error): void => {
+        logger.error(error)
+        throw new Error('Cannot resize image')
+      })
+
+    input.destroy()
+    setTimeout(() => {
+      uploadToS3(newFilePath, 'png')
+    }, 1000)
+  })
+}
+
+async function uploadToS3(
+  pathFile: string,
+  getTypeImage: string,
+): Promise<string> {
+  let url: string = ''
+  try {
+    const readPathFile = path.join(__dirname, '../../') + pathFile
+
+    const fileContent = fs.readFileSync(readPathFile)
+
+    const params = {
+      Bucket: AWS_BUCKET_NAME,
+      Key: FOLDER_APP_NAME + pathFile, // File name you want to save as in S3
+      Body: fileContent,
+      ContentType: getTypeImage === 'gif' ? 'image/gif' : 'image/png',
+      ACL: 'public-read',
+    }
+
+    S3.upload(params, (err: Error | any, data: any) => {
+      if (err) {
+        logger.error(err)
+        throw new Error(err)
+        return undefined
+      } else {
+        url = data.Location
+        console.log({ url })
+      }
+    })
+  } catch (err) {
+    logger.error(err)
+  }
+
+  return url
+}
+
+async function resizeGif(originalFilePath: any): Promise<any> {
+  return new Promise((resolve, reject): void => {
+    // const output = 'images/resized-' + filename
+    try {
+      imagemin([originalFilePath], {
+        destination: 'images/',
+        plugins: [imageminGifsicle()],
+      })
+      resolve('success')
+    } catch (err) {
+      logger.error(err)
+      reject(err)
+    }
+  })
+}
+
 class ImageController implements Controller {
   public path: string
   public router: Router
@@ -84,6 +177,7 @@ class ImageController implements Controller {
   constructor() {
     this.path = `${ConstantAPI.IMAGE}`
     this.router = Router()
+    this.router.use(bodyParser.urlencoded())
     this.initialiseRoutes()
 
     // S3
@@ -137,88 +231,57 @@ class ImageController implements Controller {
     )
   }
 
-  private resizeGif(originalFilePath: any): Promise<any> {
-    return new Promise((resolve, reject): void => {
-      // const output = 'images/resized-' + filename
-      try {
-        imagemin([originalFilePath], {
-          destination: 'images/',
-          plugins: [imageminGifsicle()],
-        })
-        resolve('success')
-      } catch (err) {
-        logger.error(err)
-        reject(err)
-      }
-    })
-  }
-
-  private resizeImage(
-    originalFilePath: string,
-    newFilePath: string,
-    maxSize: number,
-  ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const input = require('fs').createReadStream(originalFilePath)
-      probe(input).then((result: any) => {
-        let newWidth = maxSize
-        let newHeight = maxSize
-        if (result.width > result.height) {
-          if (result.width < newWidth) {
-            newWidth = result.width
-          }
-          newHeight = Math.round((newWidth * result.height) / result.width)
-        } else {
-          if (result.height < newHeight) {
-            newHeight = result.width
-          }
-          newWidth = Math.round((newHeight * result.width) / result.height)
-        }
-
-        Jimp.read(originalFilePath)
-          .then((image: Jimp): void => {
-            image.resize(newWidth, newHeight).write(newFilePath)
-          })
-          .catch((error): void => {
-            logger.error(error)
-            reject(error)
-          })
-
-        input.destroy()
-        resolve('completed')
-      })
-    })
-  }
-
   private async uploadImage(
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<void> {
+  ): Promise<Response | void> {
     const { file } = req
+    try {
+      if (!file) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.UPLOAD_FILE,
+          ),
+        )
+      }
 
-    if (!file) {
+      const getTypeImage = file.mimetype.split('/')[1]
+      let fileName = 'resized-' + file.filename
+      if (file.originalname == 'true') {
+        fileName += `-${Date.now()}`
+      }
+      const size = req.params.size ? parseInt(req.params.size) : 1000
+      const fileImagePath: string = FILE_IMAGE_PATH + fileName
+
+      if (getTypeImage === 'gif') {
+        await resizeGif(file.path)
+      } else {
+        await resizeImagev2(file.path, fileImagePath, size)
+      }
+
+      setTimeout(() => {
+        for (const file of fs.readdirSync('images/')) {
+          const pathString = path.join('images/', file) as string
+          fs.unlinkSync(pathString)
+        }
+      }, 2000)
+
+      return res.json({
+        message: 'ok',
+        url: `https://trendypolls3.s3.ap-northeast-2.amazonaws.com/${FOLDER_APP_NAME}${fileImagePath}`,
+      })
+    } catch (err) {
+      console.error(err)
+      logger.error(err)
       return next(
         new HttpException(
-          ConstantHttpCode.BAD_REQUEST,
-          ConstantHttpReason.BAD_REQUEST,
-          ConstantMessage.UPLOAD_FILE,
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
         ),
       )
-    }
-
-    const getTypeImage = file.mimetype.split('/')[1]
-    const path = file.path
-    let fileName = 'resized-' + file.filename
-    if (file.originalname == 'true') {
-      fileName += `-${Date.now()}`
-    }
-    const size = req.params.size ? parseInt(req.params.size) : 400
-
-    if (getTypeImage === 'gif') {
-      await this.resizeGif(path)
-    } else {
-      await this.resizeImage(file.path, FILE_IMAGE_PATH + fileName, size)
     }
   }
 }

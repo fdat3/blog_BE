@@ -90,7 +90,7 @@ class App {
   private initialiseConfig(): void {
     this.app.set('trust proxy', 1)
     this.app.use(
-      express.urlencoded({
+      bodyParser.urlencoded({
         extended: false,
         limit: '50mb',
       }),
@@ -125,8 +125,8 @@ class App {
         cookie: {
           secure: process.env.NODE_ENV === 'production',
           httpOnly: true,
-          expires: this.SESSION_MAX_AGE,
         },
+        expires: this.SESSION_MAX_AGE,
         proxy: process.env.NODE_ENV === 'production',
       }),
     )

@@ -1,17 +1,17 @@
 import Variable from '@/env/variable.env'
 import HttpException from '@/utils/exceptions/http.exceptions'
+import logger from '@/utils/logger.util'
 
 class ErrorController {
   public static async sendErrorToTelegram(error: HttpException): Promise<any> {
+    logger.error({ error })
     const fullUrl = `${Variable.TELEGRAM_URL}/sendMessage`
 
     const errorString = `
 <strong>Environment:</strong> <b>${Variable.NODE_ENV.toUpperCase()}</b>
-<i>At: ${new Date()}</i>
+<i>At: ${new Date().toString()}</i>
     
 <strong>Error detail:</strong>
-<pre>${error}</pre>
-
 <pre>${error.stack}</pre>
 `
 
