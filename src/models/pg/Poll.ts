@@ -30,6 +30,7 @@ import type { ReportPoll } from './ReportPoll'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 import { PollAnswer } from '@/models/pg/PollAnswer'
+import { PollEntity } from '@/models/pg/PollEntity'
 
 type PollAssociations =
   | 'user'
@@ -40,6 +41,7 @@ type PollAssociations =
   | 'mentions'
   | 'likes'
   | 'answers'
+  | 'entities'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -155,6 +157,19 @@ export class Poll extends Model<
   declare hasAnswers: HasManyHasAssociationsMixin<PollAnswer, string>
   declare countAnswers: HasManyCountAssociationsMixin
 
+  // Poll hasMany PollEntity (as Entities)
+  declare entities?: NonAttribute<PollEntity[]>
+  declare getEntities: HasManyGetAssociationsMixin<PollEntity>
+  declare setEntities: HasManySetAssociationsMixin<PollEntity, string>
+  declare addEntity: HasManyAddAssociationMixin<PollEntity, string>
+  declare addEntities: HasManyAddAssociationsMixin<PollEntity, string>
+  declare createEntity: HasManyCreateAssociationMixin<PollEntity>
+  declare removeEntity: HasManyRemoveAssociationMixin<PollEntity, string>
+  declare removeEntities: HasManyRemoveAssociationsMixin<PollEntity, string>
+  declare hasEntity: HasManyHasAssociationMixin<PollEntity, string>
+  declare hasEntities: HasManyHasAssociationsMixin<PollEntity, string>
+  declare countEntities: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -164,6 +179,7 @@ export class Poll extends Model<
     mentions: Association<Poll, PollMention>
     likes: Association<Poll, Like>
     answers: Association<Poll, PollAnswer>
+    entities: Association<Poll, PollEntity>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {

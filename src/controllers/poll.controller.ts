@@ -93,27 +93,18 @@ class PollController implements Controller {
       const { id } = req.params
       const { queryInfo } = req
 
-      const user = await this.pollService.getItem(id, queryInfo)
-      if (!user) {
+      const poll = await this.pollService.getItem(id, queryInfo)
+      if (!poll) {
         return next(
           new HttpException(
             ConstantHttpCode.NOT_FOUND,
             ConstantHttpReason.NOT_FOUND,
-            ConstantMessage.USER_NOT_FOUND,
+            ConstantMessage.POLL_NOT_FOUND,
           ),
         )
       }
 
-      return res.status(ConstantHttpCode.OK).json({
-        status: {
-          code: ConstantHttpCode.OK,
-          msg: ConstantHttpReason.OK,
-        },
-        msg: ConstantMessage.USER_FOUND,
-        data: {
-          user,
-        },
-      })
+      this.baseController.onSuccess(res, poll, undefined)
     } catch (err: any) {
       next(
         new HttpException(

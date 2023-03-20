@@ -28,6 +28,7 @@ import { GlobalPoint } from '@/models/pg/GlobalPoint'
 import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
 import { SearchHistory } from '@/models/pg/SearchHistory'
 import { ContactList } from './ContactList'
+import { PollEntity } from './PollEntity'
 
 export {
   User,
@@ -59,6 +60,7 @@ export {
   RecommendedCategoryList,
   SearchHistory,
   ContactList,
+  PollEntity,
 }
 
 export const initModels = (): any => {
@@ -91,6 +93,7 @@ export const initModels = (): any => {
   RecommendedCategoryList.initModel(sequelize)
   SearchHistory.initModel(sequelize)
   ContactList.initModel(sequelize)
+  PollEntity.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -190,6 +193,10 @@ export const initModels = (): any => {
   })
   Poll.hasMany(PollAnswer, {
     as: 'answers',
+    foreignKey: 'poll_id',
+  })
+  Poll.hasMany(PollEntity, {
+    as: 'entities',
     foreignKey: 'poll_id',
   })
   PollAnswer.belongsTo(Poll, {
@@ -388,6 +395,10 @@ export const initModels = (): any => {
     as: 'contactInfo',
     foreignKey: 'contact_id',
   })
+  PollEntity.belongsTo(Poll, {
+    as: 'poll',
+    foreignKey: 'poll_id',
+  })
 
   return {
     User,
@@ -419,5 +430,6 @@ export const initModels = (): any => {
     RecommendedCategoryList,
     SearchHistory,
     ContactList,
+    PollEntity,
   }
 }

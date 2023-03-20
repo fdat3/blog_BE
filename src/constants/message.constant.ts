@@ -57,5 +57,6 @@ class Message {
   // POll
   public static readonly CREAT_POLL_ERR: string =
     'Can not create new poll right now! Please try again.'
+  public static readonly POLL_NOT_FOUND: string = 'Poll Not found!'
 }
 export default Message

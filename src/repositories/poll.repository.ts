@@ -51,6 +51,9 @@ class PollRepository {
           {
             include: [
               {
+                association: 'entities',
+              },
+              {
                 association: 'answers',
               },
               {

@@ -212,7 +212,7 @@ class AuthController implements Controller {
         data: newUser,
       })
     } catch (err: any) {
-      console.log(err)
+      logger.error(err)
       return next(
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,

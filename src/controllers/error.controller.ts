@@ -1,11 +1,17 @@
 import logger from '@/utils/logger.util'
 import Variable from '@/env/variable.env'
 import HttpException from '@/utils/exceptions/http.exceptions'
-// import fetch from 'node-fetch'
+import { DateTime } from 'luxon'
 
 class ErrorController {
   public static async sendErrorToTelegram(error: HttpException): Promise<any> {
     const fullUrl = `${Variable.TELEGRAM_URL}/sendMessage`
+
+    const checkIsWorkingTime = (): boolean => {
+      const now = DateTime.local()
+      const hour = now.hour
+      return hour >= 7 && hour <= 20
+    }
 
     let errorString = `
 *Environment: ${Variable.NODE_ENV.toUpperCase()}*
@@ -21,6 +27,7 @@ ${error}
       message_thread_id: Variable.TELEGRAM_THREAD_ID,
       text: errorString,
       parse_mode: 'Markdown',
+      disable_notification: !checkIsWorkingTime(), // Disable notification
     }
 
     return await fetch(fullUrl, {
@@ -35,23 +42,6 @@ ${error}
       }
     })
   }
-
-  // private async findTopicId(): Promise<any> {
-  //   // const today = new Date()
-  //   // let mm: string | number = today.getMonth() + 1; // Months start at 0!
-  //   // let dd: string | number = today.getDate()
-  //   // if (dd < 10) dd = '0' + dd;
-  //   // if (mm < 10) mm = '0' + mm;
-  //   // const todayString = `${today.getFullYear()}_${mm}_${dd}`
-  //
-  //   // Find existed topic
-  //
-  //   return ''
-  // }
-  //
-  // private async createNewTopicToday(topic_id: string): Promise<any> {
-  //
-  // }
 }
 
 export default ErrorController
