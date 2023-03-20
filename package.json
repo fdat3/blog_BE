@@ -7,7 +7,7 @@
     "start": "yarn swagger_auto && node build/bin/www.js",
     "clean": "rm -rf build",
     "build": "yarn clean && yarn build:compile && yarn build:types",
-    "build:compile": "npx babel src --extensions .ts --out-dir build --source-maps",
+    "build:compile": "npx babel src --extensions .ts --out-dir build",
     "build:types": "tsc",
     "dev": "yarn swagger_auto && concurrently yarn:dev:* --kill-others \"nodemon --exec node build/bin/www.js\"",
     "dev:compile": "npx babel src --extensions .ts --out-dir build --source-maps --watch",
