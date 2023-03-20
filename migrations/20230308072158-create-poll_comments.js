@@ -13,12 +13,10 @@ module.exports = {
       pollId: {
         type: DataTypes.UUID,
         field: 'poll_id',
-        defaultValue: DataTypes.UUIDV4
       },
       userId: {
         type: DataTypes.UUID,
         field: 'user_id',
-        defaultValue: DataTypes.UUIDV4
       },
       content: {
         type: DataTypes.TEXT,
@@ -31,7 +29,6 @@ module.exports = {
       parentId: {
         type: DataTypes.UUID,
         field: 'parent_id',
-        defaultValue: DataTypes.UUIDV4
       },
       createdAt: {
         type: DataTypes.DATE,

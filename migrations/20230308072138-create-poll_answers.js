@@ -13,12 +13,6 @@ module.exports = {
       pollId: {
         type: DataTypes.UUID,
         field: 'poll_id',
-        defaultValue: DataTypes.UUIDV4
-      },
-      userId: {
-        type: DataTypes.UUID,
-        field: 'user_id',
-        defaultValue: DataTypes.UUIDV4
       },
       content: {
         type: DataTypes.TEXT,

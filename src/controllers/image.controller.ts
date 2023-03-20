@@ -243,7 +243,7 @@ class ImageController implements Controller {
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.UPLOAD_FILE,
+            ConstantMessage.UPLOAD_IMAGE,
           ),
         )
       }

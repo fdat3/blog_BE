@@ -26,7 +26,7 @@ import type { PollAnswerChosen } from './PollAnswerChosen'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type PollAnswerAssociations = 'poll' | 'user' | 'choosens'
+type PollAnswerAssociations = 'poll' | 'choosens'
 
 export class PollAnswer extends Model<
   InferAttributes<PollAnswer, { omit: PollAnswerAssociations }>,
@@ -34,7 +34,6 @@ export class PollAnswer extends Model<
 > {
   declare id: CreationOptional<uuid>
   declare pollId: string | null
-  declare userId: CreationOptional<uuid>
   declare content: string | null
   declare image: string | null
   declare coord: Buffer | null
@@ -47,12 +46,6 @@ export class PollAnswer extends Model<
   declare getPoll: BelongsToGetAssociationMixin<Poll>
   declare setPoll: BelongsToSetAssociationMixin<Poll, string>
   declare createPoll: BelongsToCreateAssociationMixin<Poll>
-
-  // PollAnswer belongsTo User (as User)
-  declare user?: NonAttribute<User>
-  declare getUser: BelongsToGetAssociationMixin<User>
-  declare setUser: BelongsToSetAssociationMixin<User, string>
-  declare createUser: BelongsToCreateAssociationMixin<User>
 
   // PollAnswer hasMany PollAnswerChosen (as Choosen)
   declare choosens?: NonAttribute<PollAnswerChosen[]>
@@ -87,11 +80,6 @@ export class PollAnswer extends Model<
         },
         pollId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-        },
-        userId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         content: {
           type: DataTypes.TEXT,

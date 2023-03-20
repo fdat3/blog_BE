@@ -14,7 +14,7 @@ module.exports = {
     
     await queryInterface.addConstraint('polls', {
       fields: ['category_id'],
-      type: 'foreign key',
+      type: 'foreign key',s\
       name: 'polls_category_id_fkey',
       references: {
         table: 'poll_categories',
@@ -42,16 +42,6 @@ module.exports = {
       }
     })
     
-    await queryInterface.addConstraint('poll_answers', {
-      fields: ['user_id'],
-      type: 'foreign key',
-      name: 'poll_answers_user_id_fkey',
-      references: {
-        table: 'users',
-        field: 'id'
-      }
-    })
-    
     await queryInterface.addConstraint('poll_answer_chosens', {
       fields: ['poll_answer_id'],
       type: 'foreign key',
@@ -71,16 +61,7 @@ module.exports = {
         field: 'id'
       }
     })
-    
-    await queryInterface.addConstraint('poll_answer_chosens', {
-      fields: ['poll_anwser_id'],
-      type: 'foreign key',
-      name: 'poll_answer_chosens_poll_anwser_id_fkey',
-      references: {
-        table: 'poll_answers',
-        field: 'id'
-      }
-    })
+
     
     await queryInterface.addConstraint('poll_comments', {
       fields: ['poll_id'],
@@ -377,7 +358,6 @@ module.exports = {
     await queryInterface.removeConstraint('polls', 'polls_category_id_fkey')
     await queryInterface.removeConstraint('polls', 'polls_poll_category_id_fkey')
     await queryInterface.removeConstraint('poll_answers', 'poll_answers_poll_id_fkey')
-    await queryInterface.removeConstraint('poll_answers', 'poll_answers_user_id_fkey')
     await queryInterface.removeConstraint('poll_answer_chosens', 'poll_answer_chosens_poll_answer_id_fkey')
     await queryInterface.removeConstraint('poll_answer_chosens', 'poll_answer_chosens_user_id_fkey')
     await queryInterface.removeConstraint('poll_answer_chosens', 'poll_answer_chosens_poll_anwser_id_fkey')

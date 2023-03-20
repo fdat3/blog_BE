@@ -51,13 +51,11 @@ class Message {
   public static readonly USER_DELETE_SUCCESS: string = 'user is delete success'
   public static readonly USER_FOUND: string = 'user is found'
 
-  // MBTI
-  public static readonly MBTI_NOT_FOUND: string = 'MBTI(s) not found!'
+  // Files
+  public static readonly UPLOAD_IMAGE: string = 'Please upload an image!'
 
-  public static readonly LABEL_NOT_VALID: string = 'Label is not valid'
-  public static readonly MBTI_NOT_CREATED: string = 'MBTI not created!'
-  public static readonly UPLOAD_FILE: string = 'Please upload a file!'
-  public static readonly MBTI_HAS_BEEN_CREATED: string =
-    'MBTI has been created!'
+  // POll
+  public static readonly CREAT_POLL_ERR: string =
+    'Can not create new poll right now! Please try again.'
 }
 export default Message

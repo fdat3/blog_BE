@@ -5,8 +5,8 @@ import Controller, {
   Response,
 } from '@/interfaces/controller.interface'
 
-import Validate from '@/validations/user.validation'
-// import validationMiddleware from '@/middlewares/validation.middleware'
+import PollValidate from '@/validations/poll.validation'
+import validationMiddleware from '@/middlewares/validation.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 import ConstantAPI from '@/constants/api.constant'
 // message constant
@@ -17,26 +17,39 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 // import logger from '@/utils/logger.util'
 import PollService from '@/services/poll.service'
 import BaseController from './base.controller'
+import ConstantMessage from '@/constants/message.constant'
+import Message from '@/constants/message.constant'
+import logger from '@/utils/logger.util'
 
 class PollController implements Controller {
   public path: string
   public router: Router
-  public validate: Validate
+  public validate: PollValidate
   private queryMiddleware: QueryMiddleware
   private baseController: BaseController
   private pollService: PollService
   constructor() {
     this.path = `${ConstantAPI.POLL}`
     this.router = Router()
-    this.validate = new Validate()
     this.queryMiddleware = new QueryMiddleware()
     this.baseController = new BaseController()
     this.pollService = new PollService()
+    this.validate = new PollValidate()
     this.initialiseRoutes()
   }
 
   public initialiseRoutes(): void {
     this.router.get(`${this.path}`, [this.queryMiddleware.run()], this.getList)
+    this.router.get(
+      `${this.path}${ConstantAPI.POLL_INFO}`,
+      [this.queryMiddleware.run()],
+      this.getItem,
+    )
+    this.router.post(
+      `${this.path}${ConstantAPI.POLL_CREATE}`,
+      [validationMiddleware(this.validate.create)],
+      this.create,
+    )
   }
 
   private getList = async (
@@ -54,6 +67,70 @@ class PollController implements Controller {
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           err?.message,
+          err,
+        ),
+      )
+    }
+  }
+
+  private getItem = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const { queryInfo } = req
+
+      const user = await this.pollService.getItem(id, queryInfo)
+      if (!user) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.USER_NOT_FOUND,
+          ),
+        )
+      }
+
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_FOUND,
+        data: {
+          user,
+        },
+      })
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
+
+  private create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const data = req.body
+      const user = req.session.user
+      const result = await this.pollService.create(user, data)
+      this.baseController.onSuccess(res, result, undefined)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.CREAT_POLL_ERR,
           err,
         ),
       )

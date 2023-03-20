@@ -23,7 +23,6 @@ class BaseMiddleware {
   }
 
   run(option?: any): any {
-    console.log('is it run?')
     return (req: Request, res: Response, next: NextFunction): any =>
       this.use
         .bind(this)(req, res, next, option)

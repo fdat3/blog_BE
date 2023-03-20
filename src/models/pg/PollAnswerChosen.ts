@@ -58,11 +58,9 @@ export class PollAnswerChosen extends Model<
         },
         pollAnswerId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         userId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         createdAt: {
           type: DataTypes.DATE,

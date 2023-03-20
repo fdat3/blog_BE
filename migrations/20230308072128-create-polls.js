@@ -13,12 +13,10 @@ module.exports = {
       userId: {
         type: DataTypes.UUID,
         field: 'user_id',
-        defaultValue: DataTypes.UUIDV4
       },
       categoryId: {
         type: DataTypes.UUID,
         field: 'category_id',
-        defaultValue: DataTypes.UUIDV4
       },
       title: {
         type: DataTypes.STRING(100),

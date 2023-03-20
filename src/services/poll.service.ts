@@ -13,12 +13,12 @@ class PollService {
     return this.repository.getList(queryInfo)
   }
 
-  public async findOne(queryInfo?: ICrudOption): Promise<any> {
-    return this.repository.findOne(queryInfo)
+  public async getItem(id: uuid, queryInfo?: ICrudOption): Promise<any> {
+    return this.repository.getItem(id, queryInfo)
   }
 
-  public async create(data: Poll): Promise<any> {
-    return this.repository.create(data)
+  public async create(user: any, data: any): Promise<any> {
+    return this.repository.create(user, data)
   }
 
   public async update(data: Partial<Poll>): Promise<any> {

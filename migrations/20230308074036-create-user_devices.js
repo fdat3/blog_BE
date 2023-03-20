@@ -12,7 +12,6 @@ module.exports = {
       userId: {
         type: DataTypes.UUID,
         field: 'user_id',
-        defaultValue: DataTypes.UUIDV4
       },
       fcmToken: {
         type: DataTypes.STRING(255),

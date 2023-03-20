@@ -29,6 +29,7 @@ import type { PollMention } from './PollMention'
 import type { ReportPoll } from './ReportPoll'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
+import { PollAnswer } from '@/models/pg/PollAnswer'
 
 type PollAssociations =
   | 'user'
@@ -38,14 +39,15 @@ type PollAssociations =
   | 'pollHashtags'
   | 'mentions'
   | 'likes'
+  | 'answers'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
   InferCreationAttributes<Poll, { omit: PollAssociations }>
 > {
   declare id: CreationOptional<string>
-  declare userId: string | null
-  declare categoryId: string | null
+  declare userId: CreationOptional<uuid>
+  declare categoryId: CreationOptional<uuid>
   declare title: string | null
   declare description: string | null
   declare image: string | null
@@ -143,6 +145,19 @@ export class Poll extends Model<
   declare hasLikes: HasManyHasAssociationsMixin<Like, string>
   declare countLikes: HasManyCountAssociationsMixin
 
+  // Poll hasMany PollAnswer (as Answers)
+  declare answers?: NonAttribute<PollAnswer[]>
+  declare getAnswers: HasManyGetAssociationsMixin<PollAnswer>
+  declare setAnswers: HasManySetAssociationsMixin<PollAnswer, string>
+  declare addAnswer: HasManyAddAssociationMixin<PollAnswer, string>
+  declare addAnswers: HasManyAddAssociationsMixin<PollAnswer, string>
+  declare createAnswer: HasManyCreateAssociationMixin<PollAnswer>
+  declare removeAnswer: HasManyRemoveAssociationMixin<PollAnswer, string>
+  declare removeAnswers: HasManyRemoveAssociationsMixin<PollAnswer, string>
+  declare hasAnswer: HasManyHasAssociationMixin<PollAnswer, string>
+  declare hasAnswers: HasManyHasAssociationsMixin<PollAnswer, string>
+  declare countAnswers: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -151,6 +166,7 @@ export class Poll extends Model<
     pollHashtags: Association<Poll, PollHashtag>
     mentions: Association<Poll, PollMention>
     likes: Association<Poll, Like>
+    answers: Association<Poll, PollAnswer>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {
@@ -164,11 +180,9 @@ export class Poll extends Model<
         },
         userId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         categoryId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         title: {
           type: DataTypes.STRING(100),
@@ -199,6 +213,7 @@ export class Poll extends Model<
             'SCHEDULE',
             'TRENDY_TALK',
           ),
+          defaultValue: 'TEXT',
         },
         createdAt: {
           type: DataTypes.DATE,

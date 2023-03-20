@@ -12,12 +12,10 @@ module.exports = {
       pollAnswerId: {
         type: DataTypes.UUID,
         field: 'poll_answer_id',
-        defaultValue: DataTypes.UUIDV4
       },
       userId: {
         type: DataTypes.UUID,
         field: 'user_id',
-        defaultValue: DataTypes.UUIDV4
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -31,10 +29,6 @@ module.exports = {
         type: DataTypes.DATE,
         field: 'deleted_at'
       },
-      pollAnwserId: {
-        type: DataTypes.UUID,
-        field: 'poll_anwser_id'
-      }
     })
   },
   down: async (queryInterface, Sequelize) => {

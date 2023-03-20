@@ -130,11 +130,9 @@ export class PollComment extends Model<
         },
         pollId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         userId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         content: {
           type: DataTypes.TEXT,
@@ -144,7 +142,6 @@ export class PollComment extends Model<
         },
         parentId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         createdAt: {
           type: DataTypes.DATE,

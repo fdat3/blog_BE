@@ -57,7 +57,6 @@ export class UserDevice extends Model<
         },
         userId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         fcmToken: {
           type: DataTypes.STRING(255),

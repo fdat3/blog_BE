@@ -94,7 +94,7 @@ export const syncSequelize = async (): Promise<void> => {
   try {
     await sequelize.sync({
       force: false,
-      alter: false,
+      alter: true,
       logging: (sql: string) => {
         process.env.LOGGING === 'true' && logger.http(sql)
       },

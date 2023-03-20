@@ -12,7 +12,7 @@ class Regex {
   // public static readonly ADDRESS = /^[a-zA-Z0-9\s,'-]{10,200}$/
   public static readonly ADDRESS = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{3,32}$/
 
-  public static readonly MBTI_LABEL = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{3,32}$/
+  public static readonly COMMON_STRING = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]$/
 }
 
 export default Regex

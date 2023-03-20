@@ -25,11 +25,14 @@ class PollRepository {
     }
   }
 
-  public async findOne(queryInfo?: ICrudOption): Promise<Poll | null> {
+  public async getItem(
+    id: uuid,
+    queryInfo?: ICrudOption,
+  ): Promise<Poll | null> {
     try {
-      const result = await this.model.findOne(
-        baseController.applyFindOptions(queryInfo),
-      )
+      const result = await this.model.findByPk(id, {
+        ...baseController.applyFindOptions(queryInfo),
+      })
       return result
     } catch (err) {
       logger.error(err)
@@ -37,18 +40,25 @@ class PollRepository {
     }
   }
 
-  public async create(data: Poll): Promise<Poll | null> {
+  public async create(user: any, data: any): Promise<Poll | any> {
     try {
       return sequelize.transaction(async (transaction) => {
-        const newPoll = await Poll.create(data, {
-          include: [
-            {
-              association: 'answers',
-            },
-          ],
-          transaction,
-        })
-        return newPoll
+        const poll = await Poll.create(
+          {
+            ...data,
+            userId: user.id,
+          },
+          {
+            include: [
+              {
+                association: 'answers',
+              },
+            ],
+            transaction,
+          },
+        )
+
+        return poll
       })
     } catch (error) {
       logger.error('Cannot create poll')

@@ -108,10 +108,6 @@ export const initModels = (): any => {
     as: 'polls',
     foreignKey: 'user_id',
   })
-  User.hasMany(PollAnswer, {
-    as: 'pollAnswers',
-    foreignKey: 'user_id',
-  })
   User.hasMany(PollAnswerChosen, {
     as: 'pollChoosens',
     foreignKey: 'user_id',
@@ -192,13 +188,13 @@ export const initModels = (): any => {
     as: 'likes',
     foreignKey: 'poll_id',
   })
+  Poll.hasMany(PollAnswer, {
+    as: 'answers',
+    foreignKey: 'poll_id',
+  })
   PollAnswer.belongsTo(Poll, {
     as: 'poll',
     foreignKey: 'poll_id',
-  })
-  PollAnswer.belongsTo(User, {
-    as: 'user',
-    foreignKey: 'user_id',
   })
   PollAnswer.hasMany(PollAnswerChosen, {
     as: 'choosens',
@@ -207,10 +203,6 @@ export const initModels = (): any => {
   PollAnswerChosen.belongsTo(User, {
     as: 'user',
     foreignKey: 'user_id',
-  })
-  PollAnswerChosen.belongsTo(PollAnswer, {
-    as: 'pollAnswer',
-    foreignKey: 'poll_anwser_id',
   })
   PollComment.belongsTo(Poll, {
     as: 'poll',
@@ -234,7 +226,7 @@ export const initModels = (): any => {
   })
   PollCategory.hasMany(Poll, {
     as: 'polls',
-    foreignKey: 'poll_category_id',
+    foreignKey: 'category_id',
   })
   PollCategory.hasMany(RecommendedCategoryList, {
     as: 'recommends',
