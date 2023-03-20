@@ -49,10 +49,16 @@ export class Poll extends Model<
   declare title: string | null
   declare description: string | null
   declare image: string | null
-  declare canAddNewAnswer: boolean | null
-  declare anonymousPoll: boolean | null
-  declare viewCount: number | null
-  declare type: 'TEXT' | 'IMAGE' | 'LOCATION' | 'TRENDY_TALK' | null
+  declare canAddNewAnswer: CreationOptional<boolean>
+  declare anonymousPoll: CreationOptional<boolean>
+  declare viewCount: CreationOptional<number>
+  declare type:
+    | 'TEXT'
+    | 'IMAGE_A'
+    | 'IMAGE_B'
+    | 'SCHEDULE'
+    | 'TRENDY_TALK'
+    | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -183,9 +189,16 @@ export class Poll extends Model<
         },
         viewCount: {
           type: DataTypes.BIGINT,
+          defaultValue: 0,
         },
         type: {
-          type: DataTypes.ENUM('TEXT', 'IMAGE', 'LOCATION', 'TRENDY_TALK'),
+          type: DataTypes.ENUM(
+            'TEXT',
+            'IMAGE_A',
+            'IMAGE_B',
+            'SCHEDULE',
+            'TRENDY_TALK',
+          ),
         },
         createdAt: {
           type: DataTypes.DATE,

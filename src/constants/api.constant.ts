@@ -37,13 +37,11 @@ class Api {
   public static readonly USER_GET_ALL: string = '/'
   public static readonly USER_GET_ALL_STATS: string = '/stats'
 
-  // MBTI
-  public static readonly MBTI = '/mbti'
-  public static readonly MBTI_GET_ALL = '/'
-  public static readonly MBTI_CREATE = '/'
-  public static readonly MBTI_GET = '/:id'
-  public static readonly MBTI_UPDATE = '/:id'
-  public static readonly MBTI_DELETE = '/:id'
+  // POLL
+  public static readonly POLL: string = '/polls'
+  public static readonly POLL_INFO: string = '/:id'
+  public static readonly POLL_CREATE: string = '/'
+  public static readonly POLL_UPDATE: string = '/:id'
 }
 
 export default Api

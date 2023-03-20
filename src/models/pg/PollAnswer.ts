@@ -32,9 +32,9 @@ export class PollAnswer extends Model<
   InferAttributes<PollAnswer, { omit: PollAnswerAssociations }>,
   InferCreationAttributes<PollAnswer, { omit: PollAnswerAssociations }>
 > {
-  declare id: CreationOptional<string>
+  declare id: CreationOptional<uuid>
   declare pollId: string | null
-  declare userId: string | null
+  declare userId: CreationOptional<uuid>
   declare content: string | null
   declare image: string | null
   declare coord: Buffer | null
