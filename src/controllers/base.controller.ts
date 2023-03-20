@@ -88,7 +88,7 @@ class BaseController {
   public static applyFindOptions(
     option: ICrudOption = {},
   ): Partial<FindOptions> {
-    const query: Partial<FindOptions<any>> = {
+    const query: Partial<FindOptions<any> | any> = {
       where: option.filter,
       limit: option.limit,
       offset: option.offset,
@@ -96,6 +96,7 @@ class BaseController {
       attributes: option.attributes,
       include: option.include,
       paranoid: option.paranoid,
+      distinct: Array.isArray(option.include),
     }
     return query
   }
