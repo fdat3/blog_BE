@@ -177,7 +177,7 @@ export const initModels = (): any => {
     foreignKey: 'poll_id',
   })
   Poll.hasMany(PollHashtag, {
-    as: 'pollHashtags',
+    as: 'hashtags',
     foreignKey: 'poll_id',
   })
   Poll.hasMany(PollMention, {

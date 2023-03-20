@@ -36,7 +36,7 @@ type PollAssociations =
   | 'category'
   | 'reports'
   | 'comments'
-  | 'pollHashtags'
+  | 'hashtags'
   | 'mentions'
   | 'likes'
   | 'answers'
@@ -104,20 +104,17 @@ export class Poll extends Model<
   declare countComments: HasManyCountAssociationsMixin
 
   // Poll hasMany PollHashtag (as PollHashtag)
-  declare pollHashtags?: NonAttribute<PollHashtag[]>
-  declare getPollHashtags: HasManyGetAssociationsMixin<PollHashtag>
-  declare setPollHashtags: HasManySetAssociationsMixin<PollHashtag, string>
-  declare addPollHashtag: HasManyAddAssociationMixin<PollHashtag, string>
-  declare addPollHashtags: HasManyAddAssociationsMixin<PollHashtag, string>
-  declare createPollHashtag: HasManyCreateAssociationMixin<PollHashtag>
-  declare removePollHashtag: HasManyRemoveAssociationMixin<PollHashtag, string>
-  declare removePollHashtags: HasManyRemoveAssociationsMixin<
-    PollHashtag,
-    string
-  >
-  declare hasPollHashtag: HasManyHasAssociationMixin<PollHashtag, string>
-  declare hasPollHashtags: HasManyHasAssociationsMixin<PollHashtag, string>
-  declare countPollHashtags: HasManyCountAssociationsMixin
+  declare hashtags?: NonAttribute<PollHashtag[]>
+  declare getHashtags: HasManyGetAssociationsMixin<PollHashtag>
+  declare setHashtags: HasManySetAssociationsMixin<PollHashtag, string>
+  declare addHashtag: HasManyAddAssociationMixin<PollHashtag, string>
+  declare addHashtags: HasManyAddAssociationsMixin<PollHashtag, string>
+  declare createHashtag: HasManyCreateAssociationMixin<PollHashtag>
+  declare removeHashtag: HasManyRemoveAssociationMixin<PollHashtag, string>
+  declare removeHashtags: HasManyRemoveAssociationsMixin<PollHashtag, string>
+  declare hasHashtag: HasManyHasAssociationMixin<PollHashtag, string>
+  declare hasHashtags: HasManyHasAssociationsMixin<PollHashtag, string>
+  declare countHashtags: HasManyCountAssociationsMixin
 
   // Poll hasMany PollMention (as Mentions)
   declare mentions?: NonAttribute<PollMention[]>
@@ -163,7 +160,7 @@ export class Poll extends Model<
     category: Association<Poll, PollCategory>
     reports: Association<Poll, ReportPoll>
     comments: Association<Poll, PollComment>
-    pollHashtags: Association<Poll, PollHashtag>
+    hashtags: Association<Poll, PollHashtag>
     mentions: Association<Poll, PollMention>
     likes: Association<Poll, Like>
     answers: Association<Poll, PollAnswer>

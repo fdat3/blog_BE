@@ -53,6 +53,14 @@ class PollRepository {
               {
                 association: 'answers',
               },
+              {
+                association: 'hashtags',
+                include: [
+                  {
+                    association: 'hashtag',
+                  },
+                ],
+              },
             ],
             transaction,
           },
