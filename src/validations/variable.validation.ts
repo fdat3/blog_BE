@@ -29,6 +29,9 @@ const validate = (): void => {
     REDIS_USERNAME: str(),
     REDIS_PASSWORD: str(),
     REDIS_DB: str(),
+    USE_LOCAL_REDIS: str({
+      default: 'true',
+    }),
   })
 }
 

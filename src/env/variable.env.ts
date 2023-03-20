@@ -104,6 +104,7 @@ class Variable {
   public static readonly REDIS_USERNAME: string = process.env.REDIS_USERNAME!
   public static readonly REDIS_PASSWORD: string = process.env.REDIS_PASSWORD!
   public static readonly REDIS_DB: string = process.env.REDIS_DB!
+  public static readonly USE_LOCAL_REDIS: string = process.env.USE_LOCAL_REDIS!
 
   constructor() {
     this.initialise()

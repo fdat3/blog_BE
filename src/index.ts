@@ -58,13 +58,17 @@ class App {
   private redisStore
 
   constructor(versioning: Versioning) {
-    this.clientRedis = new Redis({
-      port: Variable.REDIS_PORT,
-      host: Variable.REDIS_HOST,
-      username: Variable.REDIS_USERNAME,
-      password: Variable.REDIS_PASSWORD,
-      // db: Variable.REDIS_DB
-    })
+    this.clientRedis =
+      Variable.NODE_ENV === 'local'
+        ? new Redis()
+        : Variable.USE_LOCAL_REDIS === 'true'
+        ? new Redis()
+        : new Redis({
+            port: Variable.REDIS_PORT,
+            host: Variable.REDIS_HOST,
+            username: Variable.REDIS_USERNAME,
+            password: Variable.REDIS_PASSWORD,
+          })
     this.redisStore = new RedisStore({
       client: this.clientRedis,
       prefix: 'trendypoll:',
