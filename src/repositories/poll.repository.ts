@@ -61,6 +61,14 @@ class PollRepository {
                   },
                 ],
               },
+              {
+                association: 'mentions',
+                include: [
+                  {
+                    association: 'user',
+                  },
+                ],
+              },
             ],
             transaction,
           },

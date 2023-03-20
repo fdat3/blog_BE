@@ -72,6 +72,13 @@ export class PollMention extends Model<
       {
         sequelize,
         tableName: ModelPgConstant.POLL_MENTION,
+        defaultScope: {
+          include: [
+            {
+              association: 'user',
+            },
+          ],
+        },
       },
     )
 
