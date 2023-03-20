@@ -12,14 +12,13 @@ class PollRepository {
     this.model = Poll
   }
 
-  public async findAll(
+  public async getList(
     queryInfo?: ICrudOption,
   ): Promise<{ rows: Partial<Poll[]>; count: number } | null> {
     try {
-      const result = await this.model.findAndCountAll(
+      return this.model.findAndCountAll(
         baseController.applyFindOptions(queryInfo),
       )
-      return result
     } catch (e) {
       logger.error(e)
       return null

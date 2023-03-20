@@ -36,7 +36,6 @@ class AuthController implements Controller {
     this.router = Router()
     this.authService = new AuthService()
     this.validate = new Validate()
-
     this.initialiseRoutes()
   }
 

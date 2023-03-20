@@ -9,24 +9,24 @@ class PollService {
     this.repository = new PollRepository()
   }
 
-  public async findAll(queryInfo?: ICrudOption): Promise<any> {
-    return await this.repository.findAll(queryInfo)
+  public async getList(queryInfo?: ICrudOption): Promise<any> {
+    return this.repository.getList(queryInfo)
   }
 
   public async findOne(queryInfo?: ICrudOption): Promise<any> {
-    return await this.repository.findOne(queryInfo)
+    return this.repository.findOne(queryInfo)
   }
 
   public async create(data: Poll): Promise<any> {
-    return await this.repository.create(data)
+    return this.repository.create(data)
   }
 
   public async update(data: Partial<Poll>): Promise<any> {
-    return await this.repository.update(data)
+    return this.repository.update(data)
   }
 
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {
-    return await this.repository.delete(queryInfo)
+    return this.repository.delete(queryInfo)
   }
 }
 
