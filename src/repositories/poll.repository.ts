@@ -77,10 +77,10 @@ class PollRepository {
 
   public async update(queryInfo?: ICrudOption): Promise<Poll | null> {
     try {
-      const result = await this.model.findOne(
+      const poll = await this.model.findOne(
         baseController.applyFindOptions(queryInfo),
       )
-      return result
+      return poll
     } catch (err) {
       logger.error(err)
       return null

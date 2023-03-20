@@ -20,6 +20,7 @@ import BaseController from './base.controller'
 import ConstantMessage from '@/constants/message.constant'
 import Message from '@/constants/message.constant'
 import logger from '@/utils/logger.util'
+import Authenticated from '@/middlewares/authenticated.middleware'
 
 class PollController implements Controller {
   public path: string
@@ -28,6 +29,7 @@ class PollController implements Controller {
   private queryMiddleware: QueryMiddleware
   private baseController: BaseController
   private pollService: PollService
+  private authenticated: Authenticated
   constructor() {
     this.path = `${ConstantAPI.POLL}`
     this.router = Router()
@@ -35,6 +37,7 @@ class PollController implements Controller {
     this.baseController = new BaseController()
     this.pollService = new PollService()
     this.validate = new PollValidate()
+    this.authenticated = new Authenticated()
     this.initialiseRoutes()
   }
 
@@ -49,6 +52,14 @@ class PollController implements Controller {
       `${this.path}${ConstantAPI.POLL_CREATE}`,
       [validationMiddleware(this.validate.create)],
       this.create,
+    )
+    this.router.put(
+      `${this.path}${ConstantAPI.POLL_UPDATE}`,
+      [
+        this.authenticated.verifyTokenAndAuthorization,
+        validationMiddleware(this.validate.update),
+      ],
+      this.update,
     )
   }
 
@@ -123,6 +134,31 @@ class PollController implements Controller {
       const data = req.body
       const user = req.session.user
       const result = await this.pollService.create(user, data)
+      this.baseController.onSuccess(res, result, undefined)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.CREAT_POLL_ERR,
+          err,
+        ),
+      )
+    }
+  }
+  private update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const data = req.body
+      const user = req.session.user
+      const result = await this.pollService.update({
+        ...data,
+        userId: user?.id,
+      })
       this.baseController.onSuccess(res, result, undefined)
     } catch (err) {
       logger.error(err)
