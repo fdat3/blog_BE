@@ -21,6 +21,7 @@ import logger from '@/utils/logger.util'
 import Authenticated from '@/middlewares/authenticated.middleware'
 import GroupService from '@/services/group.service'
 import GroupValidation from '@/validations/group.validation'
+import { verifyToken } from '@/validations/token.validation'
 
 class GroupController implements Controller {
   public path: string
@@ -60,6 +61,12 @@ class GroupController implements Controller {
         validationMiddleware(this.validate.update),
       ],
       this.update,
+    )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.GROUP_JOIN}`,
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
+      this.joinGroup,
     )
   }
 
@@ -157,7 +164,39 @@ class GroupController implements Controller {
         new HttpException(
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
-          Message.CREAT_POLL_ERR,
+          Message.UPDATE_GROUP_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  private joinGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { user } = req.session
+      const result = await this.service.joinGroup(user?.id, req.params.id)
+      if (!result) {
+        next(
+          new HttpException(
+            ConstantHttpCode.METHOD_FAILURE,
+            ConstantHttpReason.METHOD_FAILURE,
+            Message.JOIN_GROUP_ERR,
+          ),
+        )
+      } else {
+        this.baseController.onSuccess(res, result)
+      }
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.JOIN_GROUP_ERR,
           err,
         ),
       )

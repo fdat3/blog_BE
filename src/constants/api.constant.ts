@@ -48,6 +48,8 @@ class Api {
   public static readonly GROUP_INFO: string = '/:id'
   public static readonly GROUP_CREATE: string = '/'
   public static readonly GROUP_UPDATE: string = '/:id'
+  public static readonly GROUP_JOIN: string = '/join/:id'
+  public static readonly GROUP_LEAVE: string = '/leave/:id'
 }
 
 export default Api

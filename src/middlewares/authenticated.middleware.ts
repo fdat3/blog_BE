@@ -17,7 +17,8 @@ class AuthenticatedMiddleware {
     next: NextFunction,
   ): Promise<void> {
     return await verifyToken(req, res, () => {
-      if (req?.user?.id === req?.params?.id) {
+      console.log(req.user)
+      if (req?.user?.id === req?.session?.user?.id) {
         return next()
       }
 

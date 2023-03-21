@@ -23,10 +23,10 @@ export class GroupMemberSetting extends Model<
     { omit: GroupMemberSettingAssociations }
   >
 > {
-  declare id: CreationOptional<string>
-  declare groupMemberId: string | null
-  declare setting_1: boolean | null
-  declare setting_2: boolean | null
+  declare id: CreationOptional<uuid>
+  declare groupMemberId: CreationOptional<uuid>
+  declare setting_1: CreationOptional<boolean>
+  declare setting_2: CreationOptional<boolean>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>

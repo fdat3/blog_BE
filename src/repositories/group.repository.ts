@@ -2,15 +2,17 @@ import { sequelize } from '@/config/sql.config'
 import baseController from '@/controllers/base.controller'
 
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { Group } from '@/models/pg'
+import { Group, GroupMember } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { cloneDeep } from 'lodash'
+import GroupMemberRepository from '@/repositories/group_member.repository'
 
 class GroupRepository {
   private model
-
+  private groupMemberRepository: GroupMemberRepository
   constructor() {
     this.model = Group
+    this.groupMemberRepository = new GroupMemberRepository()
   }
 
   public async getList(
@@ -31,10 +33,9 @@ class GroupRepository {
     queryInfo?: ICrudOption,
   ): Promise<Group | null> {
     try {
-      const result = await this.model.findByPk(id, {
+      return this.model.findByPk(id, {
         ...baseController.applyFindOptions(queryInfo),
       })
-      return result
     } catch (err) {
       logger.error(err)
       return null
@@ -60,13 +61,14 @@ class GroupRepository {
 
       return sequelize.transaction(async (transaction) => {
         const copyData = cloneDeep(data)
-        const group = await Group.create(
+        return Group.create(
           {
             ...copyData,
-            userId: user.id,
+            ownerId: user.id,
             members: [
               {
                 role: 'OWNER',
+                userId: user.id,
                 settings: {},
               },
             ],
@@ -88,8 +90,6 @@ class GroupRepository {
             transaction,
           },
         )
-
-        return group
       })
     } catch (error) {
       logger.error('Cannot create poll')
@@ -100,10 +100,9 @@ class GroupRepository {
 
   public async update(queryInfo?: ICrudOption): Promise<Group | null> {
     try {
-      const poll = await this.model.findOne(
+      return await this.model.findOne(
         baseController.applyFindOptions(queryInfo),
       )
-      return poll
     } catch (err) {
       logger.error(err)
       return null
@@ -112,9 +111,70 @@ class GroupRepository {
 
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {
     try {
-      const result = await this.model.destroy(queryInfo)
-      return result
+      return this.model.destroy(queryInfo)
     } catch (err) {
+      logger.error(err)
+      return null
+    }
+  }
+
+  public async findMember(userId: uuid, groupId: uuid): Promise<any> {
+    return this.groupMemberRepository.findMember(userId, groupId)
+  }
+
+  async joinGroup(userId: uuid, groupId: uuid): Promise<any> {
+    try {
+      const group = await Group.findByPk(groupId)
+
+      if (!group) return false
+
+      // check member existed in group
+      const member = await group.countMembers({
+        where: {
+          userId,
+        },
+      })
+
+      console.log({ member })
+
+      if (member == 0) {
+        return sequelize.transaction(async (transaction) => {
+          // return group.createMember({
+          //   userId,
+          //   role: "MEMBER",
+          // }, {
+          //   transaction,
+          // }).then(async member => {
+          //   await member.createSettings({}, {
+          //     transaction
+          //   })
+          //   return member
+          // })
+          const createData: Partial<GroupMember> | any = {
+            userId,
+            groupId,
+            role: 'MEMBER',
+            settings: {},
+          }
+          return GroupMember.create(
+            {
+              ...createData,
+            },
+            {
+              include: [
+                {
+                  association: 'settings',
+                },
+              ],
+              transaction,
+            },
+          )
+        })
+      } else {
+        return false
+      }
+    } catch (err) {
+      logger.error('Join member error in group.repository.ts')
       logger.error(err)
       return null
     }

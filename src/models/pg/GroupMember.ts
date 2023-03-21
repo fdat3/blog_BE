@@ -46,7 +46,7 @@ export class GroupMember extends Model<
   declare createUser: BelongsToCreateAssociationMixin<User>
 
   // GroupMember hasOne GroupMemberSetting (as Settings)
-  declare settings?: NonAttribute<GroupMemberSetting>
+  declare settings?: CreationOptional<NonAttribute<GroupMemberSetting>>
   declare getSettings: HasOneGetAssociationMixin<GroupMemberSetting>
   declare setSettings: HasOneSetAssociationMixin<GroupMemberSetting, string>
   declare createSettings: HasOneCreateAssociationMixin<GroupMemberSetting>

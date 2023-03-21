@@ -28,6 +28,10 @@ class GroupService {
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {
     return this.repository.delete(queryInfo)
   }
+
+  public async joinGroup(userId: uuid, groupId: uuid): Promise<any> {
+    return this.repository.joinGroup(userId, groupId)
+  }
 }
 
 export default GroupService

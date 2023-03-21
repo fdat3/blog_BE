@@ -20,7 +20,9 @@ At: ${new Date().toString()}
 Error detail:
 ${error}
 `
-    errorString += '```' + error.stack + '```'
+    if (error?.stack) {
+      errorString += '```' + error.stack + '```'
+    }
 
     const errorBody = {
       chat_id: Variable.TELEGRAM_ROOM,

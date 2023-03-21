@@ -32,7 +32,7 @@ class BaseController {
     }
   }
 
-  onSuccess(res: ExtraResponse, object: any = {}, extras: any): void {
+  onSuccess(res: ExtraResponse, object: any = {}, extras?: any): void {
     object = object || {}
     if (Object.keys(object).length === 0) {
       res.json({

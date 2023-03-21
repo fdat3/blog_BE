@@ -6,7 +6,7 @@ class HttpExceptions extends Error {
   public statusMsg: string
 
   public msg: string
-  private error: Error | any
+  private readonly error: Error | any
 
   constructor(
     statusCode: number,
@@ -20,19 +20,19 @@ class HttpExceptions extends Error {
     this.msg = msg || statusMsg
     this.error = error
 
-    this.sendToTelegram()
+    this.sendToTelegram(this.error)
   }
 
-  private sendToTelegram(): void {
+  private sendToTelegram(err: Error | any): void {
     if (
       process?.env?.NODE_ENV &&
       ['production', 'development', 'local'].includes(process.env.NODE_ENV)
     ) {
       setTimeout(() => {
-        ErrorController.sendErrorToTelegram(this.error)
+        ErrorController.sendErrorToTelegram(err)
           .then()
-          .catch((err) => {
-            ErrorController.sendErrorToTelegram(err)
+          .catch((error) => {
+            this.sendToTelegram(error)
           })
       }, 0)
     }
