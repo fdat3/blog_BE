@@ -57,6 +57,10 @@ class Message {
   // POll
   public static readonly CREAT_POLL_ERR: string =
     'Can not create new poll right now! Please try again.'
-  public static readonly POLL_NOT_FOUND: string = 'Poll Not found!'
+  public static readonly POLL_NOT_FOUND: string = 'Poll not found!'
+  // POll
+  public static readonly CREAT_GROUP_ERR: string =
+    'Can not create new group right now! Please try again.'
+  public static readonly GROUP_NOT_FOUND: string = 'Group not found!'
 }
 export default Message

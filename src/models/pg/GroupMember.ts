@@ -1,15 +1,15 @@
 import {
   Association,
+  BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
-  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
+  HasOneCreateAssociationMixin,
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
-  InferCreationAttributes,
   InferAttributes,
+  InferCreationAttributes,
   Model,
   NonAttribute,
   Sequelize,
@@ -19,7 +19,7 @@ import type { GroupMemberSetting } from './GroupMemberSetting'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type GroupMemberAssociations = 'group' | 'user' | 'setting'
+type GroupMemberAssociations = 'group' | 'user' | 'settings'
 
 export class GroupMember extends Model<
   InferAttributes<GroupMember, { omit: GroupMemberAssociations }>,
@@ -46,10 +46,10 @@ export class GroupMember extends Model<
   declare createUser: BelongsToCreateAssociationMixin<User>
 
   // GroupMember hasOne GroupMemberSetting (as Settings)
-  declare setting?: NonAttribute<GroupMemberSetting>
-  declare getSetting: HasOneGetAssociationMixin<GroupMemberSetting>
-  declare setSetting: HasOneSetAssociationMixin<GroupMemberSetting, string>
-  declare createSetting: HasOneCreateAssociationMixin<GroupMemberSetting>
+  declare settings?: NonAttribute<GroupMemberSetting>
+  declare getSettings: HasOneGetAssociationMixin<GroupMemberSetting>
+  declare setSettings: HasOneSetAssociationMixin<GroupMemberSetting, string>
+  declare createSettings: HasOneCreateAssociationMixin<GroupMemberSetting>
 
   declare static associations: {
     group: Association<GroupMember, Group>

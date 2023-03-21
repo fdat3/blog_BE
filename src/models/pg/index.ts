@@ -328,7 +328,7 @@ export const initModels = (): any => {
     foreignKey: 'group_id',
   })
   Group.hasOne(GroupSetting, {
-    as: 'groupSetting',
+    as: 'settings',
     foreignKey: 'group_id',
   })
   GroupMember.belongsTo(Group, {
@@ -340,7 +340,7 @@ export const initModels = (): any => {
     foreignKey: 'user_id',
   })
   GroupMember.hasOne(GroupMemberSetting, {
-    as: 'setting',
+    as: 'settings',
     foreignKey: 'group_member_id',
   })
   GroupMemberSetting.belongsTo(GroupMember, {

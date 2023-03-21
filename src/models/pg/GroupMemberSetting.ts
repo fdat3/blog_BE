@@ -47,6 +47,7 @@ export class GroupMemberSetting extends Model<
         id: {
           type: DataTypes.UUID,
           primaryKey: true,
+          defaultValue: DataTypes.UUIDV4,
         },
         groupMemberId: {
           type: DataTypes.UUID,

@@ -17,6 +17,9 @@ module.exports = {
         type: DataTypes.TEXT,
         field: 'password'
       },
+      avatar: {
+        type: DataTypes.STRING,
+      },
       isVisible: {
         type: DataTypes.BOOLEAN,
         field: 'is_visible',

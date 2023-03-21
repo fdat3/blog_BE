@@ -90,9 +90,9 @@ class BaseController {
   ): Partial<FindOptions> {
     const query: Partial<FindOptions<any> | any> = {
       where: option.filter,
-      limit: option.limit,
-      offset: option.offset,
-      order: option.order,
+      limit: option.limit || 20,
+      offset: option.offset || 0,
+      order: [['updatedAt', 'desc']] || option.order,
       attributes: option.attributes,
       include: option.include,
       paranoid: option.paranoid,

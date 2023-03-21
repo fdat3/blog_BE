@@ -29,18 +29,19 @@ import type { GroupSetting } from './GroupSetting'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type GroupAssociations = 'user' | 'members' | 'groupSetting'
+type GroupAssociations = 'user' | 'members' | 'settings'
 
 export class Group extends Model<
   InferAttributes<Group, { omit: GroupAssociations }>,
   InferCreationAttributes<Group, { omit: GroupAssociations }>
 > {
-  declare id: CreationOptional<string>
+  declare id: CreationOptional<uuid>
   declare name: string | null
-  declare password: string | null
-  declare isVisible: boolean | null
-  declare isPrivate: boolean | null
-  declare ownerId: string | null
+  declare password: CreationOptional<string>
+  declare avatar: CreationOptional<string>
+  declare isVisible: CreationOptional<boolean>
+  declare isPrivate: CreationOptional<boolean>
+  declare ownerId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -65,10 +66,10 @@ export class Group extends Model<
   declare countMembers: HasManyCountAssociationsMixin
 
   // Group hasOne GroupSetting (as GroupSettings)
-  declare groupSetting?: NonAttribute<GroupSetting>
-  declare getGroupSetting: HasOneGetAssociationMixin<GroupSetting>
-  declare setGroupSetting: HasOneSetAssociationMixin<GroupSetting, string>
-  declare createGroupSetting: HasOneCreateAssociationMixin<GroupSetting>
+  declare settings?: NonAttribute<GroupSetting>
+  declare getSetting: HasOneGetAssociationMixin<GroupSetting>
+  declare setSetting: HasOneSetAssociationMixin<GroupSetting, string>
+  declare createSetting: HasOneCreateAssociationMixin<GroupSetting>
 
   declare static associations: {
     user: Association<Group, User>
@@ -89,6 +90,9 @@ export class Group extends Model<
         },
         password: {
           type: DataTypes.TEXT,
+        },
+        avatar: {
+          type: DataTypes.STRING,
         },
         isVisible: {
           type: DataTypes.BOOLEAN,

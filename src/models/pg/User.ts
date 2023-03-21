@@ -426,6 +426,9 @@ export class User extends Model<
           type: DataTypes.STRING(15),
           unique: true,
         },
+        avatar: {
+          type: DataTypes.STRING(),
+        },
         inviteCode: {
           type: DataTypes.STRING(20),
           unique: true,

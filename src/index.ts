@@ -54,8 +54,8 @@ class App {
   private readonly SESSION_MAX_AGE: number
   private readonly SESSION_RESAVE: boolean
   private readonly PORT: number
-  private clientRedis
-  private redisStore
+  private readonly clientRedis
+  private readonly redisStore
 
   constructor(versioning: Versioning) {
     this.clientRedis =

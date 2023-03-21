@@ -42,6 +42,12 @@ class Api {
   public static readonly POLL_INFO: string = '/:id'
   public static readonly POLL_CREATE: string = '/'
   public static readonly POLL_UPDATE: string = '/:id'
+
+  // GROUP
+  public static readonly GROUP: string = '/groups'
+  public static readonly GROUP_INFO: string = '/:id'
+  public static readonly GROUP_CREATE: string = '/'
+  public static readonly GROUP_UPDATE: string = '/:id'
 }
 
 export default Api

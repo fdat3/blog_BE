@@ -35,6 +35,10 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      avatar: {
+        type: DataTypes.STRING,
+        field: 'avatar'
+      },
       phone: {
         type: DataTypes.STRING(15),
         field: 'phone',
