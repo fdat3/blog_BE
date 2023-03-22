@@ -3,6 +3,7 @@ class Message {
 
   public static readonly SOMETHING_WENT_WRONG: string = 'Something went wrong'
   public static readonly UPDATE_SUCCESSFULLY: string = 'Update successfully'
+  public static readonly NOT_FOUND: string = 'Resource not found!'
 
   // auth
   public static readonly USERNAME_NOT_VALID: string = 'username is not valid'
@@ -63,6 +64,8 @@ class Message {
   public static readonly CREAT_GROUP_ERR: string =
     'Can not create new group right now! Please try again.'
   public static readonly GROUP_NOT_FOUND: string = 'Group not found!'
+  public static readonly GROUP_NO_AUTHORIZATION: string =
+    'You have no permission to change/update this group'
   public static readonly UPDATE_GROUP_ERR: string = 'Update group error'
   public static readonly JOIN_GROUP_ERR: string = 'Join group error'
 }

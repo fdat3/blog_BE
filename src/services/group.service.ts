@@ -1,4 +1,3 @@
-import { Group } from './../models/pg/Group'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import GroupRepository from '@/repositories/group.repository'
 
@@ -21,8 +20,9 @@ class GroupService {
     return this.repository.create(user, data)
   }
 
-  public async update(data: Partial<Group>): Promise<any> {
-    return this.repository.update(data)
+  public async update(id: uuid, userId: uuid, data: any): Promise<any> {
+    const result = this.repository.update(id, userId, data)
+    return result
   }
 
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {

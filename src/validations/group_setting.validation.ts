@@ -2,13 +2,13 @@ import Joi from 'joi'
 
 class GroupValidation {
   public create = Joi.object({
-    setting1: Joi.boolean().required(),
-    setting2: Joi.boolean().required(),
+    setting_1: Joi.boolean(),
+    setting_2: Joi.boolean(),
   })
 
   public update = Joi.object({
-    setting1: Joi.boolean(),
-    setting2: Joi.boolean(),
+    setting_1: Joi.boolean(),
+    setting_2: Joi.boolean(),
   })
 }
 

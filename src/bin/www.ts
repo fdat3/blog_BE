@@ -21,6 +21,7 @@ import ErrorController from '@/controllers/error.controller'
 import ImageController from '@/controllers/image.controller'
 import PollController from '@/controllers/poll.controller'
 import GroupController from '@/controllers/group.controller'
+import GroupSettingController from '@/controllers/group_setting.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -38,6 +39,7 @@ const { app } = new App({
     new ImageController(),
     new PollController(),
     new GroupController(),
+    new GroupSettingController(),
   ],
 })
 

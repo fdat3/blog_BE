@@ -40,6 +40,7 @@ class GroupController implements Controller {
     this.validate = new GroupValidation()
     this.authenticated = new Authenticated()
     this.initialiseRoutes()
+    // this.router.use(verifyToken)
   }
 
   public initialiseRoutes(): void {
@@ -57,6 +58,7 @@ class GroupController implements Controller {
     this.router.put(
       `${this.path}${ConstantAPI.GROUP_UPDATE}`,
       [
+        verifyToken,
         this.authenticated.verifyTokenAndAuthorization,
         validationMiddleware(this.validate.update),
       ],
@@ -153,10 +155,22 @@ class GroupController implements Controller {
     try {
       const data = req.body
       const user = req.session.user
-      const result = await this.service.update({
+      const { id } = req.params
+      const result = await this.service.update(id, user?.id, {
         ...data,
         userId: user?.id,
       })
+
+      // if (typeof result === 'boolean') {
+      //   next(
+      //     new HttpException(
+      //       ConstantHttpCode.UNAUTHORIZED,
+      //       ConstantHttpReason.UNAUTHORIZED,
+      //       Message.GROUP_NO_AUTHORIZATION,
+      //     )
+      //   )
+      // }
+
       this.baseController.onSuccess(res, result, undefined)
     } catch (err) {
       logger.error(err)

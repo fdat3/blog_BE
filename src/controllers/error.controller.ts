@@ -32,6 +32,8 @@ ${error}
       disable_notification: !checkIsWorkingTime(), // Disable notification
     }
 
+    logger.info({ disable_notification: errorBody.disable_notification })
+
     return await fetch(fullUrl, {
       method: 'POST',
       headers: {

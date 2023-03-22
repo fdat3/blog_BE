@@ -61,6 +61,20 @@ class GroupRepository {
 
       return sequelize.transaction(async (transaction) => {
         const copyData = cloneDeep(data)
+        if (!('settings' in copyData)) {
+          copyData.settings = {}
+        }
+
+        if ('members' in copyData) {
+          copyData.members = [
+            ...copyData.members,
+            {
+              role: 'OWNER',
+              userId: user.id,
+              settings: {},
+            },
+          ]
+        }
         return Group.create(
           {
             ...copyData,
@@ -98,11 +112,36 @@ class GroupRepository {
     }
   }
 
-  public async update(queryInfo?: ICrudOption): Promise<Group | null> {
+  public async update(
+    id: uuid,
+    userId: uuid,
+    data: any,
+  ): Promise<Group | boolean | null> {
     try {
-      return await this.model.findOne(
-        baseController.applyFindOptions(queryInfo),
-      )
+      return sequelize.transaction(async (transaction) => {
+        return Group.findOne({
+          where: {
+            id,
+          },
+          include: [
+            {
+              association: 'settings',
+            },
+          ],
+          transaction,
+        })
+          .then(async (instance) => {
+            if (instance) {
+              if (instance.ownerId !== userId) return false
+              await instance.update({ ...data }, { transaction })
+              return instance
+            } else return null
+          })
+          .catch((err) => {
+            logger.error(err)
+            return null
+          })
+      })
     } catch (err) {
       logger.error(err)
       return null
@@ -139,17 +178,6 @@ class GroupRepository {
 
       if (member == 0) {
         return sequelize.transaction(async (transaction) => {
-          // return group.createMember({
-          //   userId,
-          //   role: "MEMBER",
-          // }, {
-          //   transaction,
-          // }).then(async member => {
-          //   await member.createSettings({}, {
-          //     transaction
-          //   })
-          //   return member
-          // })
           const createData: Partial<GroupMember> | any = {
             userId,
             groupId,

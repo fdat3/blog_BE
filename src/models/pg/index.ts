@@ -97,307 +97,307 @@ export const initModels = (): any => {
 
   User.hasMany(UserDevice, {
     as: 'devices',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(Block, {
     as: 'blockers',
-    foreignKey: 'blocker_id',
+    foreignKey: 'blockerId',
   })
   User.hasMany(Block, {
     as: 'blockeds',
-    foreignKey: 'blocked_id',
+    foreignKey: 'blockedId',
   })
   User.hasMany(Poll, {
     as: 'polls',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(PollAnswerChosen, {
     as: 'pollChoosens',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(PollComment, {
     as: 'pollComments',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(ReportUser, {
     as: 'reports',
-    foreignKey: 'reporter_id',
+    foreignKey: 'reporterId',
   })
   User.hasMany(ReportUser, {
     as: 'isReporteds',
-    foreignKey: 'reported_id',
+    foreignKey: 'reportedId',
   })
   User.hasMany(Group, {
     as: 'myGroups',
-    foreignKey: 'owner_id',
+    foreignKey: 'ownerId',
   })
   User.hasMany(GroupMember, {
     as: 'members',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasOne(UserSetting, {
     as: 'setting',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(Follow, {
     as: 'followings',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(Follow, {
     as: 'followeds',
-    foreignKey: 'followed_id',
+    foreignKey: 'followedId',
   })
   User.hasOne(UserPoint, {
     as: 'point',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(RecommendedCategoryList, {
     as: 'recommentCategories',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(ContactList, {
     as: 'contacts',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(ContactList, {
     as: 'contactInfos',
-    foreignKey: 'contact_id',
+    foreignKey: 'contactId',
   })
   Poll.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Poll.belongsTo(PollCategory, {
     as: 'category',
-    foreignKey: 'category_id',
+    foreignKey: 'categoryId',
   })
   Poll.hasMany(ReportPoll, {
     as: 'reports',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Poll.hasMany(PollComment, {
     as: 'comments',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Poll.hasMany(PollHashtag, {
     as: 'hashtags',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Poll.hasMany(PollMention, {
     as: 'mentions',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Poll.hasMany(Like, {
     as: 'likes',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Poll.hasMany(PollAnswer, {
     as: 'answers',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Poll.hasMany(PollEntity, {
     as: 'entities',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollAnswer.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollAnswer.hasMany(PollAnswerChosen, {
     as: 'choosens',
-    foreignKey: 'poll_answer_id',
+    foreignKey: 'pollAnswerId',
   })
   PollAnswerChosen.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   PollComment.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollComment.belongsTo(PollComment, {
     as: 'parent',
-    foreignKey: 'parent_id',
+    foreignKey: 'parentId',
   })
   PollComment.hasMany(PollCommentMention, {
     as: 'mentions',
-    foreignKey: 'poll_comment_id',
+    foreignKey: 'pollCommentId',
   })
   PollComment.hasMany(PollCommentHashtag, {
     as: 'hashtags',
-    foreignKey: 'poll_comment_id',
+    foreignKey: 'pollCommentId',
   })
   PollComment.hasMany(Like, {
     as: 'likes',
-    foreignKey: 'poll_comment_id',
+    foreignKey: 'pollCommentId',
   })
   PollCategory.hasMany(Poll, {
     as: 'polls',
-    foreignKey: 'category_id',
+    foreignKey: 'categoryId',
   })
   PollCategory.hasMany(RecommendedCategoryList, {
     as: 'recommends',
-    foreignKey: 'poll_category_id',
+    foreignKey: 'pollCategoryId',
   })
   UserDevice.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Block.belongsTo(User, {
     as: 'user',
-    foreignKey: 'blocker_id',
+    foreignKey: 'blockerId',
   })
   Block.belongsTo(User, {
     as: 'blocked',
-    foreignKey: 'blocked_id',
+    foreignKey: 'blockedId',
   })
   ReportUser.belongsTo(User, {
     as: 'user',
-    foreignKey: 'reporter_id',
+    foreignKey: 'reporterId',
   })
   ReportUser.belongsTo(User, {
     as: 'reported',
-    foreignKey: 'reported_id',
+    foreignKey: 'reportedId',
   })
   ReportPoll.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   ReportPoll.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollHashtag.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollHashtag.belongsTo(Hashtag, {
     as: 'hashtag',
-    foreignKey: 'hashtag_id',
+    foreignKey: 'hashtagId',
   })
   PollMention.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollMention.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   PollCommentMention.belongsTo(PollComment, {
     as: 'comment',
-    foreignKey: 'poll_comment_id',
+    foreignKey: 'pollCommentId',
   })
   PollCommentMention.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   PollCommentMention.belongsTo(User, {
     as: 'mentioned',
-    foreignKey: 'mentioned_id',
+    foreignKey: 'mentionedId',
   })
   PollCommentHashtag.belongsTo(PollComment, {
     as: 'pollComment',
-    foreignKey: 'poll_comment_id',
+    foreignKey: 'pollCommentId',
   })
   PollCommentHashtag.belongsTo(Hashtag, {
     as: 'hashtag',
-    foreignKey: 'hashtag_id',
+    foreignKey: 'hashtagId',
   })
   Session.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Like.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   Like.belongsTo(PollComment, {
     as: 'comment',
-    foreignKey: 'poll_comment_id',
+    foreignKey: 'pollCommentId',
   })
   Like.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Group.belongsTo(User, {
     as: 'user',
-    foreignKey: 'owner_id',
+    foreignKey: 'ownerId',
   })
   Group.hasMany(GroupMember, {
     as: 'members',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   Group.hasOne(GroupSetting, {
     as: 'settings',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   GroupMember.belongsTo(Group, {
     as: 'group',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   GroupMember.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   GroupMember.hasOne(GroupMemberSetting, {
     as: 'settings',
-    foreignKey: 'group_member_id',
+    foreignKey: 'groupMemberId',
   })
   GroupMemberSetting.belongsTo(GroupMember, {
     as: 'member',
-    foreignKey: 'group_member_id',
+    foreignKey: 'groupMemberId',
   })
   GroupSetting.belongsTo(Group, {
     as: 'group',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   UserSetting.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Follow.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Follow.belongsTo(User, {
     as: 'followed',
-    foreignKey: 'followed_id',
+    foreignKey: 'followedId',
   })
   UserPoint.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   UserPoint.hasMany(UserPointHistory, {
     as: 'histories',
-    foreignKey: 'user_point_id',
+    foreignKey: 'userPointId',
   })
   UserPointHistory.belongsTo(UserPoint, {
     as: 'parent',
-    foreignKey: 'user_point_id',
+    foreignKey: 'userPointId',
   })
   RecommendedCategoryList.belongsTo(PollCategory, {
     as: 'category',
-    foreignKey: 'poll_category_id',
+    foreignKey: 'pollCategoryId',
   })
   RecommendedCategoryList.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   SearchHistory.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   ContactList.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   ContactList.belongsTo(User, {
     as: 'contactInfo',
-    foreignKey: 'contact_id',
+    foreignKey: 'contactId',
   })
   PollEntity.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
 
   return {

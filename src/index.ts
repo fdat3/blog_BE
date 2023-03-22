@@ -6,18 +6,13 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
 import Redis from 'ioredis'
-const session = require('express-session')
 import RedisStore from 'connect-redis'
 // const passport = require('passport')
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 import Controller from '@/interfaces/controller.interface'
 import mongoConnectDB from '@/config/db.config'
-import {
-  postgresTestConnectDB,
-  // sequelize,
-  syncSequelize,
-} from '@/config/sql.config'
+import { postgresTestConnectDB, syncSequelize } from '@/config/sql.config'
 
 // variable
 import Variable from '@/env/variable.env'
@@ -34,12 +29,9 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 
 import morgan from 'morgan'
 import Versioning from '@/interfaces/versioning.interface'
-import {
-  initModels,
-  // Session
-} from '@/models/pg'
+import { initModels } from '@/models/pg'
 // import runAdminPage from '@/admin/.'
-import CamelCaseMiddleware from '@/middlewares/camelCase.middleware'
+const session = require('express-session')
 
 // const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
@@ -108,7 +100,7 @@ class App {
         limit: '50mb',
       }),
     )
-    this.app.use(CamelCaseMiddleware.convertCamelCase)
+    // this.app.use(CamelCaseMiddleware.convertCamelCase)
 
     this.app.use(morgan('combined'))
     this.app.disable('x-powered-by')

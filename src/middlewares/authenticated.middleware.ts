@@ -17,18 +17,27 @@ class AuthenticatedMiddleware {
     next: NextFunction,
   ): Promise<void> {
     return await verifyToken(req, res, () => {
-      console.log(req.user)
-      if (req?.user?.id === req?.session?.user?.id) {
-        return next()
+      try {
+        if (req?.user?.id === req?.session?.user?.id) {
+          return next()
+        } else {
+          return next(
+            new HttpException(
+              ConstantHttpCode.FORBIDDEN,
+              ConstantHttpReason.FORBIDDEN,
+              ConstantMessage.NOT_ALLOWED,
+            ),
+          )
+        }
+      } catch (err) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.FORBIDDEN,
+            ConstantHttpReason.FORBIDDEN,
+            ConstantMessage.NOT_ALLOWED,
+          ),
+        )
       }
-
-      return next(
-        new HttpException(
-          ConstantHttpCode.FORBIDDEN,
-          ConstantHttpReason.FORBIDDEN,
-          ConstantMessage.NOT_ALLOWED,
-        ),
-      )
     })
   }
 
@@ -38,17 +47,27 @@ class AuthenticatedMiddleware {
     next: NextFunction,
   ): Promise<void> {
     return await verifyToken(req, res, () => {
-      if (req?.user?.isAdmin) {
-        return next()
+      try {
+        if (req?.user?.isAdmin) {
+          return next()
+        } else {
+          return next(
+            new HttpException(
+              ConstantHttpCode.FORBIDDEN,
+              ConstantHttpReason.FORBIDDEN,
+              ConstantMessage.NOT_ALLOWED,
+            ),
+          )
+        }
+      } catch (err) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.FORBIDDEN,
+            ConstantHttpReason.FORBIDDEN,
+            ConstantMessage.NOT_ALLOWED,
+          ),
+        )
       }
-
-      return next(
-        new HttpException(
-          ConstantHttpCode.FORBIDDEN,
-          ConstantHttpReason.FORBIDDEN,
-          ConstantMessage.NOT_ALLOWED,
-        ),
-      )
     })
   }
 }
