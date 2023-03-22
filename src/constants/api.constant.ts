@@ -55,6 +55,13 @@ class Api {
   public static readonly GROUP_SETTING: string = '/group/settings'
   public static readonly GROUP_SETTING_GET: string = '/:id'
   public static readonly GROUP_SETTING_UPDATE: string = '/:id'
+
+  // Follow
+  public static readonly FOLLOW: string = '/follows'
+  public static readonly FOLLOW_FOLLOWED: string = '/followed'
+  public static readonly FOLLOW_FOLLOWING: string = '/following'
+  public static readonly FOLLOW_ADD: string = '/add'
+  public static readonly FOLLOW_REMOVE: string = '/remove'
 }
 
 export default Api
