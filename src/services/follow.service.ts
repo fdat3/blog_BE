@@ -36,6 +36,10 @@ class FollowService {
   ): Promise<any> {
     return await this.service.removeFollowedItem(userId, followedId)
   }
+
+  public async updateClickCount(userId: uuid, followedId: uuid): Promise<void> {
+    return this.service.updateClickCount(userId, followedId)
+  }
 }
 
 export default FollowService

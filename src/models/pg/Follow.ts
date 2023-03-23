@@ -23,6 +23,7 @@ export class Follow extends Model<
   declare id: CreationOptional<string>
   declare userId: string | null
   declare followedId: string | null
+  declare clickCount: CreationOptional<number>
   declare deletedAt: CreationOptional<Date>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -58,6 +59,10 @@ export class Follow extends Model<
         followedId: {
           type: DataTypes.UUID,
         },
+        clickCount: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+        },
         deletedAt: {
           type: DataTypes.DATE,
         },
@@ -71,6 +76,12 @@ export class Follow extends Model<
       {
         sequelize,
         tableName: ModelPgConstant.FOLLOW,
+        defaultScope: {
+          order: [
+            ['updatedAt', 'desc'],
+            ['clickCount', 'desc'],
+          ],
+        },
       },
     )
 

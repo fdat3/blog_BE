@@ -94,6 +94,35 @@ class FollowRepository {
       return null
     }
   }
+
+  public async updateClickCount(userId: uuid, followedId: uuid): Promise<void> {
+    try {
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findOne({
+            where: {
+              userId,
+              followedId,
+            },
+            transaction,
+          })
+          .then((instance) => {
+            if (instance) {
+              instance?.increment('clickCount', {
+                by: 1,
+                transaction,
+              })
+            } else return
+          })
+          .catch((err) => {
+            logger.error(err)
+            return
+          })
+      })
+    } catch (err) {
+      logger.error(err)
+    }
+  }
 }
 
 export default FollowRepository

@@ -17,6 +17,11 @@ module.exports = {
         type: DataTypes.UUID,
         field: 'followed_id'
       },
+      clickCount: {
+        type: DataTypes.INTEGER,
+        field: 'click_count',
+        defaultValue: 0
+      },
       deletedAt: {
         type: DataTypes.DATE,
         field: 'deleted_at'
