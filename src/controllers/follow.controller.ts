@@ -60,6 +60,12 @@ class FollowController implements Controller {
       [validationMiddleware(this.validate.delete)],
       this.removeFollowedItem,
     )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.FOLLOW_BACK}`,
+      [this.queryMiddleware.run()],
+      this.removeFollowedItem,
+    )
   }
 
   private getList = async (

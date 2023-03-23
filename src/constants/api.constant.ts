@@ -62,6 +62,7 @@ class Api {
   public static readonly FOLLOW_FOLLOWING: string = '/following'
   public static readonly FOLLOW_ADD: string = '/add'
   public static readonly FOLLOW_REMOVE: string = '/remove'
+  public static readonly FOLLOW_BACK: string = '/follow-back'
 }
 
 export default Api
