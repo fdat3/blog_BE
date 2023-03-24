@@ -68,5 +68,10 @@ class Message {
     'You have no permission to change/update this group'
   public static readonly UPDATE_GROUP_ERR: string = 'Update group error'
   public static readonly JOIN_GROUP_ERR: string = 'Join group error'
+
+  // Block
+  public static readonly CREATE_BLOCK_ERR: string = 'Create Block Item Error'
+  public static readonly DELETE_BLOCK_ITEM_ERR: string =
+    'Delete Block Item Error'
 }
 export default Message

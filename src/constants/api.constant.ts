@@ -63,6 +63,12 @@ class Api {
   public static readonly FOLLOW_ADD: string = '/add'
   public static readonly FOLLOW_REMOVE: string = '/remove'
   public static readonly FOLLOW_BACK: string = '/follow-back'
+
+  // Block
+  public static readonly BLOCK: string = '/block'
+  public static readonly BLOCK_GET: string = '/:id'
+  public static readonly BLOCK_CREATE: string = '/'
+  public static readonly BLOCK_DELETE: string = '/'
 }
 
 export default Api

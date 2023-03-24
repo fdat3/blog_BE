@@ -95,6 +95,8 @@ class HttpCode {
 
   public static readonly TOO_MANY_REQUESTS: number = 429
 
+  public static readonly SOMETHING_WENT_WRONG: number = 430
+
   public static readonly REQUEST_HEADER_FIELDS_TOO_LARGE: number = 431
 
   public static readonly UNAVAILABLE_FOR_LEGAL_REASONS: number = 451
