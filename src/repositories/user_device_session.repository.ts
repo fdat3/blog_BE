@@ -26,6 +26,7 @@ class UserDeviceSessionRepository {
   public async createNewDevice(
     data: UserDeviceSession,
   ): Promise<UserDeviceSession> {
+    logger.warn({ data })
     try {
       return sequelize.transaction(async (transaction) => {
         return await this.model.create(data, {

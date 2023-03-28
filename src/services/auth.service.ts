@@ -129,7 +129,7 @@ class AuthService {
       userId,
     )
 
-    if (customElements) {
+    if (currentDevice) {
       return currentDevice
     }
     /**

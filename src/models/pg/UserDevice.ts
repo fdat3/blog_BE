@@ -26,7 +26,7 @@ export class UserDeviceSession extends Model<
   declare deviceId: CreationOptional<string>
   declare ua: CreationOptional<object>
   declare ipAddress: CreationOptional<string>
-  declare lastSession: CreationOptional<string>
+  declare lastSession: CreationOptional<Date>
   declare secretKey: CreationOptional<string>
   declare refreshToken: CreationOptional<string>
   declare createdAt: CreationOptional<Date>
@@ -71,7 +71,7 @@ export class UserDeviceSession extends Model<
           type: DataTypes.STRING(255),
         },
         refreshToken: {
-          type: DataTypes.STRING(255),
+          type: DataTypes.TEXT,
         },
         lastSession: {
           type: DataTypes.DATE,
