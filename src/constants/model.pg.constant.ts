@@ -9,7 +9,7 @@ class PgModel {
   public static readonly POLL_ANSWER_CHOSEN: string = 'poll_answer_chosens'
   public static readonly POLL_COMMENT: string = 'poll_comments'
   public static readonly POLL_CATEGORY_MODEL: string = 'poll_categories'
-  public static readonly USER_DEVICE: string = 'user_devices'
+  public static readonly USER_DEVICE: string = 'user_device_session'
   public static readonly BLOCK: string = 'blocks'
   public static readonly REPORT_USER: string = 'report_users'
   public static readonly REPORT_POLL: string = 'report_polls'

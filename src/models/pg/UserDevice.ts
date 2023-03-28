@@ -16,24 +16,19 @@ import ModelPgConstant from '@/constants/model.pg.constant'
 
 type UserDeviceAssociations = 'user'
 
-export class UserDevice extends Model<
-  InferAttributes<UserDevice, { omit: UserDeviceAssociations }>,
-  InferCreationAttributes<UserDevice, { omit: UserDeviceAssociations }>
+export class UserDeviceSession extends Model<
+  InferAttributes<UserDeviceSession, { omit: UserDeviceAssociations }>,
+  InferCreationAttributes<UserDeviceSession, { omit: UserDeviceAssociations }>
 > {
   declare id: CreationOptional<string>
   declare userId: string | null
   declare fcmToken: CreationOptional<string>
   declare deviceId: CreationOptional<string>
   declare lastSession: CreationOptional<string>
-  declare loginType:
-    | 'NORMAL'
-    | 'APPLE'
-    | 'KAKAO'
-    | 'GOOGLE'
-    | 'FACEBOOK'
-    | 'NAVER'
-    | null
+  declare secretKey: CreationOptional<string>
+  declare refreshToken: CreationOptional<string>
   declare createdAt: CreationOptional<Date>
+  declare expiredAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
 
@@ -44,11 +39,11 @@ export class UserDevice extends Model<
   declare createUser: BelongsToCreateAssociationMixin<User>
 
   declare static associations: {
-    user: Association<UserDevice, User>
+    user: Association<UserDeviceSession, User>
   }
 
-  static initModel(sequelize: Sequelize): typeof UserDevice {
-    UserDevice.init(
+  static initModel(sequelize: Sequelize): typeof UserDeviceSession {
+    UserDeviceSession.init(
       {
         id: {
           type: DataTypes.UUID,
@@ -64,20 +59,18 @@ export class UserDevice extends Model<
         deviceId: {
           type: DataTypes.STRING(255),
         },
+        secretKey: {
+          type: DataTypes.STRING(255),
+        },
+        refreshToken: {
+          type: DataTypes.STRING(255),
+        },
         lastSession: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
         },
-        loginType: {
-          type: DataTypes.ENUM(
-            'NORMAL',
-            'APPLE',
-            'FACEBOOK',
-            'GOOGLE',
-            'NAVER',
-            'KAKAO',
-          ),
-          defaultValue: 'NORMAL',
+        expiredAt: {
+          type: DataTypes.DATE,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -95,6 +88,6 @@ export class UserDevice extends Model<
       },
     )
 
-    return UserDevice
+    return UserDeviceSession
   }
 }

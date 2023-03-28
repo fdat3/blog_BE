@@ -1,13 +1,13 @@
-import { Router, NextFunction } from 'express'
+import { NextFunction, Router } from 'express'
 
-import AuthService from '@/services/auth.service'
 import Controller, {
   Request,
   Response,
 } from '@/interfaces/controller.interface'
+import AuthService from '@/services/auth.service'
 
-import Validate from '@/validations/user.validation'
 import validationMiddleware from '@/middlewares/validation.middleware'
+import Validate from '@/validations/user.validation'
 
 import HttpException from '@/utils/exceptions/http.exceptions'
 
@@ -22,8 +22,8 @@ import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 
 // logger
-import logger from '@/utils/logger.util'
 import { SNSEnum } from '@/enums/auth.enum'
+import logger from '@/utils/logger.util'
 
 class AuthController implements Controller {
   public path: string
@@ -85,7 +85,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { username, fullname, email, password, phone, device } = req.body
+      const { username, fullname, email, password, phone } = req.body
 
       const usernameValidated = this.validate.validateUsername(username)
       if (!usernameValidated) {
@@ -188,7 +188,7 @@ class AuthController implements Controller {
         phone,
       }
 
-      const user = await this.authService.createUser(newUserData, device)
+      const user = await this.authService.createUser(newUserData)
       if (!user) {
         return next(
           new HttpException(
@@ -229,7 +229,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { email, password, device } = req.body
+      const { email, password } = req.body
 
       const emailValidated = this.validate.validateEmail(email)
       if (!emailValidated) {
@@ -275,11 +275,6 @@ class AuthController implements Controller {
             ConstantMessage.PASSWORD_NOT_MATCH,
           ),
         )
-      }
-
-      if (device) {
-        await this.authService.setDevice(user, device)
-        req.session.device = device
       }
 
       const accessToken = await this.authService.generateAccessToken(

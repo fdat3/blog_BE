@@ -30,7 +30,7 @@ import type { PollAnswer } from './PollAnswer'
 import type { PollAnswerChosen } from './PollAnswerChosen'
 import type { PollComment } from './PollComment'
 import type { ReportUser } from './ReportUser'
-import type { UserDevice } from './UserDevice'
+import type { UserDeviceSession } from './UserDevice'
 import type { UserSetting } from './UserSetting'
 import type { Follow } from './Follow'
 import type { UserPoint } from './UserPoint'
@@ -38,9 +38,10 @@ import UserUtils from '@/utils/user.utils'
 import ModelPgConstant from '@/constants/model.pg.constant'
 import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
 import { SearchHistory } from '@/models/pg/SearchHistory'
+import { UserLinkSNS } from './UserLinkSNS'
 
 type UserAssociations =
-  | 'devices'
+  | 'deviceSession'
   | 'blockers'
   | 'blockeds'
   | 'polls'
@@ -58,6 +59,7 @@ type UserAssociations =
   | 'searchHistories'
   | 'contacts'
   | 'contactInfos'
+  | 'snsLinks'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -99,17 +101,38 @@ export class User extends Model<
   declare deletedAt: CreationOptional<Date>
 
   // User hasMany UserDevice (as Devices)
-  declare devices?: NonAttribute<UserDevice[]>
-  declare getDevices: HasManyGetAssociationsMixin<UserDevice>
-  declare setDevices: HasManySetAssociationsMixin<UserDevice, string>
-  declare addDevice: HasManyAddAssociationMixin<UserDevice, string>
-  declare addDevices: HasManyAddAssociationsMixin<UserDevice, string>
-  declare createDevice: HasManyCreateAssociationMixin<UserDevice>
-  declare removeDevice: HasManyRemoveAssociationMixin<UserDevice, string>
-  declare removeDevices: HasManyRemoveAssociationsMixin<UserDevice, string>
-  declare hasDevice: HasManyHasAssociationMixin<UserDevice, string>
-  declare hasDevices: HasManyHasAssociationsMixin<UserDevice, string>
-  declare countDevices: HasManyCountAssociationsMixin
+  declare deviceSession?: NonAttribute<UserDeviceSession[]>
+  declare getDeviceSession: HasManyGetAssociationsMixin<UserDeviceSession>
+  declare setDeviceSession: HasManySetAssociationsMixin<
+    UserDeviceSession,
+    string
+  >
+  declare addDeviceSessions: HasManyAddAssociationMixin<
+    UserDeviceSession,
+    string
+  >
+  declare addDeviceSession: HasManyAddAssociationsMixin<
+    UserDeviceSession,
+    string
+  >
+  declare createDeviceSession: HasManyCreateAssociationMixin<UserDeviceSession>
+  declare removeDeviceSessions: HasManyRemoveAssociationMixin<
+    UserDeviceSession,
+    string
+  >
+  declare removeDeviceSession: HasManyRemoveAssociationsMixin<
+    UserDeviceSession,
+    string
+  >
+  declare hasDeviceSessions: HasManyHasAssociationMixin<
+    UserDeviceSession,
+    string
+  >
+  declare hasDeviceSession: HasManyHasAssociationsMixin<
+    UserDeviceSession,
+    string
+  >
+  declare countDeviceSession: HasManyCountAssociationsMixin
 
   // User hasMany Block (as Blockers)
   declare blockers?: NonAttribute<Block[]>
@@ -370,8 +393,21 @@ export class User extends Model<
   declare hasContactInfos: HasManyHasAssociationsMixin<ContactList, string>
   declare countContactInfos: HasManyCountAssociationsMixin
 
+  // User hasMany UserLinkSNS (as SnsLink)
+  declare snsLinks?: NonAttribute<UserLinkSNS[]>
+  declare getSnsLinks: HasManyGetAssociationsMixin<UserLinkSNS>
+  declare setSnsLinks: HasManySetAssociationsMixin<UserLinkSNS, string>
+  declare addSnsLink: HasManyAddAssociationMixin<UserLinkSNS, string>
+  declare addSnsLinks: HasManyAddAssociationsMixin<UserLinkSNS, string>
+  declare createSnsLink: HasManyCreateAssociationMixin<UserLinkSNS>
+  declare removeSnsLink: HasManyRemoveAssociationMixin<UserLinkSNS, string>
+  declare removeSnsLinks: HasManyRemoveAssociationsMixin<UserLinkSNS, string>
+  declare hasSnsLink: HasManyHasAssociationMixin<UserLinkSNS, string>
+  declare hasSnsLinks: HasManyHasAssociationsMixin<UserLinkSNS, string>
+  declare countSnsLinks: HasManyCountAssociationsMixin
+
   declare static associations: {
-    devices: Association<User, UserDevice>
+    deviceSession: Association<User, UserDeviceSession>
     blockers: Association<User, Block>
     blockeds: Association<User, Block>
     polls: Association<User, Poll>
@@ -390,6 +426,7 @@ export class User extends Model<
     searchHistories: Association<User, SearchHistory>
     contacts: Association<User, ContactList>
     contactInfos: Association<User, ContactList>
+    snsLinks: Association<User, UserLinkSNS>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

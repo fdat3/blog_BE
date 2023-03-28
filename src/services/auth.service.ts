@@ -1,4 +1,4 @@
-import { UserDevice } from './../models/pg/UserDevice'
+import { UserDeviceSession } from './../models/pg/UserDevice'
 import { User } from '@/models/pg'
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
@@ -41,13 +41,13 @@ class AuthService {
     return this.userSecurity.comparePassword(password, decryptedPassword)
   }
 
-  public async createUser(user: any, device?: any): Promise<any> {
+  public async createUser(user: any): Promise<any> {
     const encryptedPassword = this.userSecurity.encrypt(user.password)
     const newUser = {
       ...user,
       password: encryptedPassword,
     }
-    const savedUser = await this.userRepository.createUser(newUser, device)
+    const savedUser = await this.userRepository.createUser(newUser)
     return savedUser
   }
 
@@ -61,7 +61,7 @@ class AuthService {
 
   public async snsLogin(data: any, type: SNSEnum): Promise<any> {
     let result: any
-    const { token, device }: Omit<any, 'token'> = data
+    const { token } = data
     switch (type) {
       case SNSEnum.APPLE:
         result = await this.snsService.appleSignIn(token)
@@ -91,7 +91,7 @@ class AuthService {
         email: result.email,
         username: result.username || result.email,
       }
-      return await this.userRepository.createUser(snsUser, device)
+      return await this.userRepository.createUser(snsUser)
     } else {
       const { email } = result
       const snsUser = await this.userRepository.findByEmail(email)
@@ -110,7 +110,7 @@ class AuthService {
     return false
   }
 
-  public async setDevice(user: User, device: UserDevice): Promise<void> {
+  public async setDevice(user: User, device: UserDeviceSession): Promise<void> {
     await this.userRepository.addDevice(user, device)
   }
 }

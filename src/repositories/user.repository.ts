@@ -1,12 +1,13 @@
 // import User from "@/models/mongo/user.model";
 // import UserInterface from "@/interfaces/user.interface";
-import { User, UserDevice } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
-import logger from '@/utils/logger.util'
-import { DeviceInterface } from '@/interfaces/auth.interface'
+import {
+  default as BaseController,
+  default as baseController,
+} from '@/controllers/base.controller'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import BaseController from '@/controllers/base.controller'
-import baseController from '@/controllers/base.controller'
+import { User, UserDeviceSession } from '@/models/pg'
+import logger from '@/utils/logger.util'
 
 class UserRepository {
   private model
@@ -113,10 +114,7 @@ class UserRepository {
     return user
   }
 
-  public async createUser(
-    user: any,
-    device?: DeviceInterface,
-  ): Promise<Partial<User> | null> {
+  public async createUser(user: any): Promise<Partial<User> | null> {
     try {
       const result: User = await sequelize.transaction(async (transaction) => {
         const newUser: User = await User.create(
@@ -127,12 +125,6 @@ class UserRepository {
             transaction,
           },
         )
-
-        if (device) {
-          await newUser.createDevice({
-            ...device,
-          })
-        }
 
         return newUser
       })
@@ -319,9 +311,9 @@ class UserRepository {
     }
   }
 
-  public async addDevice(user: User, device: UserDevice): Promise<void> {
+  public async addDevice(user: User, device: UserDeviceSession): Promise<void> {
     try {
-      await UserDevice.findOrCreate({
+      await UserDeviceSession.findOrCreate({
         where: {
           ...device,
         },

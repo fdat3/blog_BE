@@ -78,6 +78,7 @@ export class UserLinkSNS extends Model<
       {
         sequelize,
         tableName: ModelPgConstant.USER_LINK_SNS,
+        freezeTableName: true,
       },
     )
 

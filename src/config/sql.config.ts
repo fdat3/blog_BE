@@ -1,7 +1,7 @@
-import { Sequelize, UpdateOptions } from 'sequelize'
 import VariableEnv from '@/env/variable.env'
 import logger from '@/utils/logger.util'
 import * as process from 'process'
+import { Sequelize, UpdateOptions } from 'sequelize'
 
 const sequelizeTransforms = require('sequelize-transforms')
 
@@ -31,7 +31,6 @@ export const sequelize = new Sequelize(
       timestamps: true,
       underscored: true,
       paranoid: true,
-      freezeTableName: true,
       defaultScope: {
         attributes: {
           exclude: ['deletedAt'],
@@ -93,7 +92,7 @@ export const postgresTestConnectDB = async (): Promise<void> => {
 export const syncSequelize = async (): Promise<void> => {
   try {
     await sequelize.sync({
-      force: false,
+      force: true,
       alter: true,
       logging: (sql: string) => {
         process.env.LOGGING === 'true' && logger.http(sql)

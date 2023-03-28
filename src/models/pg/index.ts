@@ -4,7 +4,7 @@ import { PollAnswer } from './PollAnswer'
 import { PollAnswerChosen } from './PollAnswerChosen'
 import { PollComment } from './PollComment'
 import { PollCategory } from './PollCategory'
-import { UserDevice } from './UserDevice'
+import { UserDeviceSession } from './UserDevice'
 import { Block } from './Block'
 import { ReportUser } from './ReportUser'
 import { ReportPoll } from './ReportPoll'
@@ -38,7 +38,7 @@ export {
   PollAnswerChosen,
   PollComment,
   PollCategory,
-  UserDevice,
+  UserDeviceSession,
   Block,
   ReportUser,
   ReportPoll,
@@ -72,7 +72,7 @@ export const initModels = (): any => {
   PollAnswerChosen.initModel(sequelize)
   PollComment.initModel(sequelize)
   PollCategory.initModel(sequelize)
-  UserDevice.initModel(sequelize)
+  UserDeviceSession.initModel(sequelize)
   Block.initModel(sequelize)
   ReportUser.initModel(sequelize)
   ReportPoll.initModel(sequelize)
@@ -98,8 +98,8 @@ export const initModels = (): any => {
   PollEntity.initModel(sequelize)
   UserLinkSNS.initModel(sequelize)
 
-  User.hasMany(UserDevice, {
-    as: 'devices',
+  User.hasMany(UserDeviceSession, {
+    as: 'deviceSession',
     foreignKey: 'userId',
   })
   User.hasMany(Block, {
@@ -246,7 +246,7 @@ export const initModels = (): any => {
     as: 'recommends',
     foreignKey: 'pollCategoryId',
   })
-  UserDevice.belongsTo(User, {
+  UserDeviceSession.belongsTo(User, {
     as: 'user',
     foreignKey: 'userId',
   })
@@ -418,7 +418,7 @@ export const initModels = (): any => {
     PollAnswerChosen,
     PollComment,
     PollCategory,
-    UserDevice,
+    UserDeviceSession,
     Block,
     ReportUser,
     ReportPoll,
