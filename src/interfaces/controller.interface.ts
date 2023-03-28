@@ -1,4 +1,5 @@
 import express, { Router } from 'express'
+import { FingerprintResult } from 'express-fingerprint'
 
 interface Controller {
   path: string
@@ -24,6 +25,7 @@ export interface ICrudOption {
 
 export interface Request extends express.Request {
   queryInfo?: ICrudOption
+  fingerprint?: FingerprintResult
 
   [x: string]: any
 }

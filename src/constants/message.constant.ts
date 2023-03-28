@@ -25,6 +25,8 @@ class Message {
 
   // token
   public static readonly TOKEN_NOT_VALID: string = 'Token not valid'
+  public static readonly TOKEN_NOT_ISSUED_FOR_THIS_DEVICE: string =
+    'Token not issued for this device'
   public static readonly NOT_AUTHENTICATED: string = 'Not authenticated'
   public static readonly UNAUTHORIZED: string = 'Unauthorized'
   public static readonly NOT_ALLOWED: string = 'Not allowed'

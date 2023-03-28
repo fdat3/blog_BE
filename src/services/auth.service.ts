@@ -1,6 +1,7 @@
 import { SNSEnum } from '@/enums/auth.enum'
 import { CheckUserExistInterface } from '@/interfaces/auth.interface'
 import UserRepository from '@/repositories/user.repository'
+import UserDeviceSessionRepository from '@/repositories/user_device_session.repository'
 import UserSecurity from '@/security/user.security'
 import SNSService from '@/services/sns.service'
 
@@ -8,11 +9,13 @@ class AuthService {
   private userRepository: UserRepository
   private userSecurity: UserSecurity
   private snsService: SNSService
+  private userDeviceSessionService: UserDeviceSessionRepository
 
   constructor() {
     this.userRepository = new UserRepository()
     this.userSecurity = new UserSecurity()
     this.snsService = new SNSService()
+    this.userDeviceSessionService = new UserDeviceSessionRepository()
   }
 
   public async findByUsername(username: string): Promise<any> {
@@ -54,6 +57,15 @@ class AuthService {
     isAdmin: boolean,
   ): Promise<string> {
     const token = this.userSecurity.generateAccessToken(id, isAdmin)
+    return token
+  }
+
+  public async generateRefreshToken(
+    id: string,
+    isAdmin: boolean,
+    deviceId?: string,
+  ): Promise<string> {
+    const token = this.userSecurity.generateRefreshToken(id, isAdmin, deviceId)
     return token
   }
 
@@ -106,6 +118,41 @@ class AuthService {
       return !!user
     }
     return false
+  }
+
+  public async handleDeviceSession(
+    userId: string,
+    metaData: any,
+  ): Promise<any> {
+    const currentDevice = await this.userDeviceSessionService.findDeviceExisted(
+      metaData.deviceId,
+      userId,
+    )
+
+    if (customElements) {
+      return currentDevice
+    }
+    /**
+     * Create new device session
+     */
+    const secretKey = this.userSecurity.generateSecretKey()
+
+    const devicePayload: any = {
+      userId,
+      deviceId: metaData.deviceId,
+      secretKey,
+      ua: metaData.ua,
+      ipAddress: metaData.ipAddress,
+      lastSession: new Date(),
+      refreshToken: metaData?.refreshToken,
+      fcmToken: metaData?.fcmToken,
+      expiredAt: metaData?.expiredAt,
+    }
+
+    const device = await this.userDeviceSessionService.createNewDevice(
+      devicePayload,
+    )
+    return device
   }
 }
 

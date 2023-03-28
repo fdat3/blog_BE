@@ -20,10 +20,12 @@ export class UserDeviceSession extends Model<
   InferAttributes<UserDeviceSession, { omit: UserDeviceAssociations }>,
   InferCreationAttributes<UserDeviceSession, { omit: UserDeviceAssociations }>
 > {
-  declare id: CreationOptional<string>
-  declare userId: string | null
+  declare id: CreationOptional<uuid>
+  declare userId: CreationOptional<uuid>
   declare fcmToken: CreationOptional<string>
   declare deviceId: CreationOptional<string>
+  declare ua: CreationOptional<object>
+  declare ipAddress: CreationOptional<string>
   declare lastSession: CreationOptional<string>
   declare secretKey: CreationOptional<string>
   declare refreshToken: CreationOptional<string>
@@ -53,11 +55,17 @@ export class UserDeviceSession extends Model<
         userId: {
           type: DataTypes.UUID,
         },
+        ipAddress: {
+          type: DataTypes.STRING(255),
+        },
         fcmToken: {
           type: DataTypes.STRING(255),
         },
         deviceId: {
           type: DataTypes.STRING(255),
+        },
+        ua: {
+          type: DataTypes.JSON,
         },
         secretKey: {
           type: DataTypes.STRING(255),

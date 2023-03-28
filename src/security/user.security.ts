@@ -25,6 +25,30 @@ class UserSecurity {
 
     return `Bearer ${token}`
   }
+
+  public generateRefreshToken(
+    id: string,
+    isAdmin: boolean,
+    deviceId?: string,
+  ): string {
+    const token = jwt.sign({ id, isAdmin, deviceId }, Variable.JWT_SECRET, {
+      expiresIn: '1d',
+    })
+
+    return `${token}`
+  }
+
+  public generateSecretKey(): string {
+    let passphrase = ''
+    const hex = '0123456789abcdef'
+    let i = 64
+    while (i >= 0) {
+      passphrase += hex.charAt(Math.floor(Math.random() * 16))
+      i--
+    }
+
+    return passphrase
+  }
 }
 
 export default UserSecurity

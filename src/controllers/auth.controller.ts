@@ -24,6 +24,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 // logger
 import { SNSEnum } from '@/enums/auth.enum'
 import logger from '@/utils/logger.util'
+import { DateTime } from 'luxon'
 
 class AuthController implements Controller {
   public path: string
@@ -266,15 +267,6 @@ class AuthController implements Controller {
         )
       }
 
-      /**
-       * Check fingerprint here
-       */
-
-      const { fingerprint } = req
-      logger.info({ fingerprint: JSON.stringify(fingerprint) })
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-      logger.info({ ip })
-
       const isMatch = this.authService.comparePassword(password, user.password)
       if (!isMatch) {
         return next(
@@ -286,11 +278,49 @@ class AuthController implements Controller {
         )
       }
 
+      /**
+       * Check fingerprint here
+       */
+
+      const { fingerprint } = req
+      const ip: string | undefined = ((): string | undefined => {
+        const forwardedIpsStr = req.header('x-forwarded-for')
+        const resultIp = req.connection.remoteAddress
+        return forwardedIpsStr ?? resultIp
+      })()
+      const ua = req.header('user-agent')
+      const deviceId = fingerprint?.hash
+
+      /**
+       * TODO: Check Device here to create new refresh token
+       */
+
       const accessToken = await this.authService.generateAccessToken(
         user.id,
         user.isAdmin,
       )
       logger.info(`accessToken: ${accessToken}`)
+
+      const refreshToken: string = await this.authService.generateRefreshToken(
+        user.id,
+        user.isAdmin,
+        deviceId,
+      )
+
+      const metaData = {
+        ipAddress: ip,
+        ua,
+        deviceId,
+        refreshToken,
+        fcmToken: req.body?.fcmToken,
+        expiredAt: DateTime.now().plus({
+          month: 1,
+        }),
+      }
+
+      await this.authService.handleDeviceSession(user.id, metaData)
+
+      res.cookie('jwt', refreshToken)
 
       const newUser = { ...user }
 
@@ -307,6 +337,7 @@ class AuthController implements Controller {
         data: {
           user: newUser,
           accessToken,
+          refreshToken,
         },
       })
     } catch (err: any) {

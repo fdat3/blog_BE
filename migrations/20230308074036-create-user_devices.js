@@ -26,9 +26,21 @@ module.exports = {
         field: 'last_session',
         defaultValue: DataTypes.NOW
       },
-      loginType: {
+      ua: {
+        type: DataTypes.JSON,
+        field: 'ua'
+      },
+      secretKey: {
         type: DataTypes.STRING,
-        field: 'login_type'
+        field: 'secret_key'
+      },
+      refreshToken: {
+        type: DataTypes.STRING,
+        field: 'refresh_token'
+      },
+      ipAddress: {
+        type: DataTypes.STRING,
+        field: 'ip_address'
       },
       createdAt: {
         type: DataTypes.DATE,
