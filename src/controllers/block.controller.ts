@@ -9,21 +9,23 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import ConstantMessage from '@/constants/message.constant'
 import BaseController from './base.controller'
 import Authenticated from '@/middlewares/authenticated.middleware'
+import validationMiddleware from '@/middlewares/validation.middleware'
 import { verifyToken } from '@/validations/token.validation'
 import BlockService from '@/services/block.service'
 import { cloneDeep } from 'lodash'
 import logger from '@/utils/logger.util'
 import HttpExceptions from '@/utils/exceptions/http.exceptions'
 import QueryMiddleware from '@/middlewares/quey.middleware'
+import BlockValidation from '@/validations/block.validation'
 
 class GroupSettingController implements Controller {
   public path: string
   public router: Router
   private baseController: BaseController
   private queryMiddleware: QueryMiddleware
-
   private service: BlockService
   private authenticated = new Authenticated()
+  private validate: BlockValidation
 
   constructor() {
     this.path = ConstantAPI.BLOCK
@@ -32,19 +34,32 @@ class GroupSettingController implements Controller {
     this.service = new BlockService()
     this.authenticated = new Authenticated()
     this.queryMiddleware = new QueryMiddleware()
+    this.validate = new BlockValidation()
 
     this.authenticationForThisRoute()
     this.initialiseRoutes()
   }
 
   private authenticationForThisRoute(): void {
-    this.router.use(verifyToken)
+    // this.router.use(verifyToken)
   }
 
   private initialiseRoutes(): void {
-    this.router.get(`${this.path}`, [this.queryMiddleware.run()], this.getList)
-    this.router.post(`${this.path}`, this.create)
-    this.router.delete(`${this.path}`, this.delete)
+    this.router.get(
+      `${this.path}`,
+      [verifyToken, this.queryMiddleware.run()],
+      this.getList,
+    )
+    this.router.post(
+      `${this.path}`,
+      [verifyToken, validationMiddleware(this.validate.create)],
+      this.create,
+    )
+    this.router.delete(
+      `${this.path}`,
+      [verifyToken, validationMiddleware(this.validate.delete)],
+      this.delete,
+    )
   }
 
   private getList = async (

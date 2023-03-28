@@ -52,7 +52,7 @@ class GroupController implements Controller {
     )
     this.router.post(
       `${this.path}${ConstantAPI.GROUP_CREATE}`,
-      [validationMiddleware(this.validate.create)],
+      [verifyToken, validationMiddleware(this.validate.create)],
       this.create,
     )
     this.router.put(

@@ -36,16 +36,18 @@ class GroupSettingController implements Controller {
   }
 
   private authenticationForThisRoute(): void {
-    this.router.use(verifyToken)
+    // this.router.use(verifyToken)
   }
 
   private initialiseRoutes(): void {
     this.router.get(
       `${this.path}${ConstantAPI.GROUP_SETTING_GET}`,
+      [verifyToken],
       this.getSettings,
     )
     this.router.put(
       `${this.path}${ConstantAPI.GROUP_SETTING_UPDATE}`,
+      [verifyToken],
       this.updateSettings,
     )
   }

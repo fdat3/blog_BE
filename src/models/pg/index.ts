@@ -29,6 +29,7 @@ import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
 import { SearchHistory } from '@/models/pg/SearchHistory'
 import { ContactList } from './ContactList'
 import { PollEntity } from './PollEntity'
+import { UserLinkSNS } from './UserLinkSNS'
 
 export {
   User,
@@ -61,6 +62,7 @@ export {
   SearchHistory,
   ContactList,
   PollEntity,
+  UserLinkSNS,
 }
 
 export const initModels = (): any => {
@@ -94,6 +96,7 @@ export const initModels = (): any => {
   SearchHistory.initModel(sequelize)
   ContactList.initModel(sequelize)
   PollEntity.initModel(sequelize)
+  UserLinkSNS.initModel(sequelize)
 
   User.hasMany(UserDevice, {
     as: 'devices',
@@ -162,6 +165,10 @@ export const initModels = (): any => {
   User.hasMany(ContactList, {
     as: 'contactInfos',
     foreignKey: 'contactId',
+  })
+  User.hasMany(UserLinkSNS, {
+    as: 'sns_link',
+    foreignKey: 'userId',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -399,6 +406,10 @@ export const initModels = (): any => {
     as: 'poll',
     foreignKey: 'pollId',
   })
+  UserLinkSNS.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'userId',
+  })
 
   return {
     User,
@@ -431,5 +442,6 @@ export const initModels = (): any => {
     SearchHistory,
     ContactList,
     PollEntity,
+    UserLinkSNS,
   }
 }

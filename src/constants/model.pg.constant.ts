@@ -30,6 +30,7 @@ class PgModel {
     'recommended_category_lists'
   public static readonly SEARCH_HISTORY: string = 'search_histories'
   public static readonly CONTACT_LIST: string = 'contact_lists'
+  public static readonly USER_LINK_SNS: string = 'user_link_sns'
 }
 
 export default PgModel
