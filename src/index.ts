@@ -1,18 +1,18 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
 
-import compression from 'compression'
-import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
+import compression from 'compression'
+import RedisStore from 'connect-redis'
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import helmet from 'helmet'
 import Redis from 'ioredis'
-import RedisStore from 'connect-redis'
 // const passport = require('passport')
-import ErrorMiddleware from '@/middlewares/error.middleware'
-import HttpException from '@/utils/exceptions/http.exceptions'
-import Controller from '@/interfaces/controller.interface'
 import mongoConnectDB from '@/config/db.config'
 import { postgresTestConnectDB, syncSequelize } from '@/config/sql.config'
+import Controller from '@/interfaces/controller.interface'
+import ErrorMiddleware from '@/middlewares/error.middleware'
+import HttpException from '@/utils/exceptions/http.exceptions'
 
 // variable
 import Variable from '@/env/variable.env'
@@ -27,11 +27,12 @@ import ConstantMessage from '@/constants/message.constant'
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 
-import morgan from 'morgan'
 import Versioning from '@/interfaces/versioning.interface'
 import { initModels } from '@/models/pg'
+import morgan from 'morgan'
 // import runAdminPage from '@/admin/.'
 const session = require('express-session')
+const Fingerprint = require('express-fingerprint')
 
 // const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
@@ -104,6 +105,15 @@ class App {
 
     this.app.use(morgan('combined'))
     this.app.disable('x-powered-by')
+    this.app.use(
+      Fingerprint({
+        parameters: [
+          Fingerprint.useragent,
+          Fingerprint.acceptHeaders,
+          Fingerprint.geoip,
+        ],
+      }),
+    )
 
     if (this.app.get('env') === 'production') {
       this.app.set('trust proxy', 1) // trust first proxy

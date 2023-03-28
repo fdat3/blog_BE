@@ -1,10 +1,8 @@
-import { UserDeviceSession } from './../models/pg/UserDevice'
-import { User } from '@/models/pg'
+import { SNSEnum } from '@/enums/auth.enum'
+import { CheckUserExistInterface } from '@/interfaces/auth.interface'
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
 import SNSService from '@/services/sns.service'
-import { CheckUserExistInterface } from '@/interfaces/auth.interface'
-import { SNSEnum } from '@/enums/auth.enum'
 
 class AuthService {
   private userRepository: UserRepository
@@ -108,10 +106,6 @@ class AuthService {
       return !!user
     }
     return false
-  }
-
-  public async setDevice(user: User, device: UserDeviceSession): Promise<void> {
-    await this.userRepository.addDevice(user, device)
   }
 }
 

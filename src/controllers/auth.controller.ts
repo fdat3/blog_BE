@@ -266,6 +266,15 @@ class AuthController implements Controller {
         )
       }
 
+      /**
+       * Check fingerprint here
+       */
+
+      const { fingerprint } = req
+      logger.info({ fingerprint: JSON.stringify(fingerprint) })
+      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      logger.info({ ip })
+
       const isMatch = this.authService.comparePassword(password, user.password)
       if (!isMatch) {
         return next(
