@@ -46,6 +46,7 @@ export class AdminUserController implements Controller {
     )
 
     this.router.put(`${ConstantAPI.ADMIN_USER_EDIT}`, this.update)
+    this.router.delete(`${ConstantAPI.ADMIN_USER_DELETE}`, this.delete)
     console.log(this.router.stack)
   }
 
@@ -240,6 +241,54 @@ export class AdminUserController implements Controller {
         data: {
           user: result,
         },
+      })
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
+
+  private delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+
+      const user = await this.userService.findById(id)
+      if (!user) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.USER_NOT_FOUND,
+          ),
+        )
+      }
+
+      const deletedUser = await this.userService.deleteUser(id)
+      if (!deletedUser) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.USER_NOT_DELETE,
+          ),
+        )
+      }
+
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_DELETE_SUCCESS,
       })
     } catch (err: any) {
       next(

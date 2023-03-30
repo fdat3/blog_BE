@@ -80,6 +80,7 @@ class Api {
   public static readonly ADMIN_USER: string = '/users'
   public static readonly ADMIN_USER_ADD: string = '/add'
   public static readonly ADMIN_USER_EDIT: string = '/edit/:id'
+  public static readonly ADMIN_USER_DELETE: string = '/delete/:id'
 }
 
 export default Api

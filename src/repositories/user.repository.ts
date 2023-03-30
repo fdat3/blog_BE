@@ -262,10 +262,20 @@ class UserRepository {
     }
   }
 
-  public async deleteUser(id: string): Promise<Partial<User> | null> {
-    const user = await User.findByPk(id)
-    user?.destroy()
-    return user
+  public async deleteUser(id: string): Promise<any> {
+    try {
+      return sequelize.transaction(async (transaction) => {
+        return User.destroy({
+          where: {
+            id,
+          },
+          transaction,
+        })
+      })
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
   }
 
   public async getUsersStats(): Promise<Partial<User[]> | null> {
