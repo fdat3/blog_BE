@@ -78,6 +78,7 @@ class Api {
   // Admin
   public static readonly ADMIN: string = '/admin'
   public static readonly ADMIN_USER: string = '/users'
+  public static readonly ADMIN_USER_ADD: string = '/add'
 }
 
 export default Api
