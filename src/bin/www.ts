@@ -24,6 +24,7 @@ import GroupController from '@/controllers/group.controller'
 import GroupSettingController from '@/controllers/group_setting.controller'
 import BlockController from '@/controllers/block.controller'
 import DeviceController from '@/controllers/device.controller'
+import AdminController from '@/controllers/admin.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -44,6 +45,7 @@ const { app } = new App({
     new GroupController(),
     new GroupSettingController(),
     new DeviceController(),
+    new AdminController(),
   ],
 })
 

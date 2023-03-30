@@ -74,6 +74,10 @@ class Api {
   public static readonly DEVICE: string = '/devices'
   public static readonly DEVICE_LIST: string = '/:deviceId'
   public static readonly DEVICE_DELETE: string = '/:id'
+
+  // Admin
+  public static readonly ADMIN: string = '/admin'
+  public static readonly ADMIN_USER: string = '/users'
 }
 
 export default Api
