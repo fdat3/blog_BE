@@ -23,6 +23,7 @@ import PollController from '@/controllers/poll.controller'
 import GroupController from '@/controllers/group.controller'
 import GroupSettingController from '@/controllers/group_setting.controller'
 import BlockController from '@/controllers/block.controller'
+import DeviceController from '@/controllers/device.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -42,6 +43,7 @@ const { app } = new App({
     new PollController(),
     new GroupController(),
     new GroupSettingController(),
+    new DeviceController(),
   ],
 })
 

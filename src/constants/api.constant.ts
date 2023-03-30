@@ -69,6 +69,11 @@ class Api {
   public static readonly BLOCK_GET: string = '/:id'
   public static readonly BLOCK_CREATE: string = '/'
   public static readonly BLOCK_DELETE: string = '/'
+
+  // Device
+  public static readonly DEVICE: string = '/devices'
+  public static readonly DEVICE_LIST: string = '/:deviceId'
+  public static readonly DEVICE_DELETE: string = '/:id'
 }
 
 export default Api
