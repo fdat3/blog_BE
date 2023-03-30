@@ -48,7 +48,6 @@ class GithubHookController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      console.log('hello')
       return res.json({
         message: 'test',
       })

@@ -47,7 +47,6 @@ class AuthenticatedMiddleware {
     next: NextFunction,
   ): Promise<void> {
     return await verifyToken(req, res, () => {
-      console.log(req?.user)
       try {
         if (req?.user?.isAdmin) {
           return next()

@@ -44,6 +44,9 @@ export class AdminUserController implements Controller {
       [validationMiddleware(this.validate.register)],
       this.create,
     )
+
+    this.router.put(`${ConstantAPI.ADMIN_USER_EDIT}`, this.update)
+    console.log(this.router.stack)
   }
 
   private getList = async (
@@ -214,6 +217,36 @@ export class AdminUserController implements Controller {
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           err.message,
+        ),
+      )
+    }
+  }
+
+  private update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { user, body } = req
+      body.id = user.id
+      const result = await this.userService.updateAny(body)
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.UPDATE_SUCCESSFULLY,
+        data: {
+          user: result,
+        },
+      })
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
         ),
       )
     }

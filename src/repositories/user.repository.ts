@@ -26,7 +26,7 @@ class UserRepository {
       )
       return users
     } catch (e) {
-      console.log(e)
+      logger.error(e)
       return null
     }
   }
@@ -294,18 +294,12 @@ class UserRepository {
             where: {
               id: user.id,
             },
-            include: [
-              {
-                association: 'mbti',
-              },
-            ],
             raw: true,
             nest: true,
           })
         },
       )
     } catch (err) {
-      console.log(err)
       logger.error(err)
       return null
     }

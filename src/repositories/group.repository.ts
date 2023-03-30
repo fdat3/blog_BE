@@ -174,8 +174,6 @@ class GroupRepository {
         },
       })
 
-      console.log({ member })
-
       if (member == 0) {
         return sequelize.transaction(async (transaction) => {
           const createData: Partial<GroupMember> | any = {
