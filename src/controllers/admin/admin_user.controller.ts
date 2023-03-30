@@ -15,6 +15,7 @@ import ConstantAPI from '@/constants/api.constant'
 import logger from '@/utils/logger.util'
 import Validate from '@/validations/user.validation'
 import AuthService from '@/services/auth.service'
+import validationMiddleware from '@/middlewares/validation.middleware'
 
 export class AdminUserController implements Controller {
   path: string
@@ -38,7 +39,11 @@ export class AdminUserController implements Controller {
 
   private initialiseRoutes(): void {
     this.router.get(this.path, [this.queryMiddleware.run()], this.getList)
-    this.router.post(ConstantAPI.ADMIN_USER_ADD, [], this.create)
+    this.router.post(
+      ConstantAPI.ADMIN_USER_ADD,
+      [validationMiddleware(this.validate.register)],
+      this.create,
+    )
   }
 
   private getList = async (
