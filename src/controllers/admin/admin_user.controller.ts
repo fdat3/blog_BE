@@ -47,7 +47,6 @@ export class AdminUserController implements Controller {
 
     this.router.put(`${ConstantAPI.ADMIN_USER_EDIT}`, this.update)
     this.router.delete(`${ConstantAPI.ADMIN_USER_DELETE}`, this.delete)
-    console.log(this.router.stack)
   }
 
   private getList = async (
@@ -58,7 +57,7 @@ export class AdminUserController implements Controller {
     try {
       const { queryInfo } = req
       const users = await this.userService.findAll(queryInfo)
-      if (!users || users.rows.lenght == 0) {
+      if (!users || users.rows.length == 0) {
         return next(
           new HttpException(
             ConstantHttpCode.NOT_FOUND,

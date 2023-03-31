@@ -77,10 +77,18 @@ class Api {
 
   // Admin
   public static readonly ADMIN: string = '/admin'
+
   public static readonly ADMIN_USER: string = '/users'
+  public static readonly ADMIN_USER_ITEM: string = '/:id'
   public static readonly ADMIN_USER_ADD: string = '/add'
   public static readonly ADMIN_USER_EDIT: string = '/edit/:id'
   public static readonly ADMIN_USER_DELETE: string = '/delete/:id'
+
+  public static readonly ADMIN_POLL_CATEGORY: string = '/poll_category'
+  public static readonly ADMIN_POLL_CATEGORY_ITEM: string = '/:id'
+  public static readonly ADMIN_POLL_CATEGORY_ADD: string = '/add'
+  public static readonly ADMIN_POLL_CATEGORY_EDIT: string = '/edit/:id'
+  public static readonly ADMIN_POLL_CATEGORY_DELETE: string = '/delete/:id'
 }
 
 export default Api
