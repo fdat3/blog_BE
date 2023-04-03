@@ -18,6 +18,7 @@ class PgModel {
   public static readonly POLL_MENTION: string = 'poll_mentions'
   public static readonly POLL_COMMENT_MENTION: string = 'poll_comment_mentions'
   public static readonly POLL_COMMENT_HASHTAG: string = 'poll_comment_hashtags'
+  public static readonly POPULARITY_POLL: string = 'popularity_polls'
   public static readonly POLL_ENTITY: string = 'poll_entities'
   public static readonly SESSION: string = 'sessions'
   public static readonly LIKES: string = 'likes'

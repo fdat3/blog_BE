@@ -30,6 +30,7 @@ import { SearchHistory } from '@/models/pg/SearchHistory'
 import { ContactList } from './ContactList'
 import { PollEntity } from './PollEntity'
 import { UserLinkSNS } from './UserLinkSNS'
+import { PopularityPoll } from '@/models/pg/PopularityPolls'
 
 export {
   User,
@@ -63,6 +64,7 @@ export {
   ContactList,
   PollEntity,
   UserLinkSNS,
+  PopularityPoll,
 }
 
 export const initModels = (): any => {
@@ -97,6 +99,7 @@ export const initModels = (): any => {
   ContactList.initModel(sequelize)
   PollEntity.initModel(sequelize)
   UserLinkSNS.initModel(sequelize)
+  PopularityPoll.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -451,5 +454,6 @@ export const initModels = (): any => {
     ContactList,
     PollEntity,
     UserLinkSNS,
+    PopularityPoll,
   }
 }
