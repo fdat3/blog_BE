@@ -174,6 +174,10 @@ export const initModels = (): any => {
     as: 'user',
     foreignKey: 'userId',
   })
+  Poll.belongsTo(Group, {
+    as: 'group',
+    foreignKey: 'groupId',
+  })
   Poll.belongsTo(PollCategory, {
     as: 'category',
     foreignKey: 'categoryId',
@@ -332,6 +336,10 @@ export const initModels = (): any => {
   })
   Group.hasMany(GroupMember, {
     as: 'members',
+    foreignKey: 'groupId',
+  })
+  Group.hasMany(Poll, {
+    as: 'polls',
     foreignKey: 'groupId',
   })
   Group.hasOne(GroupSetting, {

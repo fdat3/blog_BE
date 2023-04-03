@@ -4,6 +4,7 @@ import baseController from '@/controllers/base.controller'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import { Poll } from '@/models/pg'
 import logger from '@/utils/logger.util'
+import { redis } from '@/config/redis.config'
 
 class PollRepository {
   private model
@@ -105,6 +106,46 @@ class PollRepository {
     } catch (err) {
       logger.error(err)
       return null
+    }
+  }
+
+  /**
+   * This function to run every day at 12:00 AM (00:00) to get popularity of polls
+   * This will get the most 3 polls with the highest popularity with counting of votes and views on each poll
+   * And store this id to redis, then store to database in popularity table
+   */
+  public async getPopularityPolls(): Promise<Poll[] | void> {
+    const redisKey = 'popularityPolls'
+    const popularityPolls = await redis.get(redisKey)
+    if (popularityPolls) {
+      logger.info('Popularity polls already exist')
+      return
+    } else {
+      /**
+       * Finding the most 3 polls with the highest popularity with counting of votes and views on each poll
+       * And store this id to redis, then store to database in popularity table
+       */
+      const popularityPolls = await this.model.findAll({
+        where: {},
+        limit: 3,
+        order: [
+          ['createdAt', 'DESC'],
+          ['views', 'DESC'],
+          ['votes', 'DESC'],
+        ],
+        attributes: ['id'],
+      })
+
+      console.log({ popularityPolls })
+
+      if (popularityPolls.length > 0) {
+        /**
+         * set redis key
+         */
+        await redis.set(redisKey, JSON.stringify(popularityPolls))
+      }
+
+      return popularityPolls
     }
   }
 }

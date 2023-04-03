@@ -30,6 +30,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import Versioning from '@/interfaces/versioning.interface'
 import { initModels } from '@/models/pg'
 import morgan from 'morgan'
+import { redis } from '@/config/redis.config'
 // import runAdminPage from '@/admin/.'
 const session = require('express-session')
 const Fingerprint = require('express-fingerprint')
@@ -56,12 +57,7 @@ class App {
         ? new Redis()
         : Variable.USE_LOCAL_REDIS === 'true'
         ? new Redis()
-        : new Redis({
-            port: Variable.REDIS_PORT,
-            host: Variable.REDIS_HOST,
-            username: Variable.REDIS_USERNAME,
-            password: Variable.REDIS_PASSWORD,
-          })
+        : redis
     this.redisStore = new RedisStore({
       client: this.clientRedis,
       prefix: 'trendypoll:',

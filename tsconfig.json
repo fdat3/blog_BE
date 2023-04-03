@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "rootDir": "./src",
+    "rootDir": "src",
     "moduleResolution": "node",
     "removeComments": true,
     "baseUrl": "./src",
@@ -84,5 +84,10 @@
       "./src/types",
       "./node_modules/@types"
     ]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "rootDir": "."
+    }
   },
 }

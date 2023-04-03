@@ -27,9 +27,10 @@ import {
 import type { GroupMember } from './GroupMember'
 import type { GroupSetting } from './GroupSetting'
 import type { User } from './User'
+import type { Poll } from './Poll'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type GroupAssociations = 'user' | 'members' | 'settings'
+type GroupAssociations = 'user' | 'members' | 'settings' | 'polls'
 
 export class Group extends Model<
   InferAttributes<Group, { omit: GroupAssociations }>,
@@ -71,10 +72,24 @@ export class Group extends Model<
   declare setSetting: HasOneSetAssociationMixin<GroupSetting, string>
   declare createSetting: HasOneCreateAssociationMixin<GroupSetting>
 
+  // Group hasMany Poll (as Polls)
+  declare polls?: NonAttribute<Poll[]>
+  declare getPolls: HasManyGetAssociationsMixin<Poll>
+  declare setPolls: HasManySetAssociationsMixin<Poll, string>
+  declare addPoll: HasManyAddAssociationMixin<Poll, string>
+  declare addPolls: HasManyAddAssociationsMixin<Poll, string>
+  declare createPoll: HasManyCreateAssociationMixin<Poll>
+  declare removePoll: HasManyRemoveAssociationMixin<Poll, string>
+  declare removePolls: HasManyRemoveAssociationsMixin<Poll, string>
+  declare hasPoll: HasManyHasAssociationMixin<Poll, string>
+  declare hasPolls: HasManyHasAssociationsMixin<Poll, string>
+  declare countPolls: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Group, User>
     members: Association<Group, GroupMember>
     groupSetting: Association<Group, GroupSetting>
+    polls: Association<Group, Poll>
   }
 
   static initModel(sequelize: Sequelize): typeof Group {

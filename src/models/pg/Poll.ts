@@ -21,6 +21,7 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize'
+import type { Group } from './Group'
 import type { Like } from './Like'
 import type { PollCategory } from './PollCategory'
 import type { PollComment } from './PollComment'
@@ -42,6 +43,7 @@ type PollAssociations =
   | 'likes'
   | 'answers'
   | 'entities'
+  | 'group'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -50,6 +52,7 @@ export class Poll extends Model<
   declare id: CreationOptional<string>
   declare userId: CreationOptional<uuid>
   declare categoryId: CreationOptional<uuid>
+  declare groupId: CreationOptional<uuid>
   declare title: string | null
   declare description: string | null
   declare image: string | null
@@ -170,6 +173,12 @@ export class Poll extends Model<
   declare hasEntities: HasManyHasAssociationsMixin<PollEntity, string>
   declare countEntities: HasManyCountAssociationsMixin
 
+  // Poll belongsTo Group (as Group)
+  declare group?: NonAttribute<Group>
+  declare getGroup: BelongsToGetAssociationMixin<Group>
+  declare setGroup: BelongsToSetAssociationMixin<Group, string>
+  declare createGroup: BelongsToCreateAssociationMixin<Group>
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -180,6 +189,7 @@ export class Poll extends Model<
     likes: Association<Poll, Like>
     answers: Association<Poll, PollAnswer>
     entities: Association<Poll, PollEntity>
+    group: Association<Poll, Group>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {
@@ -195,6 +205,9 @@ export class Poll extends Model<
           type: DataTypes.UUID,
         },
         categoryId: {
+          type: DataTypes.UUID,
+        },
+        groupId: {
           type: DataTypes.UUID,
         },
         title: {
