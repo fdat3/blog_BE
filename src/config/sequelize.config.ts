@@ -1,7 +1,9 @@
 // import Variable from '@/env/variable.env'
 import * as process from 'process'
 
-require('dotenv').config()
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'local' ? '.env.local' : '.env',
+})
 const Variable = process.env
 
 module.exports = {

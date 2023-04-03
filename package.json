@@ -21,7 +21,10 @@
     "new_migrate": "npx sequelize-cli migration:generate",
     "run_migrate": "npx sequelize-cli db:migrate",
     "swagger": "tsoa spec",
-    "test": "jest"
+    "test": "jest",
+    "sequelize": "node_modules/.bin/sequelize",
+    "apply-seeders": "node -r dotenv-flow/config ./node_modules/.bin/sequelize db:seed:all",
+    "revert-seeders": "node -r dotenv-flow/config ./node_modules/.bin/sequelize db:seed:undo:all"
   },
   "keywords": [],
   "author": "@nhanlethanh1198",
@@ -118,6 +121,7 @@
     "@babel/runtime": "7.20.7",
     "@commitlint/cli": "17.4.1",
     "@commitlint/config-conventional": "17.4.0",
+    "@faker-js/faker": "7.6.0",
     "@types/compression": "1.7.2",
     "@types/connect-pg-simple": "7.0.0",
     "@types/cookie-parser": "1.4.3",

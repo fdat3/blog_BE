@@ -14,7 +14,7 @@ module.exports = {
     
     await queryInterface.addConstraint('polls', {
       fields: ['category_id'],
-      type: 'foreign key',s\
+      type: 'foreign key',
       name: 'polls_category_id_fkey',
       references: {
         table: 'poll_categories',
