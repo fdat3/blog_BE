@@ -5,6 +5,7 @@ import { ICrudOption } from '@/interfaces/controller.interface'
 import { Poll } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { redis } from '@/config/redis.config'
+import { GetListRepository } from '@/interfaces/base.interface'
 
 class PollRepository {
   private model
@@ -15,7 +16,7 @@ class PollRepository {
 
   public async getList(
     queryInfo?: ICrudOption,
-  ): Promise<{ rows: Partial<Poll[]>; count: number } | null> {
+  ): Promise<GetListRepository<Poll> | null> {
     try {
       return this.model.findAndCountAll(
         baseController.applyFindOptions(queryInfo),
@@ -128,12 +129,31 @@ class PollRepository {
       const popularityPolls = await this.model.findAll({
         where: {},
         limit: 3,
+        include: [
+          {
+            association: 'answers',
+            attributes: [],
+            include: [
+              {
+                association: 'choosens',
+                attributes: [],
+              },
+            ],
+          },
+        ],
+        attributes: {
+          include: [
+            [
+              sequelize.fn('COUNT', sequelize.col('answers.choosens.id')),
+              'votes',
+            ],
+          ],
+        },
         order: [
           ['createdAt', 'DESC'],
           ['views', 'DESC'],
           ['votes', 'DESC'],
         ],
-        attributes: ['id'],
       })
 
       console.log({ popularityPolls })

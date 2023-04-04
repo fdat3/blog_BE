@@ -30,7 +30,10 @@ import { SearchHistory } from '@/models/pg/SearchHistory'
 import { ContactList } from './ContactList'
 import { PollEntity } from './PollEntity'
 import { UserLinkSNS } from './UserLinkSNS'
-import { PopularityPoll } from '@/models/pg/PopularityPolls'
+import { PollHandlePriority } from './PollHandlePriority'
+import { Transaction } from './Transaction'
+import { PollUpPackage } from './PollUpPackage'
+import { PriorityPollByDate } from './PriorityPollByDate'
 
 export {
   User,
@@ -64,7 +67,10 @@ export {
   ContactList,
   PollEntity,
   UserLinkSNS,
-  PopularityPoll,
+  PollHandlePriority,
+  Transaction,
+  PollUpPackage,
+  PriorityPollByDate,
 }
 
 export const initModels = (): any => {
@@ -99,7 +105,10 @@ export const initModels = (): any => {
   ContactList.initModel(sequelize)
   PollEntity.initModel(sequelize)
   UserLinkSNS.initModel(sequelize)
-  PopularityPoll.initModel(sequelize)
+  PollHandlePriority.initModel(sequelize)
+  Transaction.initModel(sequelize)
+  PollUpPackage.initModel(sequelize)
+  PriorityPollByDate.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -172,6 +181,10 @@ export const initModels = (): any => {
   User.hasMany(UserLinkSNS, {
     as: 'sns_link',
     foreignKey: 'userId',
+  })
+  User.hasMany(Transaction, {
+    as: 'transactions',
+    foreignKey: 'user_id',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -421,6 +434,30 @@ export const initModels = (): any => {
     as: 'user',
     foreignKey: 'userId',
   })
+  PollHandlePriority.belongsTo(Poll, {
+    as: 'poll',
+    foreignKey: 'poll_id',
+  })
+  PollHandlePriority.belongsTo(Transaction, {
+    as: 'transaction',
+    foreignKey: 'transaction_id',
+  })
+  Transaction.hasMany(PollHandlePriority, {
+    as: 'handlePolls',
+    foreignKey: 'transaction_id',
+  })
+  Transaction.belongsTo(PollUpPackage, {
+    as: 'package',
+    foreignKey: 'package_id',
+  })
+  Transaction.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  PollUpPackage.hasMany(Transaction, {
+    as: 'transactions',
+    foreignKey: 'package_id',
+  })
 
   return {
     User,
@@ -454,6 +491,5 @@ export const initModels = (): any => {
     ContactList,
     PollEntity,
     UserLinkSNS,
-    PopularityPoll,
   }
 }

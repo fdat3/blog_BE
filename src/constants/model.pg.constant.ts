@@ -1,4 +1,4 @@
-class PgModel {
+export class PgModel {
   public static readonly USER: string = 'users'
   public static readonly USER_SETTING: string = 'user_settings'
   public static readonly USER_POINTS: string = 'user_points'
@@ -32,6 +32,11 @@ class PgModel {
   public static readonly SEARCH_HISTORY: string = 'search_histories'
   public static readonly CONTACT_LIST: string = 'contact_lists'
   public static readonly USER_LINK_SNS: string = 'user_link_sns'
+  public static readonly TRANSACTION: string = 'transactions'
+  public static readonly POLL_HANDLE_PRIORITY: string = 'poll_handle_priorities'
+  public static readonly POLL_UP_PACKAGE: string = 'poll_up_packages'
+  public static readonly PRIORITY_POLL_BY_DATE: string =
+    'priority_poll_by_dates'
 }
 
 export default PgModel

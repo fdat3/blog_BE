@@ -1,3 +1,5 @@
+import ModelPgConstant from '@/constants/model.pg.constant'
+
 import {
   CreationOptional,
   DataTypes,
@@ -6,11 +8,10 @@ import {
   Model,
   Sequelize,
 } from 'sequelize'
-import ModelPgConstant from '@/constants/model.pg.constant'
 
-export class PopularityPoll extends Model<
-  InferAttributes<PopularityPoll>,
-  InferCreationAttributes<PopularityPoll>
+export class PriorityPollByDate extends Model<
+  InferAttributes<PriorityPollByDate>,
+  InferCreationAttributes<PriorityPollByDate>
 > {
   declare id: CreationOptional<string>
   declare pollIds: string[] | null
@@ -18,8 +19,8 @@ export class PopularityPoll extends Model<
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  static initModel(sequelize: Sequelize): typeof PopularityPoll {
-    PopularityPoll.init(
+  static initModel(sequelize: Sequelize): typeof PriorityPollByDate {
+    PriorityPollByDate.init(
       {
         id: {
           type: DataTypes.UUID,
@@ -41,10 +42,10 @@ export class PopularityPoll extends Model<
       },
       {
         sequelize,
-        tableName: ModelPgConstant.POPULARITY_POLL,
+        tableName: ModelPgConstant.PRIORITY_POLL_BY_DATE,
       },
     )
 
-    return PopularityPoll
+    return PriorityPollByDate
   }
 }

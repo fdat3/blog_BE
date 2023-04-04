@@ -84,10 +84,5 @@
       "./src/types",
       "./node_modules/@types"
     ]
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "rootDir": "."
-    }
-  },
+  }
 }

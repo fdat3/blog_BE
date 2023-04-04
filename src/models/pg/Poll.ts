@@ -28,6 +28,7 @@ import type { PollComment } from './PollComment'
 import type { PollHashtag } from './PollHashtag'
 import type { PollMention } from './PollMention'
 import type { ReportPoll } from './ReportPoll'
+import type { PollHandlePriority } from './PollHandlePriority'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 import { PollAnswer } from '@/models/pg/PollAnswer'
@@ -44,6 +45,7 @@ type PollAssociations =
   | 'answers'
   | 'entities'
   | 'group'
+  | 'handlePriorities'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -179,6 +181,40 @@ export class Poll extends Model<
   declare setGroup: BelongsToSetAssociationMixin<Group, string>
   declare createGroup: BelongsToCreateAssociationMixin<Group>
 
+  // Poll hasMany PollHandlePriority (as HandlePriority)
+  declare handlePriorities?: NonAttribute<PollHandlePriority[]>
+  declare getHandlePriorities: HasManyGetAssociationsMixin<PollHandlePriority>
+  declare setHandlePriorities: HasManySetAssociationsMixin<
+    PollHandlePriority,
+    string
+  >
+  declare addHandlePriority: HasManyAddAssociationMixin<
+    PollHandlePriority,
+    string
+  >
+  declare addHandlePriorities: HasManyAddAssociationsMixin<
+    PollHandlePriority,
+    string
+  >
+  declare createHandlePriority: HasManyCreateAssociationMixin<PollHandlePriority>
+  declare removeHandlePriority: HasManyRemoveAssociationMixin<
+    PollHandlePriority,
+    string
+  >
+  declare removeHandlePriorities: HasManyRemoveAssociationsMixin<
+    PollHandlePriority,
+    string
+  >
+  declare hasHandlePriority: HasManyHasAssociationMixin<
+    PollHandlePriority,
+    string
+  >
+  declare hasHandlePriorities: HasManyHasAssociationsMixin<
+    PollHandlePriority,
+    string
+  >
+  declare countHandlePriorities: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -190,6 +226,7 @@ export class Poll extends Model<
     answers: Association<Poll, PollAnswer>
     entities: Association<Poll, PollEntity>
     group: Association<Poll, Group>
+    handlePriorities: Association<Poll, PollHandlePriority>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {
