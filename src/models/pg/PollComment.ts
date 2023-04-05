@@ -25,6 +25,7 @@ import type { Like } from './Like'
 import type { Poll } from './Poll'
 import type { PollCommentHashtag } from './PollCommentHashtag'
 import type { PollCommentMention } from './PollCommentMention'
+import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
 type PollCommentAssociations =
@@ -33,6 +34,7 @@ type PollCommentAssociations =
   | 'mentions'
   | 'hashtags'
   | 'likes'
+  | 'user'
 
 export class PollComment extends Model<
   InferAttributes<PollComment, { omit: PollCommentAssociations }>,
@@ -111,12 +113,19 @@ export class PollComment extends Model<
   declare hasLikes: HasManyHasAssociationsMixin<Like, string>
   declare countLikes: HasManyCountAssociationsMixin
 
+  // PollComment belongsTo User (as User)
+  declare user?: NonAttribute<User>
+  declare getUser: BelongsToGetAssociationMixin<User>
+  declare setUser: BelongsToSetAssociationMixin<User, string>
+  declare createUser: BelongsToCreateAssociationMixin<User>
+
   declare static associations: {
     poll: Association<PollComment, Poll>
     parent: Association<PollComment, PollComment>
     mentions: Association<PollComment, PollCommentMention>
     hashtags: Association<PollComment, PollCommentHashtag>
     likes: Association<PollComment, Like>
+    user: Association<PollComment, User>
   }
 
   static initModel(sequelize: Sequelize): typeof PollComment {

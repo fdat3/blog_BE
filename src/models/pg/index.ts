@@ -184,7 +184,7 @@ export const initModels = (): any => {
   })
   User.hasMany(Transaction, {
     as: 'transactions',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -245,6 +245,10 @@ export const initModels = (): any => {
   PollComment.belongsTo(PollComment, {
     as: 'parent',
     foreignKey: 'parentId',
+  })
+  PollComment.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'userId',
   })
   PollComment.hasMany(PollCommentMention, {
     as: 'mentions',
@@ -436,27 +440,27 @@ export const initModels = (): any => {
   })
   PollHandlePriority.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollHandlePriority.belongsTo(Transaction, {
     as: 'transaction',
-    foreignKey: 'transaction_id',
+    foreignKey: 'transactionId',
   })
   Transaction.hasMany(PollHandlePriority, {
     as: 'handlePolls',
-    foreignKey: 'transaction_id',
+    foreignKey: 'transactionId',
   })
   Transaction.belongsTo(PollUpPackage, {
     as: 'package',
-    foreignKey: 'package_id',
+    foreignKey: 'packageId',
   })
   Transaction.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   PollUpPackage.hasMany(Transaction, {
     as: 'transactions',
-    foreignKey: 'package_id',
+    foreignKey: 'packageId',
   })
 
   return {
