@@ -461,7 +461,7 @@ export class User extends Model<
         },
         phone: {
           type: DataTypes.STRING(15),
-          unique: true,
+          unique: false,
         },
         avatar: {
           type: DataTypes.STRING(),

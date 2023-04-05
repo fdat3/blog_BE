@@ -50,10 +50,10 @@ export class UserSetting extends Model<
           type: DataTypes.UUID,
         },
         setting_1: {
-          type: DataTypes.UUID,
+          type: DataTypes.BOOLEAN,
         },
         setting_2: {
-          type: DataTypes.UUID,
+          type: DataTypes.BOOLEAN,
         },
         createdAt: {
           type: DataTypes.DATE,
