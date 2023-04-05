@@ -31,6 +31,7 @@ import Versioning from '@/interfaces/versioning.interface'
 import { initModels } from '@/models/pg'
 import morgan from 'morgan'
 import { redis } from '@/config/redis.config'
+import logger from './utils/logger.util'
 // import runAdminPage from '@/admin/.'
 const session = require('express-session')
 const Fingerprint = require('express-fingerprint')
@@ -145,6 +146,34 @@ class App {
               msg: ConstantHttpReason.OK,
             },
             msg: ConstantMessage.API_WORKING,
+          })
+        } catch (err: any) {
+          return next(
+            new HttpException(
+              ConstantHttpCode.INTERNAL_SERVER_ERROR,
+              ConstantHttpReason.INTERNAL_SERVER_ERROR,
+              err.message,
+            ),
+          )
+        }
+      },
+    )
+
+    this.app.post(
+      ConstantAPI.ROOT,
+      (_req: Request, res: Response, next: NextFunction) => {
+        try {
+          logger.warn({
+            message: 'Test post on root',
+            data: _req?.body,
+          })
+
+          return res.status(ConstantHttpCode.NOT_FOUND).json({
+            status: {
+              code: ConstantHttpCode.NOT_FOUND,
+              msg: ConstantHttpReason.NOT_FOUND,
+            },
+            msg: ConstantMessage.NOT_FOUND,
           })
         } catch (err: any) {
           return next(
