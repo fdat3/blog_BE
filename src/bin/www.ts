@@ -25,6 +25,7 @@ import GroupSettingController from '@/controllers/group_setting.controller'
 import BlockController from '@/controllers/block.controller'
 import DeviceController from '@/controllers/device.controller'
 import AdminController from '@/controllers/admin.controller'
+import CronService from '@/services/schedule.service'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -131,16 +132,12 @@ setTimeout(async () => {
   console.log(`Socket server run on ${SocketServer.SOCKET_PORT}`)
 }, 0)
 
-// process.on('beforeExit', () => {
-//   logger.info('Process is terminated by beforeExit')
-//   ErrorController.sendSignalToTelegram('beforeExit')
-// })
-
-// const CLOSE_PROCESS_SIGNAL = ['SIGINT', 'SIGTERM', 'SIGQUIT']
-
-// CLOSE_PROCESS_SIGNAL.forEach((signal) => {
-
-// })
+/**
+ * Set cron service run on only main process with setImmediate
+ */
+setImmediate(() => {
+  new CronService()
+})
 
 process.on('SIGINT', async (code) => {
   logger.info(`Process is terminated by ${code.toString()}`)

@@ -2,7 +2,7 @@ import { sequelize } from '@/config/sql.config'
 import baseController from '@/controllers/base.controller'
 
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { Poll } from '@/models/pg'
+import { Poll, PriorityPollByDate } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { redis } from '@/config/redis.config'
 import { GetListRepository } from '@/interfaces/base.interface'
@@ -115,57 +115,76 @@ class PollRepository {
    * This will get the most 3 polls with the highest popularity with counting of votes and views on each poll
    * And store this id to redis, then store to database in popularity table
    */
-  public async getPopularityPolls(): Promise<Poll[] | void> {
-    const redisKey = 'popularityPolls'
-    const popularityPolls = await redis.get(redisKey)
-    if (popularityPolls) {
-      logger.info('Popularity polls already exist')
-      return
-    } else {
-      /**
-       * Finding the most 3 polls with the highest popularity with counting of votes and views on each poll
-       * And store this id to redis, then store to database in popularity table
-       */
-      const popularityPolls = await this.model.findAll({
-        where: {},
-        limit: 3,
-        include: [
-          {
-            association: 'answers',
-            attributes: [],
+
+  public static async getPopularityPolls(): Promise<Poll[] | void> {
+    try {
+      logger.info(`Start get popularity polls at ${new Date()}`)
+      const redisKey = 'popularityPolls'
+      const popularityPolls = await redis.get(redisKey)
+      if (popularityPolls) {
+        logger.info('Popularity polls already exist')
+        return
+      } else {
+        /**
+         * Finding the most 3 polls with the highest popularity with counting of votes and views on each poll
+         * And store this id to redis, then store to database in popularity table
+         */
+        const popularityPolls = await Poll.findAll({
+          where: {},
+          limit: 3,
+          include: [
+            {
+              association: 'answers',
+              attributes: [],
+              include: [
+                {
+                  association: 'choosens',
+                  attributes: [],
+                },
+              ],
+            },
+          ],
+          attributes: {
             include: [
-              {
-                association: 'choosens',
-                attributes: [],
-              },
+              [
+                sequelize.fn('COUNT', sequelize.col('answers.choosens.id')),
+                'votes',
+              ],
             ],
           },
-        ],
-        attributes: {
-          include: [
-            [
-              sequelize.fn('COUNT', sequelize.col('answers.choosens.id')),
-              'votes',
-            ],
+          order: [
+            ['createdAt', 'DESC'],
+            ['views', 'DESC'],
+            ['votes', 'DESC'],
           ],
-        },
-        order: [
-          ['createdAt', 'DESC'],
-          ['views', 'DESC'],
-          ['votes', 'DESC'],
-        ],
-      })
+        })
 
-      console.log({ popularityPolls })
+        console.log({ popularityPolls })
 
-      if (popularityPolls.length > 0) {
-        /**
-         * set redis key
-         */
-        await redis.set(redisKey, JSON.stringify(popularityPolls))
+        if (popularityPolls.length > 0) {
+          /**
+           * set redis key
+           * then storing to database in popularity table
+           */
+          await redis.set(redisKey, JSON.stringify(popularityPolls))
+          await sequelize.transaction(async (transaction) => {
+            await PriorityPollByDate.create(
+              {
+                pollIds: popularityPolls.map((poll) => poll.id),
+                type: 'POPULARITY',
+              },
+              {
+                transaction,
+              },
+            )
+          })
+        }
+
+        return popularityPolls
       }
-
-      return popularityPolls
+    } catch (err) {
+      logger.error(err)
+      return
     }
   }
 }

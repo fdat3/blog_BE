@@ -14,7 +14,8 @@ export class PriorityPollByDate extends Model<
   InferCreationAttributes<PriorityPollByDate>
 > {
   declare id: CreationOptional<string>
-  declare pollIds: string[] | null
+  declare pollIds: CreationOptional<string[]>
+  declare type: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'POPULARITY'
   declare deletedAt: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -29,6 +30,10 @@ export class PriorityPollByDate extends Model<
         },
         pollIds: {
           type: DataTypes.ARRAY(DataTypes.STRING),
+        },
+        type: {
+          type: DataTypes.ENUM('DAILY', 'WEEKLY', 'MONTHLY', 'POPULARITY'),
+          defaultValue: 'POPULARITY',
         },
         deletedAt: {
           type: DataTypes.STRING,

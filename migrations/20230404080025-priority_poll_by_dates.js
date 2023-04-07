@@ -13,6 +13,10 @@ module.exports = {
         type: DataTypes.ARRAY(DataTypes.STRING),
         field: 'poll_ids'
       },
+      type: {
+        type: DataTypes.ENUM('DAILY', 'WEEKLY', 'MONTHLY', 'POPULARITY'),
+        defaultValue: 'POPULARITY'
+      },
       deletedAt: {
         type: DataTypes.STRING,
         field: 'deleted_at'
