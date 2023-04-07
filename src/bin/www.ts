@@ -16,7 +16,7 @@ import AuthController from '@/controllers/auth.controller'
 import UserController from '@/controllers/user.controller'
 // import GithubController from '@/controllers/github.controller'
 import dotenv from 'dotenv'
-import * as process from 'process'
+import process from 'node:process'
 import ErrorController from '@/controllers/error.controller'
 import ImageController from '@/controllers/image.controller'
 import PollController from '@/controllers/poll.controller'
@@ -131,4 +131,37 @@ setTimeout(async () => {
   console.log(`Socket server run on ${SocketServer.SOCKET_PORT}`)
 }, 0)
 
-// export {app}
+// process.on('beforeExit', () => {
+//   logger.info('Process is terminated by beforeExit')
+//   ErrorController.sendSignalToTelegram('beforeExit')
+// })
+
+// const CLOSE_PROCESS_SIGNAL = ['SIGINT', 'SIGTERM', 'SIGQUIT']
+
+// CLOSE_PROCESS_SIGNAL.forEach((signal) => {
+
+// })
+
+process.on('SIGINT', async (code) => {
+  logger.info(`Process is terminated by ${code.toString()}`)
+  await ErrorController.sendSignalToTelegram(code.toString()).catch((err) => {
+    logger.error(err)
+  })
+  process.exit(0)
+})
+
+process.on('SIGTERM', async (code) => {
+  logger.info(`Process is terminated by ${code.toString()}`)
+  await ErrorController.sendSignalToTelegram(code.toString()).catch((err) => {
+    logger.error(err)
+  })
+  process.exit(0)
+})
+
+process.on('SIGQUIT', async (code) => {
+  logger.info(`Process is terminated by ${code.toString()}`)
+  await ErrorController.sendSignalToTelegram(code.toString()).catch((err) => {
+    logger.error(err)
+  })
+  process.exit(0)
+})
