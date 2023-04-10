@@ -25,7 +25,7 @@ import GroupSettingController from '@/controllers/group_setting.controller'
 import BlockController from '@/controllers/block.controller'
 import DeviceController from '@/controllers/device.controller'
 import AdminController from '@/controllers/admin.controller'
-import CronService from '@/services/schedule.service'
+import CronService from '@/services/cron.service'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
