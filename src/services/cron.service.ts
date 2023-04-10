@@ -8,6 +8,7 @@ class CronService {
     logger.info('CronService initialized')
     // this.scheduleJobEveryMinute()
     this.scheduleJobEveryDay()
+    this.scheduleJobEveryHour()
   }
 
   private scheduleJobEveryDay(): void {
@@ -19,7 +20,16 @@ class CronService {
 
   private scheduleJobEveryMinute(): void {
     logger.info('scheduleJobEveryMinute initialized')
-    schedule.scheduleJob(CronConstant.EVERY_1_MINUTE, async () => {})
+    schedule.scheduleJob(CronConstant.EVERY_1_MINUTE, async () => {
+      await PollRepository.getPopularityPolls()
+    })
+  }
+
+  private scheduleJobEveryHour(): void {
+    logger.info('scheduleJobEveryHour initialized')
+    schedule.scheduleJob(CronConstant.EVERY_1_HOUR, async () => {
+      await PollRepository.getPopularityPolls()
+    })
   }
 }
 

@@ -7,6 +7,7 @@ import logger from '@/utils/logger.util'
 import { redis } from '@/config/redis.config'
 import { GetListRepository } from '@/interfaces/base.interface'
 import TelegramUtil from '@/utils/telegram.util'
+import NumberUtils from '@/utils/number.utils'
 
 class PollRepository {
   private model
@@ -145,7 +146,7 @@ class PollRepository {
          */
         const popularityPolls = await Poll.findAll({
           where: {},
-          limit: 3,
+          limit: NumberUtils.randomIntToGetPopularityPolls(),
           include: [
             {
               association: 'votes',
