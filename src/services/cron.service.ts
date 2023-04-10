@@ -6,9 +6,11 @@ import logger from '@/utils/logger.util'
 class CronService {
   constructor() {
     logger.info('CronService initialized')
-    // this.scheduleJobEveryMinute()
+    // Run all functions below
     this.scheduleJobEveryDay()
+    this.scheduleJobEveryMinute()
     this.scheduleJobEveryHour()
+    this.scheduleJobEvery3Days()
   }
 
   private scheduleJobEveryDay(): void {
@@ -28,6 +30,13 @@ class CronService {
   private scheduleJobEveryHour(): void {
     logger.info('scheduleJobEveryHour initialized')
     schedule.scheduleJob(CronConstant.EVERY_1_HOUR, async () => {
+      await PollRepository.getPopularityPolls()
+    })
+  }
+
+  private scheduleJobEvery3Days(): void {
+    logger.info('scheduleJobEvery3Days initialized')
+    schedule.scheduleJob(CronConstant.EACH_3_DAYS, async () => {
       await PollRepository.getPopularityPolls()
     })
   }

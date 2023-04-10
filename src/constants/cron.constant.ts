@@ -14,6 +14,8 @@ class CronConstant {
   public static readonly EVERY_12_HOURS_UTC = '0 */12 * * * UTC'
   public static readonly EVERY_1_DAY = '0 0 */1 * *'
   public static readonly EVERY_1_DAY_UTC = '0 0 */1 * * UTC'
+  public static readonly EACH_3_DAYS = '0 0 */3 * *'
+  public static readonly EACH_3_DAYS_UTC = '0 0 */3 * * UTC'
 }
 
 export default CronConstant
