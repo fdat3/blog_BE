@@ -61,7 +61,7 @@ class App {
         : redis
     this.redisStore = new RedisStore({
       client: this.clientRedis,
-      prefix: 'trendypoll:',
+      prefix: 'session:',
     })
     this.app = express()
 
@@ -84,7 +84,7 @@ class App {
   private initialiseConfig(): void {
     this.app.set('trust proxy', 1)
     this.app.use(
-      bodyParser.urlencoded({
+      express.urlencoded({
         extended: false,
         limit: '50mb',
       }),

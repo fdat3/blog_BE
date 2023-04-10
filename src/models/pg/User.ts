@@ -27,7 +27,7 @@ import type { Group } from './Group'
 import type { GroupMember } from './GroupMember'
 import type { Poll } from './Poll'
 import type { PollAnswer } from './PollAnswer'
-import type { PollAnswerChosen } from './PollAnswerChosen'
+import type { PollVotes } from './PollVotes'
 import type { PollComment } from './PollComment'
 import type { ReportUser } from './ReportUser'
 import type { UserDeviceSession } from './UserDevice'
@@ -46,7 +46,7 @@ type UserAssociations =
   | 'blockeds'
   | 'polls'
   | 'pollAnswers'
-  | 'pollChoosens'
+  | 'pollVotes'
   | 'pollComments'
   | 'reports'
   | 'isReporteds'
@@ -186,24 +186,18 @@ export class User extends Model<
   declare hasPollAnswers: HasManyHasAssociationsMixin<PollAnswer, string>
   declare countPollAnswers: HasManyCountAssociationsMixin
 
-  // User hasMany PollAnswerChosen (as PollChoosen)
-  declare pollChoosens?: NonAttribute<PollAnswerChosen[]>
-  declare getPollChoosens: HasManyGetAssociationsMixin<PollAnswerChosen>
-  declare setPollChoosens: HasManySetAssociationsMixin<PollAnswerChosen, string>
-  declare addPollChoosen: HasManyAddAssociationMixin<PollAnswerChosen, string>
-  declare addPollChoosens: HasManyAddAssociationsMixin<PollAnswerChosen, string>
-  declare createPollChoosen: HasManyCreateAssociationMixin<PollAnswerChosen>
-  declare removePollChoosen: HasManyRemoveAssociationMixin<
-    PollAnswerChosen,
-    string
-  >
-  declare removePollChoosens: HasManyRemoveAssociationsMixin<
-    PollAnswerChosen,
-    string
-  >
-  declare hasPollChoosen: HasManyHasAssociationMixin<PollAnswerChosen, string>
-  declare hasPollChoosens: HasManyHasAssociationsMixin<PollAnswerChosen, string>
-  declare countPollChoosens: HasManyCountAssociationsMixin
+  // User hasMany PollVotes (as PollChoosen)
+  declare pollVotes?: NonAttribute<PollVotes[]>
+  declare getPollVotes: HasManyGetAssociationsMixin<PollVotes>
+  declare setPollVotes: HasManySetAssociationsMixin<PollVotes, string>
+  declare addPollVote: HasManyAddAssociationMixin<PollVotes, string>
+  declare addPollVotes: HasManyAddAssociationsMixin<PollVotes, string>
+  declare createPollVote: HasManyCreateAssociationMixin<PollVotes>
+  declare removePollVote: HasManyRemoveAssociationMixin<PollVotes, string>
+  declare removePollVotes: HasManyRemoveAssociationsMixin<PollVotes, string>
+  declare hasPollVote: HasManyHasAssociationMixin<PollVotes, string>
+  declare hasPollVotes: HasManyHasAssociationsMixin<PollVotes, string>
+  declare countPollVotes: HasManyCountAssociationsMixin
 
   // User hasMany PollComment (as PollComments)
   declare pollComments?: NonAttribute<PollComment[]>
@@ -412,7 +406,7 @@ export class User extends Model<
     blockeds: Association<User, Block>
     polls: Association<User, Poll>
     pollAnswers: Association<User, PollAnswer>
-    pollChoosens: Association<User, PollAnswerChosen>
+    pollVotes: Association<User, PollVotes>
     pollComments: Association<User, PollComment>
     reports: Association<User, ReportUser>
     isReporteds: Association<User, ReportUser>

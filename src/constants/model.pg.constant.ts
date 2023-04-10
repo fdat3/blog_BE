@@ -6,7 +6,7 @@ export class PgModel {
   public static readonly FOLLOW: string = 'follows'
   public static readonly POLL: string = 'polls'
   public static readonly POLL_ANSWER: string = 'poll_answers'
-  public static readonly POLL_ANSWER_CHOSEN: string = 'poll_answer_chosens'
+  public static readonly POLL_VOTES: string = 'poll_votes'
   public static readonly POLL_COMMENT: string = 'poll_comments'
   public static readonly POLL_CATEGORY_MODEL: string = 'poll_categories'
   public static readonly USER_DEVICE: string = 'user_device_session'

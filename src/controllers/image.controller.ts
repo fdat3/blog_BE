@@ -21,7 +21,6 @@ import ConstantMessage from '@/constants/message.constant'
 import Jimp from 'jimp'
 import imagemin from 'imagemin'
 import imageminGifsicle from 'imagemin-gifsicle'
-import bodyParser from 'body-parser'
 import * as fs from 'fs'
 
 const TYPE_IMAGE_PNG: string = '.png'
@@ -177,7 +176,6 @@ class ImageController implements Controller {
   constructor() {
     this.path = `${ConstantAPI.IMAGE}`
     this.router = Router()
-    this.router.use(bodyParser.urlencoded())
     this.initialiseRoutes()
 
     // S3

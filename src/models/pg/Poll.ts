@@ -33,6 +33,7 @@ import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 import { PollAnswer } from '@/models/pg/PollAnswer'
 import { PollEntity } from '@/models/pg/PollEntity'
+import { PollVotes } from './PollVotes'
 
 type PollAssociations =
   | 'user'
@@ -46,6 +47,7 @@ type PollAssociations =
   | 'entities'
   | 'group'
   | 'handlePriorities'
+  | 'votes'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -215,6 +217,19 @@ export class Poll extends Model<
   >
   declare countHandlePriorities: HasManyCountAssociationsMixin
 
+  // Poll hasMany PollVotes (as Votes)
+  declare votes?: NonAttribute<PollVotes[]>
+  declare getVotes: HasManyGetAssociationsMixin<PollVotes>
+  declare setVotes: HasManySetAssociationsMixin<PollVotes, string>
+  declare addVote: HasManyAddAssociationMixin<PollVotes, string>
+  declare addVotes: HasManyAddAssociationsMixin<PollVotes, string>
+  declare createVote: HasManyCreateAssociationMixin<PollVotes>
+  declare removeVote: HasManyRemoveAssociationMixin<PollVotes, string>
+  declare removeVotes: HasManyRemoveAssociationsMixin<PollVotes, string>
+  declare hasVote: HasManyHasAssociationMixin<PollVotes, string>
+  declare hasVotes: HasManyHasAssociationsMixin<PollVotes, string>
+  declare countVotes: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -227,6 +242,7 @@ export class Poll extends Model<
     entities: Association<Poll, PollEntity>
     group: Association<Poll, Group>
     handlePriorities: Association<Poll, PollHandlePriority>
+    votes: Association<Poll, PollVotes>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {

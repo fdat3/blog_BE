@@ -1,7 +1,7 @@
 import { User } from './User'
 import { Poll } from './Poll'
 import { PollAnswer } from './PollAnswer'
-import { PollAnswerChosen } from './PollAnswerChosen'
+import { PollVotes } from './PollVotes'
 import { PollComment } from './PollComment'
 import { PollCategory } from './PollCategory'
 import { UserDeviceSession } from './UserDevice'
@@ -39,7 +39,7 @@ export {
   User,
   Poll,
   PollAnswer,
-  PollAnswerChosen,
+  PollVotes,
   PollComment,
   PollCategory,
   UserDeviceSession,
@@ -77,7 +77,7 @@ export const initModels = (): any => {
   User.initModel(sequelize)
   Poll.initModel(sequelize)
   PollAnswer.initModel(sequelize)
-  PollAnswerChosen.initModel(sequelize)
+  PollVotes.initModel(sequelize)
   PollComment.initModel(sequelize)
   PollCategory.initModel(sequelize)
   UserDeviceSession.initModel(sequelize)
@@ -126,7 +126,7 @@ export const initModels = (): any => {
     as: 'polls',
     foreignKey: 'userId',
   })
-  User.hasMany(PollAnswerChosen, {
+  User.hasMany(PollVotes, {
     as: 'pollChoosens',
     foreignKey: 'userId',
   })
@@ -226,17 +226,25 @@ export const initModels = (): any => {
     as: 'entities',
     foreignKey: 'pollId',
   })
+  Poll.hasMany(PollVotes, {
+    as: 'votes',
+    foreignKey: 'pollId',
+  })
   PollAnswer.belongsTo(Poll, {
     as: 'poll',
     foreignKey: 'pollId',
   })
-  PollAnswer.hasMany(PollAnswerChosen, {
-    as: 'choosens',
+  PollAnswer.hasMany(PollVotes, {
+    as: 'votes',
     foreignKey: 'pollAnswerId',
   })
-  PollAnswerChosen.belongsTo(User, {
+  PollVotes.belongsTo(User, {
     as: 'user',
     foreignKey: 'userId',
+  })
+  PollVotes.belongsTo(PollAnswer, {
+    as: 'pollAnswer',
+    foreignKey: 'pollAnswerId',
   })
   PollComment.belongsTo(Poll, {
     as: 'poll',
@@ -467,7 +475,7 @@ export const initModels = (): any => {
     User,
     Poll,
     PollAnswer,
-    PollAnswerChosen,
+    PollAnswerChosen: PollVotes,
     PollComment,
     PollCategory,
     UserDeviceSession,

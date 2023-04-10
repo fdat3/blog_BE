@@ -22,11 +22,11 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Poll } from './Poll'
-import type { PollAnswerChosen } from './PollAnswerChosen'
+import type { PollVotes } from './PollVotes'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type PollAnswerAssociations = 'poll' | 'choosens'
+type PollAnswerAssociations = 'poll' | 'votes'
 
 export class PollAnswer extends Model<
   InferAttributes<PollAnswer, { omit: PollAnswerAssociations }>,
@@ -47,26 +47,23 @@ export class PollAnswer extends Model<
   declare setPoll: BelongsToSetAssociationMixin<Poll, string>
   declare createPoll: BelongsToCreateAssociationMixin<Poll>
 
-  // PollAnswer hasMany PollAnswerChosen (as Choosen)
-  declare choosens?: NonAttribute<PollAnswerChosen[]>
-  declare getChoosens: HasManyGetAssociationsMixin<PollAnswerChosen>
-  declare setChoosens: HasManySetAssociationsMixin<PollAnswerChosen, string>
-  declare addChoosen: HasManyAddAssociationMixin<PollAnswerChosen, string>
-  declare addChoosens: HasManyAddAssociationsMixin<PollAnswerChosen, string>
-  declare createChoosen: HasManyCreateAssociationMixin<PollAnswerChosen>
-  declare removeChoosen: HasManyRemoveAssociationMixin<PollAnswerChosen, string>
-  declare removeChoosens: HasManyRemoveAssociationsMixin<
-    PollAnswerChosen,
-    string
-  >
-  declare hasChoosen: HasManyHasAssociationMixin<PollAnswerChosen, string>
-  declare hasChoosens: HasManyHasAssociationsMixin<PollAnswerChosen, string>
-  declare countChoosens: HasManyCountAssociationsMixin
+  // PollAnswer hasMany PollVotes (as Choosen)
+  declare votes?: NonAttribute<PollVotes[]>
+  declare getVotes: HasManyGetAssociationsMixin<PollVotes>
+  declare setVotes: HasManySetAssociationsMixin<PollVotes, string>
+  declare addVote: HasManyAddAssociationMixin<PollVotes, string>
+  declare addVotes: HasManyAddAssociationsMixin<PollVotes, string>
+  declare createVote: HasManyCreateAssociationMixin<PollVotes>
+  declare removeVote: HasManyRemoveAssociationMixin<PollVotes, string>
+  declare removeVotes: HasManyRemoveAssociationsMixin<PollVotes, string>
+  declare hasVote: HasManyHasAssociationMixin<PollVotes, string>
+  declare hasVotes: HasManyHasAssociationsMixin<PollVotes, string>
+  declare countVotes: HasManyCountAssociationsMixin
 
   declare static associations: {
     poll: Association<PollAnswer, Poll>
     user: Association<PollAnswer, User>
-    choosens: Association<PollAnswer, PollAnswerChosen>
+    votes: Association<PollAnswer, PollVotes>
   }
 
   static initModel(sequelize: Sequelize): typeof PollAnswer {

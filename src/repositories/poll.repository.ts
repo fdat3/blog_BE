@@ -6,6 +6,7 @@ import { Poll, PriorityPollByDate } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { redis } from '@/config/redis.config'
 import { GetListRepository } from '@/interfaces/base.interface'
+import TelegramUtil from '@/utils/telegram.util'
 
 class PollRepository {
   private model
@@ -122,8 +123,21 @@ class PollRepository {
       const redisKey = 'popularityPolls'
       const popularityPolls = await redis.get(redisKey)
       if (popularityPolls) {
-        logger.info('Popularity polls already exist')
-        return
+        logger.info({
+          popularityPolls,
+        })
+        const purePopularityPolls = JSON.parse(popularityPolls)
+        const date = new Date(purePopularityPolls.date)
+        if (date.getDate() === new Date().getDate()) {
+          logger.info('Popularity polls already exist for today')
+          return
+        } else {
+          /**
+           * Remove popularityPolls key from redis
+           */
+          await redis.del(redisKey)
+          await PollRepository.getPopularityPolls()
+        }
       } else {
         /**
          * Finding the most 3 polls with the highest popularity with counting of votes and views on each poll
@@ -134,39 +148,36 @@ class PollRepository {
           limit: 3,
           include: [
             {
-              association: 'answers',
-              attributes: [],
-              include: [
-                {
-                  association: 'choosens',
-                  attributes: [],
-                },
-              ],
+              association: 'votes',
             },
           ],
           attributes: {
             include: [
               [
-                sequelize.fn('COUNT', sequelize.col('answers.choosens.id')),
-                'votes',
+                sequelize.literal(
+                  '(SELECT COUNT(*) FROM "poll_votes" as "Votes" WHERE "Votes"."poll_id" = "Poll"."id")',
+                ),
+                'total_vote',
               ],
             ],
           },
           order: [
             ['createdAt', 'DESC'],
-            ['views', 'DESC'],
-            ['votes', 'DESC'],
+            ['viewCount', 'DESC'],
+            [sequelize.literal('total_vote'), 'DESC'],
           ],
         })
-
-        console.log({ popularityPolls })
 
         if (popularityPolls.length > 0) {
           /**
            * set redis key
            * then storing to database in popularity table
            */
-          await redis.set(redisKey, JSON.stringify(popularityPolls))
+          const popularityPollsRedis = {
+            date: new Date(),
+            polls: popularityPolls.map((poll) => poll.id),
+          }
+          await redis.set(redisKey, JSON.stringify(popularityPollsRedis))
           await sequelize.transaction(async (transaction) => {
             await PriorityPollByDate.create(
               {
@@ -179,6 +190,14 @@ class PollRepository {
             )
           })
         }
+
+        setTimeout(() => {
+          TelegramUtil.sendToTelegram(
+            `Popularity polls in ${new Date()} are: ${popularityPolls.map(
+              (poll) => poll.id,
+            )}`,
+          )
+        }, 0)
 
         return popularityPolls
       }
