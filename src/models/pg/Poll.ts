@@ -70,6 +70,7 @@ export class Poll extends Model<
     | 'SCHEDULE'
     | 'TRENDY_TALK'
     | null
+  declare isUsedPullUp: CreationOptional<boolean>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -293,6 +294,10 @@ export class Poll extends Model<
             'TRENDY_TALK',
           ),
           defaultValue: 'TEXT',
+        },
+        isUsedPullUp: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
         createdAt: {
           type: DataTypes.DATE,

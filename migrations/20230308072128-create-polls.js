@@ -48,6 +48,10 @@ module.exports = {
         type: DataTypes.ENUM('TEXT', 'IMAGE', 'LOCATION', 'TRENDY_TALK'),
         field: 'type'
       },
+      isUsedPullUp: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       createdAt: {
         type: DataTypes.DATE,
         field: 'created_at'
