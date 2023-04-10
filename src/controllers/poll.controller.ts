@@ -43,6 +43,13 @@ class PollController implements Controller {
 
   public initialiseRoutes(): void {
     this.router.get(`${this.path}`, [this.queryMiddleware.run()], this.getList)
+
+    this.router.get(
+      `${this.path}${ConstantAPI.POLL_POPULARITY}`,
+      [this.queryMiddleware.run()],
+      this.getPopularity,
+    )
+
     this.router.get(
       `${this.path}${ConstantAPI.POLL_INFO}`,
       [this.queryMiddleware.run()],
@@ -60,6 +67,11 @@ class PollController implements Controller {
         validationMiddleware(this.validate.update),
       ],
       this.update,
+    )
+    this.router.delete(
+      `${this.path}${ConstantAPI.POLL_DELETE}`,
+      [this.authenticated.verifyTokenAndAuthorization],
+      this.delete,
     )
   }
 
@@ -158,6 +170,57 @@ class PollController implements Controller {
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
           Message.CREAT_POLL_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  private delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const user = req.session.user
+      const result = await this.pollService.delete({
+        filter: {
+          id,
+          user_id: user?.id,
+        },
+      })
+      this.baseController.onSuccess(res, result, undefined)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.DELETE_POLL_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  private getPopularity = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { queryInfo } = req
+      const result = await this.pollService.getPopularity(queryInfo)
+
+      this.baseController.onSuccessAsList(res, result, undefined, queryInfo)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.GET_POPULARITY_POLL_ERR,
           err,
         ),
       )

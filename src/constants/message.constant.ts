@@ -61,10 +61,13 @@ class Message {
   public static readonly CREAT_POLL_ERR: string =
     'Can not create new poll right now! Please try again.'
   public static readonly POLL_NOT_FOUND: string = 'Poll not found!'
-
-  // GROUP
   public static readonly CREAT_GROUP_ERR: string =
     'Can not create new group right now! Please try again.'
+  public static readonly DELETE_POLL_ERR: string = 'Delete poll error'
+  public static readonly GET_POPULARITY_POLL_ERR: string =
+    'Get popularity poll error'
+
+  // GROUP
   public static readonly GROUP_NOT_FOUND: string = 'Group not found!'
   public static readonly GROUP_NO_AUTHORIZATION: string =
     'You have no permission to change/update this group'

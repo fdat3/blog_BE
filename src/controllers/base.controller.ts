@@ -4,6 +4,7 @@ import * as _ from 'lodash'
 import { FindOptions } from 'sequelize'
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
+import logger from '@/utils/logger.util'
 
 export interface TokenInfo {
   payload?: any
@@ -88,17 +89,22 @@ class BaseController {
   public static applyFindOptions(
     option: ICrudOption = {},
   ): Partial<FindOptions> {
-    const query: Partial<FindOptions<any> | any> = {
-      where: option.filter,
-      limit: option.limit || 20,
-      offset: option.offset || 0,
-      order: [['updatedAt', 'desc']] || option.order,
-      attributes: option.attributes,
-      include: option.include,
-      paranoid: option.paranoid,
-      distinct: Array.isArray(option.include),
+    try {
+      const query: Partial<FindOptions<any> | any> = {
+        where: option.filter,
+        limit: option.limit || 20,
+        offset: option.offset || 0,
+        order: [['updatedAt', 'desc']] || option.order,
+        attributes: option.attributes,
+        include: option.include,
+        paranoid: option.paranoid || false,
+        distinct: Array.isArray(option.include),
+      }
+      return query
+    } catch (error) {
+      logger.error(error)
+      return {}
     }
-    return query
   }
 }
 

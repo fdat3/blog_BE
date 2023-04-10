@@ -8,6 +8,8 @@ import { redis } from '@/config/redis.config'
 import { GetListRepository } from '@/interfaces/base.interface'
 import TelegramUtil from '@/utils/telegram.util'
 import NumberUtils from '@/utils/number.utils'
+import RedisConstant from '@/constants/redis.constant'
+import * as _ from 'lodash'
 
 class PollRepository {
   private model
@@ -23,6 +25,51 @@ class PollRepository {
       return this.model.findAndCountAll(
         baseController.applyFindOptions(queryInfo),
       )
+    } catch (e) {
+      logger.error(e)
+      return null
+    }
+  }
+
+  public async getPopularity(queryInfo?: ICrudOption): Promise<any> {
+    try {
+      let popularityPollIds: string[] | null = []
+      let isReloadPopularityPolls: boolean = false
+      /**
+       * Get list poll by date from redis first
+       * If not, then query to Database
+       */
+      const popularityPollRedis = await redis.get(RedisConstant.POPULARITY_POLL)
+      if (!popularityPollRedis) {
+        isReloadPopularityPolls = true
+      } else {
+        const popularityRedisData = JSON.parse(popularityPollRedis)
+        if (
+          popularityRedisData?.date &&
+          new Date().getDate() !== new Date(popularityRedisData?.date).getDate()
+        ) {
+          isReloadPopularityPolls = true
+        }
+
+        popularityPollIds = popularityRedisData.polls || []
+      }
+      if (isReloadPopularityPolls) {
+        await PollRepository.getPopularityPolls()
+        await this.getPopularity(queryInfo)
+      }
+
+      // deep clone queryInfo
+      const extendedQueryInfo = _.cloneDeep(queryInfo) || {}
+      if (extendedQueryInfo?.filter) {
+        extendedQueryInfo.filter.id = popularityPollIds
+      } else {
+        extendedQueryInfo.filter = {
+          id: popularityPollIds,
+        }
+      }
+      extendedQueryInfo.limit = popularityPollIds?.length || 0
+
+      return await this.getList(extendedQueryInfo)
     } catch (e) {
       logger.error(e)
       return null
@@ -121,7 +168,7 @@ class PollRepository {
   public static async getPopularityPolls(): Promise<Poll[] | void> {
     try {
       logger.info(`Start get popularity polls at ${new Date()}`)
-      const redisKey = 'popularityPolls'
+      const redisKey = RedisConstant.POPULARITY_POLL
       const popularityPolls = await redis.get(redisKey)
       if (popularityPolls) {
         logger.info({
