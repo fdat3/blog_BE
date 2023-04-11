@@ -8,7 +8,7 @@ class CronService {
     logger.info('CronService initialized')
     // Run all functions below
     this.scheduleJobEveryDay()
-    this.scheduleJobEveryMinute()
+    // this.scheduleJobEveryMinute()
     this.scheduleJobEveryHour()
     this.scheduleJobEvery3Days()
   }

@@ -69,7 +69,7 @@ const normalizePort = (val: any): string | number | boolean => {
   return false
 }
 
-const port = normalizePort(Variable.PORT || '5050')
+const port = normalizePort(Variable.PORT || '6000')
 app.set('port', port)
 
 /**

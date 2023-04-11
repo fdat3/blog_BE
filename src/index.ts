@@ -90,7 +90,11 @@ class App {
       }),
     )
     this.app.use(cookieParser())
-    this.app.use(compression())
+    this.app.use(
+      compression({
+        level: 9,
+      }),
+    )
     this.app.use(cors())
     this.app.use(helmet())
     this.app.use(

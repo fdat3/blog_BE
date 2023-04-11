@@ -10,12 +10,30 @@ import TelegramUtil from '@/utils/telegram.util'
 import NumberUtils from '@/utils/number.utils'
 import RedisConstant from '@/constants/redis.constant'
 import * as _ from 'lodash'
+import PollConstant from '@/constants/poll.constant'
 
 class PollRepository {
   private model
 
   constructor() {
     this.model = Poll
+  }
+
+  private cloneQueryInfoWithFilter(
+    queryInfo: ICrudOption = {},
+    filter: any = {},
+  ): ICrudOption {
+    const extendedQueryInfo = _.cloneDeep(queryInfo) || {}
+    if (extendedQueryInfo?.filter) {
+      extendedQueryInfo.filter = {
+        ...extendedQueryInfo.filter,
+        ...filter,
+      }
+    } else {
+      extendedQueryInfo.filter = filter
+    }
+
+    return extendedQueryInfo
   }
 
   public async getList(
@@ -31,10 +49,23 @@ class PollRepository {
     }
   }
 
-  public async getPopularity(queryInfo?: ICrudOption): Promise<any> {
+  public async getPopularity(
+    queryInfo?: ICrudOption,
+    pollIds: string[] = [],
+  ): Promise<any> {
     try {
       let popularityPollIds: string[] | null = []
       let isReloadPopularityPolls: boolean = false
+
+      if (pollIds?.length > 0) {
+        const extendedQueryInfo = this.cloneQueryInfoWithFilter(queryInfo, {
+          id: pollIds,
+        })
+        extendedQueryInfo.limit = popularityPollIds?.length || 0
+
+        return await this.getList(extendedQueryInfo)
+      }
+
       /**
        * Get list poll by date from redis first
        * If not, then query to Database
@@ -54,19 +85,14 @@ class PollRepository {
         popularityPollIds = popularityRedisData.polls || []
       }
       if (isReloadPopularityPolls) {
-        await PollRepository.getPopularityPolls()
-        await this.getPopularity(queryInfo)
+        const pollIdsRedis = await PollRepository.getPopularityPolls()
+        await this.getPopularity(queryInfo, pollIdsRedis || [])
       }
 
       // deep clone queryInfo
-      const extendedQueryInfo = _.cloneDeep(queryInfo) || {}
-      if (extendedQueryInfo?.filter) {
-        extendedQueryInfo.filter.id = popularityPollIds
-      } else {
-        extendedQueryInfo.filter = {
-          id: popularityPollIds,
-        }
-      }
+      const extendedQueryInfo = this.cloneQueryInfoWithFilter(queryInfo, {
+        id: popularityPollIds,
+      })
       extendedQueryInfo.limit = popularityPollIds?.length || 0
 
       return await this.getList(extendedQueryInfo)
@@ -165,7 +191,7 @@ class PollRepository {
    * And store this id to redis, then store to database in popularity table
    */
 
-  public static async getPopularityPolls(): Promise<Poll[] | void> {
+  public static async getPopularityPolls(): Promise<string[] | void> {
     try {
       logger.info(`Start get popularity polls at ${new Date()}`)
       const redisKey = RedisConstant.POPULARITY_POLL
@@ -178,7 +204,7 @@ class PollRepository {
         const date = new Date(purePopularityPolls.date)
         if (date.getDate() === new Date().getDate()) {
           logger.info('Popularity polls already exist for today')
-          return
+          return purePopularityPolls.polls
         } else {
           /**
            * Remove popularityPolls key from redis
@@ -225,7 +251,12 @@ class PollRepository {
             date: new Date(),
             polls: popularityPolls.map((poll) => poll.id),
           }
-          await redis.set(redisKey, JSON.stringify(popularityPollsRedis))
+          await redis.set(
+            redisKey,
+            JSON.stringify(popularityPollsRedis),
+            'EX',
+            PollConstant.POPULARITY_POLL_TTL,
+          )
           await sequelize.transaction(async (transaction) => {
             await PriorityPollByDate.create(
               {
@@ -247,7 +278,7 @@ class PollRepository {
           )
         }, 0)
 
-        return popularityPolls
+        return popularityPolls.map((poll) => poll.id)
       }
     } catch (err) {
       logger.error(err)
