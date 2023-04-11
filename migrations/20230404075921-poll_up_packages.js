@@ -13,9 +13,13 @@ module.exports = {
         type: DataTypes.BIGINT,
         field: 'amount'
       },
-      type: {
-        type: DataTypes.ENUM('PG', 'APPLE_PAY', 'GOOGLE_PAY'),
-        field: 'type'
+      // type: {
+      //   type: DataTypes.ENUM('PG', 'APPLE_PAY', 'GOOGLE_PAY'),
+      //   field: 'type'
+      // },
+      name: {
+        type: DataTypes.STRING,
+        field: 'name'
       },
       deletedAt: {
         type: DataTypes.STRING,

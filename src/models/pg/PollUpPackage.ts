@@ -32,7 +32,7 @@ export class PollUpPackage extends Model<
   declare amount: number | null
   declare name: CreationOptional<string>
   declare description: CreationOptional<string>
-  declare type: 'PG' | 'APPLE_PAY' | 'GOOGLE_PAY' | null
+  // declare type: 'PG' | 'APPLE_PAY' | 'GOOGLE_PAY' | null
   declare deletedAt: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -68,9 +68,9 @@ export class PollUpPackage extends Model<
         amount: {
           type: DataTypes.BIGINT,
         },
-        type: {
-          type: DataTypes.ENUM('PG', 'APPLE_PAY', 'GOOGLE_PAY'),
-        },
+        // type: {
+        //   type: DataTypes.ENUM('PG', 'APPLE_PAY', 'GOOGLE_PAY'),
+        // },
         name: {
           type: DataTypes.STRING,
         },
