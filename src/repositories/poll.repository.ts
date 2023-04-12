@@ -2,7 +2,13 @@ import { sequelize } from '@/config/sql.config'
 import baseController from '@/controllers/base.controller'
 
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { Poll, PriorityPollByDate } from '@/models/pg'
+import {
+  Group,
+  GroupMember,
+  Poll,
+  PollMention,
+  PriorityPollByDate,
+} from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { redis } from '@/config/redis.config'
 import { GetListRepository } from '@/interfaces/base.interface'
@@ -45,6 +51,118 @@ class PollRepository {
       )
     } catch (e) {
       logger.error(e)
+      return null
+    }
+  }
+
+  /**
+   @param userId
+   * My Posts Page:
+   * All posts were created by me (don't include posts from any group).
+   * This list will be shown on the My Feed Page (My Posts).
+   * Ordered by created_time. If a post was used by "Pull Up", this post will be displayed first on the My Posts Page.
+   */
+  public async myPostPage(
+    userId: uuid,
+    queryInfo?: ICrudOption,
+  ): Promise<GetListRepository<Poll> | null> {
+    try {
+      const extendedQueryInfo = this.cloneQueryInfoWithFilter(queryInfo, {
+        filter: {
+          userId,
+          groupId: null,
+        },
+      })
+      return await this.getList(extendedQueryInfo)
+    } catch (err) {
+      logger.error(err)
+      return null
+    }
+  }
+
+  /**
+   * @param userId
+   * @param queryInfo
+   * @description
+   * All posts that I was tagged (poll_mentions table) and All posts of groups that I joined with the condition is these groups are public.
+   * Ordered by created_time.
+   */
+  public async postPage(
+    userId: uuid,
+    queryInfo: ICrudOption,
+  ): Promise<GetListRepository<Poll> | null> {
+    try {
+      const publicGroupsThatJoined = await Group.findAll({
+        where: {
+          isPrivate: false,
+        },
+        include: [
+          {
+            association: 'members',
+            where: {
+              userId,
+            },
+          },
+        ],
+        attributes: ['id'],
+      })
+
+      const publicGroupIds =
+        publicGroupsThatJoined?.map((group) => group.id) || []
+
+      const pollThatMentioned = await PollMention.findAll({
+        where: {
+          userId,
+        },
+        attributes: ['pollId'],
+      })
+
+      const pollMentionedIds =
+        pollThatMentioned?.map((poll) => poll.pollId) || []
+
+      const pollIds = [...publicGroupIds, ...pollMentionedIds]
+
+      const extendedQueryInfo = this.cloneQueryInfoWithFilter(queryInfo, {
+        filter: {
+          id: pollIds,
+        },
+      })
+
+      return await this.getList(extendedQueryInfo)
+    } catch (err) {
+      logger.error(err)
+      return null
+    }
+  }
+
+  public async homePage(queryInfo: ICrudOption): Promise<any> {
+    try {
+      return await this.getList(queryInfo)
+    } catch (err) {
+      logger.error(err)
+      return null
+    }
+  }
+
+  public async groupPage(userId: uuid, queryInfo: ICrudOption): Promise<any> {
+    try {
+      const groupsThatJoined = await GroupMember.findAll({
+        where: {
+          userId,
+        },
+        attributes: ['groupId'],
+      })
+
+      const groupIds = groupsThatJoined?.map((group) => group.groupId) || []
+
+      const extendedQueryInfo = this.cloneQueryInfoWithFilter(queryInfo, {
+        filter: {
+          groupId: groupIds,
+        },
+      })
+      return await this.getList(extendedQueryInfo)
+    } catch (err) {
+      logger.error(err)
       return null
     }
   }

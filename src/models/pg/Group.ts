@@ -32,6 +32,11 @@ import ModelPgConstant from '@/constants/model.pg.constant'
 
 type GroupAssociations = 'user' | 'members' | 'settings' | 'polls'
 
+/**
+ * Group model
+ * isPrivate: true => Not showing in public page
+ * isVisible: if true, group is visible to all members else only owner can see
+ */
 export class Group extends Model<
   InferAttributes<Group, { omit: GroupAssociations }>,
   InferCreationAttributes<Group, { omit: GroupAssociations }>

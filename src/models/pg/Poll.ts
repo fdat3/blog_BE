@@ -63,6 +63,10 @@ export class Poll extends Model<
   declare canAddNewAnswer: CreationOptional<boolean>
   declare anonymousPoll: CreationOptional<boolean>
   declare viewCount: CreationOptional<number>
+  // Declare voteCount with Virtual type
+  // declare voteCount: NonAttribute<any>
+  // declare commentCount: NonAttribute<any>
+  // declare likeCount: NonAttribute<any>
   declare type:
     | 'TEXT'
     | 'IMAGE_A'

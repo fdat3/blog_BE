@@ -77,7 +77,7 @@ class QueryMiddleware extends BaseMiddleware {
   _parseAttribute(attrs: any): ICrudOption {
     const attributes: any[] = []
     const includes: any[] = []
-    let isGetAll = false
+    let isGetAll = true
     let isSetParanoid = false
     let where: any = undefined
     _.forEach(attrs, (f) => {

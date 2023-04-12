@@ -61,7 +61,7 @@ class App {
         : redis
     this.redisStore = new RedisStore({
       client: this.clientRedis,
-      prefix: 'session:',
+      prefix: `session_${Variable.NODE_ENV}:`,
     })
     this.app = express()
 

@@ -29,7 +29,8 @@ ${error}
       message_thread_id: Variable.TELEGRAM_THREAD_ID,
       text: errorString,
       parse_mode: 'Markdown',
-      disable_notification: !checkIsWorkingTime(), // Disable notification
+      // disable_notification: !checkIsWorkingTime(), // Disable notification
+      disable_notification: true,
     }
 
     logger.info({ disable_notification: errorBody.disable_notification })
