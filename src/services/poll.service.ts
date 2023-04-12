@@ -13,10 +13,6 @@ class PollService {
     return this.repository.getList(queryInfo)
   }
 
-  public async userGetList(queryInfo?: ICrudOption): Promise<any> {
-    return this.repository.userGetList(queryInfo)
-  }
-
   public async getPopularity(queryInfo?: ICrudOption): Promise<any> {
     return this.repository.getPopularity(queryInfo)
   }

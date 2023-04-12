@@ -25,11 +25,14 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import { SNSEnum } from '@/enums/auth.enum'
 import logger from '@/utils/logger.util'
 import { DateTime } from 'luxon'
+import BaseController from '@/controllers/base.controller'
+import * as _ from 'lodash'
 
 class AuthController implements Controller {
   public path: string
   public router: Router
   private authService: AuthService
+  private baseController: BaseController
   private validate: Validate
 
   constructor() {
@@ -37,6 +40,7 @@ class AuthController implements Controller {
     this.router = Router()
     this.authService = new AuthService()
     this.validate = new Validate()
+    this.baseController = new BaseController()
     this.initialiseRoutes()
   }
 
@@ -320,13 +324,13 @@ class AuthController implements Controller {
 
       res.cookie('jwt', refreshToken)
 
-      const newUser = { ...user }
+      const newUser = _.cloneDeep(user)
 
-      delete newUser.password
+      delete newUser.dataValues.password
 
       req.session.user = newUser
 
-      return res.status(ConstantHttpCode.OK).json({
+      const result = {
         status: {
           code: ConstantHttpCode.OK,
           msg: ConstantHttpReason.OK,
@@ -337,7 +341,9 @@ class AuthController implements Controller {
           accessToken,
           refreshToken,
         },
-      })
+      }
+
+      this.baseController.onSuccess(res, result)
     } catch (err: any) {
       return next(
         new HttpException(
