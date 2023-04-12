@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction } from 'express'
 import HttpException from '@/utils/exceptions/http.exceptions'
 
 import { verifyToken } from '@/validations/token.validation'
@@ -9,6 +9,8 @@ import ConstantMessage from '@/constants/message.constant'
 // http constant
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
+import logger from '@/utils/logger.util'
+import { Request, Response } from '@/interfaces/controller.interface'
 
 class AuthenticatedMiddleware {
   public async verifyTokenAndAuthorization(
@@ -21,6 +23,10 @@ class AuthenticatedMiddleware {
         if (req?.user?.id === req?.session?.user?.id) {
           return next()
         } else {
+          logger.error(ConstantMessage.NOT_ALLOWED)
+          logger.error(
+            'authenticated.middleware.ts: verifyTokenAndAuthorization',
+          )
           return next(
             new HttpException(
               ConstantHttpCode.FORBIDDEN,
@@ -30,6 +36,7 @@ class AuthenticatedMiddleware {
           )
         }
       } catch (err) {
+        logger.error(err)
         return next(
           new HttpException(
             ConstantHttpCode.FORBIDDEN,

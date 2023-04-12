@@ -21,6 +21,7 @@ import ConstantMessage from '@/constants/message.constant'
 import Message from '@/constants/message.constant'
 import logger from '@/utils/logger.util'
 import Authenticated from '@/middlewares/authenticated.middleware'
+import { verifyToken } from '@/validations/token.validation'
 
 class PollController implements Controller {
   public path: string
@@ -48,6 +49,16 @@ class PollController implements Controller {
       `${this.path}${ConstantAPI.POLL_POPULARITY}`,
       [this.queryMiddleware.run()],
       this.getPopularity,
+    )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.POLL_MY_POLL}`,
+      [
+        verifyToken,
+        this.authenticated.verifyTokenAndAuthorization,
+        this.queryMiddleware.run(),
+      ],
+      this.getMyPoll,
     )
 
     this.router.get(
@@ -221,6 +232,33 @@ class PollController implements Controller {
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
           Message.GET_POPULARITY_POLL_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  private getMyPoll = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const {
+        queryInfo,
+        session: { user },
+      } = req
+
+      const result = await this.pollService.getMyPoll(user?.id, queryInfo)
+
+      this.baseController.onSuccessAsList(res, result, undefined, queryInfo)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.GET_MY_POLL_ERROR,
           err,
         ),
       )

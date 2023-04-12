@@ -44,6 +44,7 @@ class Api {
   public static readonly POLL_UPDATE: string = '/:id'
   public static readonly POLL_DELETE: string = '/:id'
   public static readonly POLL_POPULARITY: string = '/popularity'
+  public static readonly POLL_MY_POLL: string = '/my_polls'
 
   // GROUP
   public static readonly GROUP: string = '/groups'

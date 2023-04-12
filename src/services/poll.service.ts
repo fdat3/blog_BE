@@ -17,6 +17,10 @@ class PollService {
     return this.repository.getPopularity(queryInfo)
   }
 
+  public async getMyPoll(userId: uuid, queryInfo?: ICrudOption): Promise<any> {
+    return this.repository.myPollPage(userId, queryInfo)
+  }
+
   public async getItem(id: uuid, queryInfo?: ICrudOption): Promise<any> {
     return this.repository.getItem(id, queryInfo)
   }

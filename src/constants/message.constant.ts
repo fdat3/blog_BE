@@ -66,6 +66,7 @@ class Message {
   public static readonly DELETE_POLL_ERR: string = 'Delete poll error'
   public static readonly GET_POPULARITY_POLL_ERR: string =
     'Get popularity poll error'
+  public static readonly GET_MY_POLL_ERROR: string = 'Get my poll error'
 
   // GROUP
   public static readonly GROUP_NOT_FOUND: string = 'Group not found!'

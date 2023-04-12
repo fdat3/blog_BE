@@ -62,16 +62,14 @@ class PollRepository {
    * This list will be shown on the My Feed Page (My Posts).
    * Ordered by created_time. If a post was used by "Pull Up", this post will be displayed first on the My Posts Page.
    */
-  public async myPostPage(
+  public async myPollPage(
     userId: uuid,
     queryInfo?: ICrudOption,
   ): Promise<GetListRepository<Poll> | null> {
     try {
       const extendedQueryInfo = this.cloneQueryInfoWithFilter(queryInfo, {
-        filter: {
-          userId,
-          groupId: null,
-        },
+        userId,
+        groupId: null,
       })
       return await this.getList(extendedQueryInfo)
     } catch (err) {
