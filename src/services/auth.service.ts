@@ -23,6 +23,11 @@ class AuthService {
     return user
   }
 
+  public async findByUsernameWithPassword(username: string): Promise<any> {
+    const user = await this.userRepository.findByUsernameWithPassword(username)
+    return user
+  }
+
   public async findByEmail(email: string): Promise<any> {
     const user = await this.userRepository.findByEmail(email)
     return user

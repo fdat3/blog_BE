@@ -230,19 +230,17 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { email, password } = req.body
-
-      const emailValidated = this.validate.validateEmail(email)
-      if (!emailValidated) {
+      const { username, password } = req.body
+      const usernameValidated = this.validate.validateUsername(username)
+      if (!usernameValidated) {
         return next(
           new HttpException(
             ConstantHttpCode.INTERNAL_SERVER_ERROR,
             ConstantHttpReason.INTERNAL_SERVER_ERROR,
-            ConstantMessage.EMAIL_NOT_VALID,
+            ConstantMessage.USERNAME_NOT_VALID,
           ),
         )
       }
-      logger.info(`email ${email} is valid`)
 
       const passwordValidated = this.validate.validatePassword(password)
       if (!passwordValidated) {
@@ -256,7 +254,7 @@ class AuthController implements Controller {
       }
       logger.info(`password ${password} is valid`)
 
-      const user = await this.authService.findByEmailWithPassword(email)
+      const user = await this.authService.findByUsernameWithPassword(username)
       if (!user) {
         return next(
           new HttpException(

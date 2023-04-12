@@ -84,7 +84,7 @@ class UserRepository {
   public async findByUsernameWithPassword(
     username: string,
   ): Promise<User | null> {
-    const user = await User.findOne({
+    const user = await User.scope('withPassword').findOne({
       where: { username },
     })
     return user
