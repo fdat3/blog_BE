@@ -28,6 +28,7 @@ import AdminController from '@/controllers/admin.controller'
 import CronService from '@/services/cron.service'
 import TransactionController from '@/controllers/transaction.controller'
 import PollUpPackageController from '@/controllers/poll_up_package.controller'
+import ReportPollController from '@/controllers/report_poll.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -50,6 +51,7 @@ const { app } = new App({
     new DeviceController(),
     new TransactionController(),
     new PollUpPackageController(),
+    new ReportPollController(),
     new AdminController(),
   ],
 })

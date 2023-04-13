@@ -4,6 +4,8 @@ class Api {
   public static readonly ROOT: string = '/'
 
   public static readonly API: string = '/api'
+  public static readonly API_V1: string = '/v1'
+  public static readonly API_V2: string = '/v2'
 
   public static readonly HOOK: string = '/hook'
   public static readonly IMAGE: string = '/images'
@@ -45,6 +47,14 @@ class Api {
   public static readonly POLL_DELETE: string = '/:id'
   public static readonly POLL_POPULARITY: string = '/popularity'
   public static readonly POLL_MY_POLL: string = '/my_polls'
+
+  // REPORT POLL
+  public static readonly REPORT_POLL: string = '/report_polls'
+  public static readonly REPORT_POLL_LIST: string = '/'
+  public static readonly REPORT_POLL_INFO: string = '/:id'
+  public static readonly REPORT_POLL_CREATE: string = '/'
+  public static readonly REPORT_POLL_UPDATE: string = '/:id'
+  public static readonly REPORT_POLL_DELETE: string = '/:id'
 
   // GROUP
   public static readonly GROUP: string = '/groups'
