@@ -85,7 +85,7 @@ class PollRepository {
    * All posts that I was tagged (poll_mentions table) and All posts of groups that I joined with the condition is these groups are public.
    * Ordered by created_time.
    */
-  public async postPage(
+  public async pollPage(
     userId: uuid,
     queryInfo: ICrudOption,
   ): Promise<GetListRepository<Poll> | null> {

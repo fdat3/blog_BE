@@ -264,6 +264,33 @@ class PollController implements Controller {
       )
     }
   }
+
+  private pollPage = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const {
+        queryInfo,
+        session: { user },
+      } = req
+
+      const result = await this.pollService.getMyPoll(user?.id, queryInfo)
+
+      this.baseController.onSuccessAsList(res, result, undefined, queryInfo)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.GET_MY_POLL_ERROR,
+          err,
+        ),
+      )
+    }
+  }
 }
 
 export default PollController
