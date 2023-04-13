@@ -46,9 +46,9 @@ class PollRepository {
     queryInfo?: ICrudOption,
   ): Promise<GetListRepository<Poll> | null> {
     try {
-      return this.model.findAndCountAll(
-        baseController.applyFindOptions(queryInfo),
-      )
+      const newQuery = _.cloneDeep(baseController.applyFindOptions(queryInfo))
+
+      return this.model.findAndCountAll(newQuery)
     } catch (e) {
       logger.error(e)
       return null

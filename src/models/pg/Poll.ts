@@ -29,6 +29,7 @@ import type { PollHashtag } from './PollHashtag'
 import type { PollMention } from './PollMention'
 import type { ReportPoll } from './ReportPoll'
 import type { PollHandlePriority } from './PollHandlePriority'
+import type { PollUpPackageUserBought } from './PollUpPackageUserBought'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 import { PollAnswer } from '@/models/pg/PollAnswer'
@@ -48,6 +49,7 @@ type PollAssociations =
   | 'group'
   | 'handlePriorities'
   | 'votes'
+  | 'appliedPackages'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -235,6 +237,40 @@ export class Poll extends Model<
   declare hasVotes: HasManyHasAssociationsMixin<PollVotes, string>
   declare countVotes: HasManyCountAssociationsMixin
 
+  // Poll hasMany PollUpPackageUserBought (as AppliedPackages)
+  declare appliedPackages?: NonAttribute<PollUpPackageUserBought[]>
+  declare getAppliedPackages: HasManyGetAssociationsMixin<PollUpPackageUserBought>
+  declare setAppliedPackages: HasManySetAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare addAppliedPackage: HasManyAddAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare addAppliedPackages: HasManyAddAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare createAppliedPackage: HasManyCreateAssociationMixin<PollUpPackageUserBought>
+  declare removeAppliedPackage: HasManyRemoveAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare removeAppliedPackages: HasManyRemoveAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare hasAppliedPackage: HasManyHasAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare hasAppliedPackages: HasManyHasAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare countAppliedPackages: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -248,6 +284,7 @@ export class Poll extends Model<
     group: Association<Poll, Group>
     handlePriorities: Association<Poll, PollHandlePriority>
     votes: Association<Poll, PollVotes>
+    appliedPackages: Association<Poll, PollUpPackageUserBought>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {

@@ -35,6 +35,8 @@ export class PgModel {
   public static readonly TRANSACTION: string = 'transactions'
   public static readonly POLL_HANDLE_PRIORITY: string = 'poll_handle_priorities'
   public static readonly POLL_UP_PACKAGE: string = 'poll_up_packages'
+  public static readonly POLL_UP_PACKAGE_USER_BOUGHT: string =
+    'poll_up_package_user_boughts'
   public static readonly PRIORITY_POLL_BY_DATE: string =
     'priority_poll_by_dates'
 }

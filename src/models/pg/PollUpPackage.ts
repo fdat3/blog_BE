@@ -21,8 +21,9 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Transaction } from './Transaction'
+import type { PollUpPackageUserBought } from './PollUpPackageUserBought'
 
-type PollUpPackageAssociations = 'transactions'
+type PollUpPackageAssociations = 'transactions' | 'packageSolds'
 
 export class PollUpPackage extends Model<
   InferAttributes<PollUpPackage, { omit: PollUpPackageAssociations }>,
@@ -53,8 +54,43 @@ export class PollUpPackage extends Model<
   declare hasTransactions: HasManyHasAssociationsMixin<Transaction, string>
   declare countTransactions: HasManyCountAssociationsMixin
 
+  // PollUpPackage hasMany PollUpPackageUserBought (as PackageSold)
+  declare packageSolds?: NonAttribute<PollUpPackageUserBought[]>
+  declare getPackageSolds: HasManyGetAssociationsMixin<PollUpPackageUserBought>
+  declare setPackageSolds: HasManySetAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare addPackageSold: HasManyAddAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare addPackageSolds: HasManyAddAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare createPackageSold: HasManyCreateAssociationMixin<PollUpPackageUserBought>
+  declare removePackageSold: HasManyRemoveAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare removePackageSolds: HasManyRemoveAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare hasPackageSold: HasManyHasAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare hasPackageSolds: HasManyHasAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare countPackageSolds: HasManyCountAssociationsMixin
+
   declare static associations: {
     transactions: Association<PollUpPackage, Transaction>
+    packageSolds: Association<PollUpPackage, PollUpPackageUserBought>
   }
 
   static initModel(sequelize: Sequelize): typeof PollUpPackage {

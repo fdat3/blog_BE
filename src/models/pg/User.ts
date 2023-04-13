@@ -1,3 +1,7 @@
+import ModelPgConstant from '@/constants/model.pg.constant'
+import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
+import { SearchHistory } from '@/models/pg/SearchHistory'
+import UserUtils from '@/utils/user.utils'
 import {
   Association,
   CreationOptional,
@@ -23,22 +27,20 @@ import {
 } from 'sequelize'
 import type { Block } from './Block'
 import type { ContactList } from './ContactList'
+import type { Follow } from './Follow'
 import type { Group } from './Group'
 import type { GroupMember } from './GroupMember'
 import type { Poll } from './Poll'
 import type { PollAnswer } from './PollAnswer'
-import type { PollVotes } from './PollVotes'
 import type { PollComment } from './PollComment'
+import type { PollUpPackageUserBought } from './PollUpPackageUserBought'
+import type { PollVotes } from './PollVotes'
 import type { ReportUser } from './ReportUser'
+import { Transaction } from './Transaction'
 import type { UserDeviceSession } from './UserDevice'
-import type { UserSetting } from './UserSetting'
-import type { Follow } from './Follow'
-import type { UserPoint } from './UserPoint'
-import UserUtils from '@/utils/user.utils'
-import ModelPgConstant from '@/constants/model.pg.constant'
-import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
-import { SearchHistory } from '@/models/pg/SearchHistory'
 import { UserLinkSNS } from './UserLinkSNS'
+import type { UserPoint } from './UserPoint'
+import type { UserSetting } from './UserSetting'
 
 type UserAssociations =
   | 'deviceSession'
@@ -60,6 +62,7 @@ type UserAssociations =
   | 'contacts'
   | 'contactInfos'
   | 'snsLinks'
+  | 'boughtPackages'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -400,6 +403,56 @@ export class User extends Model<
   declare hasSnsLinks: HasManyHasAssociationsMixin<UserLinkSNS, string>
   declare countSnsLinks: HasManyCountAssociationsMixin
 
+  // User hasMany Transaction (as Transactions)
+  declare transactions?: NonAttribute<Transaction[]>
+  declare getTransactions: HasManyGetAssociationsMixin<Transaction>
+  declare setTransactions: HasManySetAssociationsMixin<Transaction, string>
+  declare addTransaction: HasManyAddAssociationMixin<Transaction, string>
+  declare addTransactions: HasManyAddAssociationsMixin<Transaction, string>
+  declare createTransaction: HasManyCreateAssociationMixin<Transaction>
+  declare removeTransaction: HasManyRemoveAssociationMixin<Transaction, string>
+  declare removeTransactions: HasManyRemoveAssociationsMixin<
+    Transaction,
+    string
+  >
+  declare hasTransaction: HasManyHasAssociationMixin<Transaction, string>
+  declare hasTransactions: HasManyHasAssociationsMixin<Transaction, string>
+  declare countTransactions: HasManyCountAssociationsMixin
+
+  // User hasMany PollUpPackageUserBought (as BoughtPackages)
+  declare boughtPackages?: NonAttribute<PollUpPackageUserBought[]>
+  declare getBoughtPackages: HasManyGetAssociationsMixin<PollUpPackageUserBought>
+  declare setBoughtPackages: HasManySetAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare addBoughtPackage: HasManyAddAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare addBoughtPackages: HasManyAddAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare createBoughtPackage: HasManyCreateAssociationMixin<PollUpPackageUserBought>
+  declare removeBoughtPackage: HasManyRemoveAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare removeBoughtPackages: HasManyRemoveAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare hasBoughtPackage: HasManyHasAssociationMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare hasBoughtPackages: HasManyHasAssociationsMixin<
+    PollUpPackageUserBought,
+    string
+  >
+  declare countBoughtPackages: HasManyCountAssociationsMixin
+
   declare static associations: {
     deviceSession: Association<User, UserDeviceSession>
     blockers: Association<User, Block>
@@ -421,6 +474,8 @@ export class User extends Model<
     contacts: Association<User, ContactList>
     contactInfos: Association<User, ContactList>
     snsLinks: Association<User, UserLinkSNS>
+    transactions: Association<User, Transaction>
+    boughtPackages: Association<User, PollUpPackageUserBought>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

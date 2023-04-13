@@ -34,6 +34,7 @@ import { PollHandlePriority } from './PollHandlePriority'
 import { Transaction } from './Transaction'
 import { PollUpPackage } from './PollUpPackage'
 import { PriorityPollByDate } from './PriorityPollByDate'
+import { PollUpPackageUserBought } from './PollUpPackageUserBought'
 
 export {
   User,
@@ -71,6 +72,7 @@ export {
   Transaction,
   PollUpPackage,
   PriorityPollByDate,
+  PollUpPackageUserBought,
 }
 
 export const initModels = (): any => {
@@ -109,6 +111,7 @@ export const initModels = (): any => {
   Transaction.initModel(sequelize)
   PollUpPackage.initModel(sequelize)
   PriorityPollByDate.initModel(sequelize)
+  PollUpPackageUserBought.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -186,6 +189,10 @@ export const initModels = (): any => {
     as: 'transactions',
     foreignKey: 'userId',
   })
+  User.hasMany(PollUpPackageUserBought, {
+    as: 'boughtPackages',
+    foreignKey: 'user_id',
+  })
   Poll.belongsTo(User, {
     as: 'user',
     foreignKey: 'userId',
@@ -229,6 +236,10 @@ export const initModels = (): any => {
   Poll.hasMany(PollVotes, {
     as: 'votes',
     foreignKey: 'pollId',
+  })
+  Poll.hasMany(PollUpPackageUserBought, {
+    as: 'appliedPackages',
+    foreignKey: 'poll_id',
   })
   PollAnswer.belongsTo(Poll, {
     as: 'poll',
@@ -470,6 +481,22 @@ export const initModels = (): any => {
     as: 'transactions',
     foreignKey: 'packageId',
   })
+  PollUpPackage.hasMany(PollUpPackageUserBought, {
+    as: 'packageSolds',
+    foreignKey: 'package_id',
+  })
+  PollUpPackageUserBought.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  PollUpPackageUserBought.belongsTo(Poll, {
+    as: 'poll',
+    foreignKey: 'poll_id',
+  })
+  PollUpPackageUserBought.belongsTo(PollUpPackage, {
+    as: 'package',
+    foreignKey: 'package_id',
+  })
 
   return {
     User,
@@ -503,5 +530,10 @@ export const initModels = (): any => {
     ContactList,
     PollEntity,
     UserLinkSNS,
+    PollHandlePriority,
+    Transaction,
+    PollUpPackage,
+    PriorityPollByDate,
+    PollUpPackageUserBought,
   }
 }
