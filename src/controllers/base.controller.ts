@@ -23,7 +23,7 @@ export interface ExtraResponse extends Response {
   [key: string]: any
 }
 
-class BaseController {
+export class BaseController {
   onError(res: ExtraResponse, error: any): void {
     if (!error.options) {
       // const err = errorService.router.somethingWentWrong()

@@ -78,6 +78,11 @@ class Api {
   public static readonly DEVICE_LIST: string = '/:deviceId'
   public static readonly DEVICE_DELETE: string = '/:id'
 
+  // Transaction
+  public static readonly TRANSACTION: string = '/transactions'
+  public static readonly TRANSACTION_LIST: string = '/'
+  public static readonly TRANSACTION_INFO: string = '/:id'
+
   // Admin
   public static readonly ADMIN: string = '/admin'
 

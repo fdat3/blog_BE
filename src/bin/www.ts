@@ -26,6 +26,7 @@ import BlockController from '@/controllers/block.controller'
 import DeviceController from '@/controllers/device.controller'
 import AdminController from '@/controllers/admin.controller'
 import CronService from '@/services/cron.service'
+import TransactionController from '@/controllers/transaction.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -46,6 +47,7 @@ const { app } = new App({
     new GroupController(),
     new GroupSettingController(),
     new DeviceController(),
+    new TransactionController(),
     new AdminController(),
   ],
 })
