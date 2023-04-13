@@ -15,28 +15,27 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 // import logger from '@/utils/logger.util'
 import ConstantMessage from '@/constants/message.constant'
 import Authenticated from '@/middlewares/authenticated.middleware'
-import TransactionService from '@/services/transaction.service'
+import PollUpPackageService from '@/services/poll_up_package.service'
 import { verifyToken } from '@/validations/token.validation'
-import BaseController from './base.controller'
 import _ from 'lodash'
+import BaseController from './base.controller'
 
-class TransactionController implements Controller {
+class PollUpPackageController implements Controller {
   public path: string
   public router: Router
 
   private queryMiddleware: QueryMiddleware
   private baseController: BaseController
-  private service: TransactionService
+  private service: PollUpPackageService
   private authenticated: Authenticated
   constructor() {
-    this.path = `${ConstantAPI.TRANSACTION}`
+    this.path = `${ConstantAPI.POLL_UP_PACKAGE}`
     this.router = Router()
     this.queryMiddleware = new QueryMiddleware()
     this.baseController = new BaseController()
-    this.service = new TransactionService()
+    this.service = new PollUpPackageService()
     this.authenticated = new Authenticated()
     this.initialiseRoutes()
-    // this.router.use(verifyToken)
   }
 
   public initialiseRoutes(): void {
@@ -144,4 +143,4 @@ class TransactionController implements Controller {
   }
 }
 
-export default TransactionController
+export default PollUpPackageController

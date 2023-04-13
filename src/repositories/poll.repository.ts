@@ -47,6 +47,18 @@ class PollRepository {
   ): Promise<GetListRepository<Poll> | null> {
     try {
       const newQuery = _.cloneDeep(baseController.applyFindOptions(queryInfo))
+      const pollRankIds = await this.getPollListUsingPullUpPackageFromRedis()
+      if (pollRankIds?.length > 0) {
+        newQuery.order = [
+          [
+            sequelize.literal(
+              `CASE WHEN id IN (${pollRankIds.join(',')}) THEN 1 ELSE 2 END`,
+            ),
+            'ASC',
+          ],
+          ['createdAt', 'DESC'],
+        ]
+      }
 
       return this.model.findAndCountAll(newQuery)
     } catch (e) {
@@ -399,6 +411,62 @@ class PollRepository {
     } catch (err) {
       logger.error(err)
       return
+    }
+  }
+
+  /**
+   *
+   * @param pollId
+   * @description Push poll id to redis list PULL_UP_PACKAGE_POLL with TTL is 1 day
+   */
+  public async pushPollUsingPullUpPackageToRedis(
+    pollId: uuid,
+    score: number,
+  ): Promise<void> {
+    try {
+      const redisKey = RedisConstant.POLL_UP_PACKAGE_LIST
+      // Finding poll by id, if not exist, zadd for the new one with score and TTL is 1 day
+      // Else increase score for the poll and update new TTL is 1 day
+      //    remove poll from list
+      //   zadd poll with new score and TTL is 1 day
+      const pollList = await redis.zrange(redisKey, 0, -1)
+      if (pollList.includes(pollId)) {
+        // find the old score or set 0 if not exist
+        const oldScore = (await redis.zscore(redisKey, pollId)) || 0
+        const newScore = Number(oldScore) + score
+        await redis.zrem(redisKey, pollId)
+        await redis.zadd(
+          redisKey,
+          newScore,
+          pollId,
+          'EX',
+          PollConstant.POLL_UP_PACKAGE_TTL,
+        )
+      } else {
+        await redis.zadd(
+          redisKey,
+          score,
+          pollId,
+          'EX',
+          PollConstant.POLL_UP_PACKAGE_TTL,
+        )
+      }
+      return
+    } catch (err) {
+      logger.error(err)
+      return
+    }
+  }
+
+  public async getPollListUsingPullUpPackageFromRedis(): Promise<uuid[]> {
+    try {
+      const redisKey = RedisConstant.POLL_UP_PACKAGE_LIST
+      const result = await redis.zrevrange(redisKey, 0, -1)
+      logger.info({ result })
+      return result
+    } catch (error) {
+      logger.error(error)
+      return []
     }
   }
 }

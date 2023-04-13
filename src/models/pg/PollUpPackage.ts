@@ -33,6 +33,7 @@ export class PollUpPackage extends Model<
   declare amount: number | null
   declare name: CreationOptional<string>
   declare description: CreationOptional<string>
+  declare isActive: CreationOptional<boolean>
   // declare type: 'PG' | 'APPLE_PAY' | 'GOOGLE_PAY' | null
   declare deletedAt: string | null
   declare createdAt: CreationOptional<Date>
@@ -113,6 +114,10 @@ export class PollUpPackage extends Model<
         description: {
           type: DataTypes.STRING,
         },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: true,
+        },
         deletedAt: {
           type: DataTypes.STRING,
         },
@@ -126,6 +131,16 @@ export class PollUpPackage extends Model<
       {
         sequelize,
         tableName: ModelPgConstant.POLL_UP_PACKAGE,
+        defaultScope: {
+          where: {
+            isActive: true,
+          },
+        },
+        scopes: {
+          includeNotActive: {
+            where: {},
+          },
+        },
       },
     )
 

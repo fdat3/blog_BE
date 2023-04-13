@@ -21,6 +21,11 @@ module.exports = {
         type: DataTypes.STRING,
         field: 'name'
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        field: 'is_active'
+      },
       deletedAt: {
         type: DataTypes.STRING,
         field: 'deleted_at'

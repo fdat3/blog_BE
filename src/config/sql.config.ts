@@ -2,6 +2,7 @@ import VariableEnv from '@/env/variable.env'
 import logger from '@/utils/logger.util'
 import * as process from 'process'
 import { Sequelize, UpdateOptions } from 'sequelize'
+require('pg').defaults.parseInt8 = true
 
 const sequelizeTransforms = require('sequelize-transforms')
 
@@ -92,7 +93,7 @@ export const postgresTestConnectDB = async (): Promise<void> => {
 export const syncSequelize = async (): Promise<void> => {
   try {
     await sequelize.sync({
-      force: true,
+      force: !true,
       alter: true,
       logging: (sql: string) => {
         process.env.LOGGING === 'true' && logger.http(sql)

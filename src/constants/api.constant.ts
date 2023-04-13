@@ -83,6 +83,16 @@ class Api {
   public static readonly TRANSACTION_LIST: string = '/'
   public static readonly TRANSACTION_INFO: string = '/:id'
 
+  // Poll Up Package
+  public static readonly POLL_UP_PACKAGE: string = '/poll_up_packages'
+  public static readonly POLL_UP_PACKAGE_LIST: string = '/'
+  public static readonly POLL_UP_PACKAGE_INFO: string = '/:id'
+  public static readonly POLL_UP_PACKAGE_CREATE: string = '/'
+  public static readonly POLL_UP_PACKAGE_UPDATE: string = '/:id'
+  public static readonly POLL_UP_PACKAGE_DELETE: string = '/:id'
+  public static readonly POLL_UP_PACKAGE_ACTIVE: string = '/:id/active'
+  public static readonly POLL_UP_PACKAGE_INACTIVE: string = '/:id/inactive'
+
   // Admin
   public static readonly ADMIN: string = '/admin'
 
