@@ -76,7 +76,6 @@ export class PollUpPackageUserBought extends Model<
         },
         packageId: {
           type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
         },
         point: {
           type: DataTypes.INTEGER,
@@ -86,6 +85,7 @@ export class PollUpPackageUserBought extends Model<
         },
         isUsed: {
           type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
         usedAt: {
           type: DataTypes.DATE,
