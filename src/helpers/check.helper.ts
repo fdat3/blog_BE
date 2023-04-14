@@ -55,13 +55,17 @@ class CheckHelper {
     }
 
     // Check memory usage is too large when running in production mode
-    if (CheckHelper.isProduction() && memoryUsage > 1000000000) {
+    if (memoryUsage > 1000) {
       logger.error('Memory Usage is too large')
-      // Send to Telegram
       const message = `Memory Usage is too large: ${memoryUsage}
       Please check the server now!`
-
       TelegramUtil.sendToTelegram(message, undefined, false)
+    } else if (memoryUsage > 500) {
+      const message = `Memory Usage is too large: ${memoryUsage}`
+      logger.warn(message)
+      TelegramUtil.sendToTelegram(message, undefined, false)
+    } else {
+      logger.info('Memory Usage is normal')
     }
   }
 
