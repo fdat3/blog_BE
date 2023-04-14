@@ -35,6 +35,7 @@ import { Transaction } from './Transaction'
 import { PollUpPackage } from './PollUpPackage'
 import { PriorityPollByDate } from './PriorityPollByDate'
 import { PollUpPackageUserBought } from './PollUpPackageUserBought'
+import { GroupActivity } from './GroupActivity'
 
 export {
   User,
@@ -112,6 +113,7 @@ export const initModels = (): any => {
   PollUpPackage.initModel(sequelize)
   PriorityPollByDate.initModel(sequelize)
   PollUpPackageUserBought.initModel(sequelize)
+  GroupActivity.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -191,7 +193,11 @@ export const initModels = (): any => {
   })
   User.hasMany(PollUpPackageUserBought, {
     as: 'boughtPackages',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
+  })
+  User.hasMany(GroupActivity, {
+    as: 'groupActivities',
+    foreignKey: 'userId',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -379,6 +385,10 @@ export const initModels = (): any => {
   })
   Group.hasMany(Poll, {
     as: 'polls',
+    foreignKey: 'groupId',
+  })
+  Group.hasMany(GroupActivity, {
+    as: 'activities',
     foreignKey: 'groupId',
   })
   Group.hasOne(GroupSetting, {

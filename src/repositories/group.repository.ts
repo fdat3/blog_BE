@@ -7,6 +7,8 @@ import logger from '@/utils/logger.util'
 import { cloneDeep } from 'lodash'
 import GroupMemberRepository from '@/repositories/group_member.repository'
 import { GetListRepository } from '@/interfaces/base.interface'
+import GroupSecurity from '@/security/group.security'
+import Message from '@/constants/message.constant'
 
 class GroupRepository {
   private model
@@ -15,7 +17,13 @@ class GroupRepository {
     this.model = Group
     this.groupMemberRepository = new GroupMemberRepository()
   }
-
+  /**
+   *
+   *
+   * @param {ICrudOption} [queryInfo]
+   * @return {*}  {(Promise<{ rows: Partial<Group[]>; count: number } | null>)}
+   * @memberof GroupRepository
+   */
   public async getList(
     queryInfo?: ICrudOption,
   ): Promise<{ rows: Partial<Group[]>; count: number } | null> {
@@ -29,6 +37,14 @@ class GroupRepository {
     }
   }
 
+  /**
+   *
+   *
+   * @param {uuid} id
+   * @param {ICrudOption} [queryInfo]
+   * @return {*}  {(Promise<Group | null>)}
+   * @memberof GroupRepository
+   */
   public async getItem(
     id: uuid,
     queryInfo?: ICrudOption,
@@ -43,6 +59,14 @@ class GroupRepository {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} user
+   * @param {*} data
+   * @return {*}  {(Promise<Group | any>)}
+   * @memberof GroupRepository
+   */
   public async create(user: any, data: any): Promise<Group | any> {
     try {
       /**
@@ -59,6 +83,11 @@ class GroupRepository {
        *   }]
        * }
        */
+
+      if ('password' in data) {
+        // Hashing password
+        data.password = await GroupSecurity.hashPasswordOfGroup(data.password)
+      }
 
       return sequelize.transaction(async (transaction) => {
         const copyData = cloneDeep(data)
@@ -113,6 +142,15 @@ class GroupRepository {
     }
   }
 
+  /**
+   *
+   *
+   * @param {uuid} id
+   * @param {uuid} userId
+   * @param {*} data
+   * @return {*}  {(Promise<Group | boolean | null>)}
+   * @memberof GroupRepository
+   */
   public async update(
     id: uuid,
     userId: uuid,
@@ -149,6 +187,13 @@ class GroupRepository {
     }
   }
 
+  /**
+   *
+   *
+   * @param {ICrudOption} [queryInfo]
+   * @return {*}  {(Promise<number | null>)}
+   * @memberof GroupRepository
+   */
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {
     try {
       return this.model.destroy(queryInfo)
@@ -158,54 +203,83 @@ class GroupRepository {
     }
   }
 
+  /**
+   *
+   *
+   * @param {uuid} userId
+   * @param {uuid} groupId
+   * @return {*}  {Promise<any>}
+   * @memberof GroupRepository
+   */
   public async findMember(userId: uuid, groupId: uuid): Promise<any> {
     return this.groupMemberRepository.findMember(userId, groupId)
   }
 
-  async joinGroup(userId: uuid, groupId: uuid): Promise<any> {
+  /**
+   *
+   *
+   * @param {uuid} userId
+   * @param {uuid} groupId
+   * @return {*}  {Promise<any>}
+   * @memberof GroupRepository
+   */
+  async inviteMemberByAdmin(userId: uuid, groupId: uuid): Promise<any> {
     try {
-      const group = await Group.findByPk(groupId)
+      return await this.groupMemberRepository.joinGroup(
+        groupId,
+        userId,
+        'MEMBER',
+        true,
+      )
+    } catch (err) {
+      logger.error('Invite member by admin error in group.repository.ts')
+      logger.error(err)
+      throw err
+      return null
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {uuid} userId
+   * @param {uuid} groupId
+   * @param {string} [password]
+   * @return {*}  {Promise<any>}
+   * @memberof GroupRepository
+   */
+  async joinGroup(
+    userId: uuid,
+    groupId: uuid,
+    password?: string,
+  ): Promise<any> {
+    try {
+      const group = await Group.scope('withPassword').findByPk(groupId)
 
       if (!group) return false
 
-      // check member existed in group
-      const member = await group.countMembers({
-        where: {
-          userId,
-        },
-      })
+      if ('password' in group) {
+        if (!password) throw new Error(Message.JOIN_GROUP_PASSWORD_REQUIRED)
 
-      if (member == 0) {
-        return sequelize.transaction(async (transaction) => {
-          const createData: Partial<GroupMember> | any = {
-            userId,
-            groupId,
-            role: 'MEMBER',
-            settings: {},
-          }
-          return GroupMember.create(
-            {
-              ...createData,
-            },
-            {
-              include: [
-                {
-                  association: 'settings',
-                },
-              ],
-              transaction,
-            },
-          )
-        })
-      } else {
-        return false
+        const isMatch = GroupSecurity.comparePasswordOfGroup(
+          password,
+          group.password,
+        )
+        if (!isMatch) throw new Error(Message.JOIN_GROUP_WRONG_PASSWORD)
       }
+
+      return await this.groupMemberRepository.joinGroup(
+        groupId,
+        userId,
+        'MEMBER',
+      )
     } catch (err) {
       logger.error('Join member error in group.repository.ts')
       logger.error(err)
       return null
     }
   }
+
   /**
    *
    * @description Leaving group
@@ -266,7 +340,8 @@ class GroupRepository {
         },
         order: [
           ['createdAt', 'DESC'],
-          ['members', 'DESC'],
+          // Order by numbers of members DESC
+          [sequelize.literal('membersCount'), 'DESC'],
         ],
         include: [
           {

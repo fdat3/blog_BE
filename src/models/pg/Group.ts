@@ -42,6 +42,9 @@ type GroupAssociations =
  * Group model
  * isPrivate: true => Not showing in public page
  * isVisible: if true, group is visible to all members else only owner can see
+ * Max members in group: 30
+ * if Member has been invited by Admin, member join normally, including max members over 30
+ * if member is removed by admin, Member can not join again (as banned member)
  */
 export class Group extends Model<
   InferAttributes<Group, { omit: GroupAssociations }>,
@@ -165,10 +168,37 @@ export class Group extends Model<
           where: {
             isVisible: true,
           },
+          attributes: {
+            exclude: ['password'],
+          },
+        },
+        scopes: {
+          withPassword: {
+            where: {
+              isVisible: true,
+            },
+          },
+          private: {
+            where: {
+              isPrivate: true,
+            },
+            attributes: {
+              exclude: ['password'],
+            },
+          },
+          public: {
+            where: {
+              isPrivate: false,
+            },
+            attributes: {
+              exclude: ['password'],
+            },
+          },
+          all: {},
         },
       },
     )
 
     return Group
   }
-}
+} // end Group

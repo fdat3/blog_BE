@@ -1,3 +1,4 @@
+import ModelPgConstant from '@/constants/model.pg.constant'
 import {
   Association,
   BelongsToGetAssociationMixin,
@@ -15,22 +16,26 @@ import type { Group } from './Group'
 import type { User } from './User'
 
 type GroupActivitiesAssociations = 'group' | 'user'
+type GroupActivityAction =
+  | 'CREATE_GROUP'
+  | 'JOIN_GROUP'
+  | 'LEAVE_GROUP'
+  | 'CHANGE_GROUP_SETTING'
+  | 'NEW_POLL'
+  | 'DELETE_POLL'
+  | 'INVITE_MEMBER_BY_ADMIN'
+  | 'REMOVE_MEMBER_BY_ADMIN'
+  | null
 
 export class GroupActivity extends Model<
   InferAttributes<GroupActivity, { omit: GroupActivitiesAssociations }>,
   InferCreationAttributes<GroupActivity, { omit: GroupActivitiesAssociations }>
 > {
-  declare id: CreationOptional<string>
-  declare groupId: string | null
-  declare type:
-    | 'JOIN_GROUP'
-    | 'LEAVE_GROUP'
-    | 'CHANGE_GROUP_SETTING'
-    | 'NEW_POLL'
-    | 'DELETE_POLL'
-    | null
-  declare deletedAt: Date | null
-  declare userId: string | null
+  declare id: CreationOptional<uuid>
+  declare groupId: CreationOptional<uuid>
+  declare action: CreationOptional<GroupActivityAction>
+  declare deletedAt: CreationOptional<Date>
+  declare userId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
@@ -62,13 +67,16 @@ export class GroupActivity extends Model<
         groupId: {
           type: DataTypes.UUID,
         },
-        type: {
+        action: {
           type: DataTypes.ENUM(
+            'CREATE_GROUP',
             'JOIN_GROUP',
             'LEAVE_GROUP',
             'CHANGE_GROUP_SETTING',
             'NEW_POLL',
             'DELETE_POLL',
+            'INVITE_MEMBER_BY_ADMIN',
+            'REMOVE_MEMBER_BY_ADMIN',
           ),
         },
         deletedAt: {
@@ -86,6 +94,7 @@ export class GroupActivity extends Model<
       },
       {
         sequelize,
+        tableName: ModelPgConstant.GROUP_ACTIVITY,
       },
     )
 
