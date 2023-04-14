@@ -32,6 +32,14 @@ class GroupService {
   public async joinGroup(userId: uuid, groupId: uuid): Promise<any> {
     return this.repository.joinGroup(userId, groupId)
   }
+
+  public async leaveGroup(userId: uuid, groupId: uuid): Promise<any> {
+    return this.repository.leaveGroup(userId, groupId)
+  }
+
+  public async publicGroup(queryInfo?: ICrudOption): Promise<any> {
+    return this.repository.publicGroup(queryInfo)
+  }
 }
 
 export default GroupService

@@ -26,11 +26,17 @@ import {
 } from 'sequelize'
 import type { GroupMember } from './GroupMember'
 import type { GroupSetting } from './GroupSetting'
+import type { GroupActivity } from './GroupActivity'
 import type { User } from './User'
 import type { Poll } from './Poll'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type GroupAssociations = 'user' | 'members' | 'settings' | 'polls'
+type GroupAssociations =
+  | 'user'
+  | 'members'
+  | 'settings'
+  | 'polls'
+  | 'activities'
 
 /**
  * Group model
@@ -90,11 +96,28 @@ export class Group extends Model<
   declare hasPolls: HasManyHasAssociationsMixin<Poll, string>
   declare countPolls: HasManyCountAssociationsMixin
 
+  // Group hasMany GroupActivity (as Activities)
+  declare activities?: NonAttribute<GroupActivity[]>
+  declare getActivities: HasManyGetAssociationsMixin<GroupActivity>
+  declare setActivities: HasManySetAssociationsMixin<GroupActivity, string>
+  declare addActivity: HasManyAddAssociationMixin<GroupActivity, string>
+  declare addActivities: HasManyAddAssociationsMixin<GroupActivity, string>
+  declare createActivity: HasManyCreateAssociationMixin<GroupActivity>
+  declare removeActivity: HasManyRemoveAssociationMixin<GroupActivity, string>
+  declare removeActivities: HasManyRemoveAssociationsMixin<
+    GroupActivity,
+    string
+  >
+  declare hasActivity: HasManyHasAssociationMixin<GroupActivity, string>
+  declare hasActivities: HasManyHasAssociationsMixin<GroupActivity, string>
+  declare countActivities: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Group, User>
     members: Association<Group, GroupMember>
     groupSetting: Association<Group, GroupSetting>
     polls: Association<Group, Poll>
+    activities: Association<Group, GroupActivity>
   }
 
   static initModel(sequelize: Sequelize): typeof Group {
@@ -138,6 +161,11 @@ export class Group extends Model<
       {
         sequelize,
         tableName: ModelPgConstant.GROUP,
+        defaultScope: {
+          where: {
+            isVisible: true,
+          },
+        },
       },
     )
 

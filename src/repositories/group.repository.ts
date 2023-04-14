@@ -6,6 +6,7 @@ import { Group, GroupMember } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { cloneDeep } from 'lodash'
 import GroupMemberRepository from '@/repositories/group_member.repository'
+import { GetListRepository } from '@/interfaces/base.interface'
 
 class GroupRepository {
   private model
@@ -203,6 +204,93 @@ class GroupRepository {
       logger.error('Join member error in group.repository.ts')
       logger.error(err)
       return null
+    }
+  }
+  /**
+   *
+   * @description Leaving group
+   * @param {uuid} userId
+   * @param {uuid} groupId
+   * @return {*}  {Promise<any>}
+   * @memberof GroupRepository
+   */
+  public async leaveGroup(userId: uuid, groupId: uuid): Promise<any> {
+    try {
+      const group = await Group.findByPk(groupId)
+
+      if (!group) return false
+
+      // check member existed in group
+      const member = await group.countMembers({
+        where: {
+          userId,
+        },
+      })
+
+      if (member == 0) {
+        return false
+      } else {
+        return sequelize.transaction(async (transaction) => {
+          return GroupMember.destroy({
+            where: {
+              userId,
+              groupId,
+            },
+            transaction,
+          })
+        })
+      }
+    } catch (err) {
+      logger.error('Leave member error in group.repository.ts')
+      logger.error(err)
+      return null
+    }
+  }
+  /**
+   *
+   * @description Get public group, order by createdAt DESC, numbers of members DESC
+   * @param {ICrudOption} [queryInfo]
+   * @return {*}  {Promise<any>}
+   * @memberof GroupRepository
+   */
+  public async publicGroup(
+    queryInfo?: ICrudOption,
+  ): Promise<GetListRepository<Group> | any> {
+    try {
+      // Overwrite queryInfo to get public group, order by createdAt DESC, numbers of members DESC
+      const newQuery: ICrudOption = {
+        ...queryInfo,
+        filter: {
+          ...queryInfo?.where,
+          isPrivate: false,
+        },
+        order: [
+          ['createdAt', 'DESC'],
+          ['members', 'DESC'],
+        ],
+        include: [
+          {
+            association: 'settings',
+          },
+          {
+            association: 'members',
+            include: [
+              {
+                association: 'user',
+                attributes: ['id', 'fullname', 'avatar'],
+              },
+              {
+                association: 'settings',
+              },
+            ],
+          },
+        ],
+      }
+
+      return this.getList(newQuery)
+    } catch (err) {
+      logger.error(err)
+      throw err
     }
   }
 }

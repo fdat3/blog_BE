@@ -63,6 +63,7 @@ class Api {
   public static readonly GROUP_UPDATE: string = '/:id'
   public static readonly GROUP_JOIN: string = '/join/:id'
   public static readonly GROUP_LEAVE: string = '/leave/:id'
+  public static readonly GROUP_PUBLIC: string = '/public'
 
   // GROUP SETTINGS
   public static readonly GROUP_SETTING: string = '/group/settings'

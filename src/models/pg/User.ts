@@ -29,6 +29,7 @@ import type { Block } from './Block'
 import type { ContactList } from './ContactList'
 import type { Follow } from './Follow'
 import type { Group } from './Group'
+import type { GroupActivity } from './GroupActivity'
 import type { GroupMember } from './GroupMember'
 import type { Poll } from './Poll'
 import type { PollAnswer } from './PollAnswer'
@@ -453,6 +454,25 @@ export class User extends Model<
   >
   declare countBoughtPackages: HasManyCountAssociationsMixin
 
+  // User hasMany GroupActivity (as GroupActivities)
+  declare groupActivities?: NonAttribute<GroupActivity[]>
+  declare getGroupActivities: HasManyGetAssociationsMixin<GroupActivity>
+  declare setGroupActivities: HasManySetAssociationsMixin<GroupActivity, string>
+  declare addGroupActivity: HasManyAddAssociationMixin<GroupActivity, string>
+  declare addGroupActivities: HasManyAddAssociationsMixin<GroupActivity, string>
+  declare createGroupActivity: HasManyCreateAssociationMixin<GroupActivity>
+  declare removeGroupActivity: HasManyRemoveAssociationMixin<
+    GroupActivity,
+    string
+  >
+  declare removeGroupActivities: HasManyRemoveAssociationsMixin<
+    GroupActivity,
+    string
+  >
+  declare hasGroupActivity: HasManyHasAssociationMixin<GroupActivity, string>
+  declare hasGroupActivities: HasManyHasAssociationsMixin<GroupActivity, string>
+  declare countGroupActivities: HasManyCountAssociationsMixin
+
   declare static associations: {
     deviceSession: Association<User, UserDeviceSession>
     blockers: Association<User, Block>
@@ -586,6 +606,9 @@ export class User extends Model<
         },
         scopes: {
           withPassword: {},
+          basicScope: {
+            attributes: ['id', 'fullname', 'avatar'],
+          },
         },
       },
     )

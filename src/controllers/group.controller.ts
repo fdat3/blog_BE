@@ -44,11 +44,14 @@ class GroupController implements Controller {
   }
 
   public initialiseRoutes(): void {
-    this.router.get(`${this.path}`, [this.queryMiddleware.run()], this.getList)
     this.router.get(
-      `${this.path}${ConstantAPI.GROUP_INFO}`,
-      [this.queryMiddleware.run()],
-      this.getItem,
+      `${this.path}`,
+      [
+        verifyToken,
+        this.authenticated.verifyTokenAndAdmin,
+        this.queryMiddleware.run(),
+      ],
+      this.getList,
     )
     this.router.post(
       `${this.path}${ConstantAPI.GROUP_CREATE}`,
@@ -69,6 +72,28 @@ class GroupController implements Controller {
       `${this.path}${ConstantAPI.GROUP_JOIN}`,
       [verifyToken, this.authenticated.verifyTokenAndAuthorization],
       this.joinGroup,
+    )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.GROUP_LEAVE}`,
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
+      this.leaveGroup,
+    )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.GROUP_PUBLIC}`,
+      [
+        verifyToken,
+        this.authenticated.verifyTokenAndAuthorization,
+        this.queryMiddleware.run(),
+      ],
+      this.publicGroup,
+    )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.GROUP_INFO}`,
+      [this.queryMiddleware.run()],
+      this.getItem,
     )
   }
 
@@ -211,6 +236,60 @@ class GroupController implements Controller {
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
           Message.JOIN_GROUP_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  private leaveGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { user } = req.session
+      const result = await this.service.leaveGroup(user?.id, req.params.id)
+      if (!result) {
+        next(
+          new HttpException(
+            ConstantHttpCode.METHOD_FAILURE,
+            ConstantHttpReason.METHOD_FAILURE,
+            Message.LEAVE_GROUP_ERR,
+          ),
+        )
+      } else {
+        this.baseController.onSuccess(res, result)
+      }
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.LEAVE_GROUP_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  private publicGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { queryInfo } = req
+      const result = await this.service.publicGroup(queryInfo)
+      this.baseController.onSuccessAsList(res, result, undefined, queryInfo)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.GET_MY_PUBLIC_GROUP_ERR,
           err,
         ),
       )
