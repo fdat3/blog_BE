@@ -40,11 +40,14 @@
       "@/enums/*": [
         "enums/*"
       ],
-      "@/interfaces/*": [
-        "interfaces/*"
-      ],
       "@/firebase/*": [
         "firebase/*"
+      ],
+      "@/helpers/*": [
+        "helpers/*"
+      ],
+      "@/interfaces/*": [
+        "interfaces/*"
       ],
       "@/middlewares/*": [
         "middlewares/*"

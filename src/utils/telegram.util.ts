@@ -14,13 +14,14 @@ class TelegramUtil {
   public static async sendToTelegram(
     message: string,
     message_thread_id?: string,
+    disable_notification: boolean = !checkIsWorkingTime(),
   ): Promise<void> {
     const body = {
       text: message,
       chat_id: Variable.TELEGRAM_ROOM,
       message_thread_id:
         message_thread_id || Variable.TELEGRAM_THREAD_ID || null,
-      disable_notification: !checkIsWorkingTime(),
+      disable_notification,
     }
     return await fetch(this.fullUrl, {
       method: 'POST',

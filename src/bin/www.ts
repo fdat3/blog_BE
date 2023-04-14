@@ -29,6 +29,8 @@ import CronService from '@/services/cron.service'
 import TransactionController from '@/controllers/transaction.controller'
 import PollUpPackageController from '@/controllers/poll_up_package.controller'
 import ReportPollController from '@/controllers/report_poll.controller'
+import CheckHelper from '@/helpers/check.helper'
+import TelegramUtil from '@/utils/telegram.util'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -126,7 +128,9 @@ const onError = (error: any): void => {
  */
 const onListening = (): void => {
   const addr = server.address()
+  const ip = typeof addr === 'string' ? addr : addr?.address
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`
+  logger.info(`Server run at IP: ${ip}`)
   logger.info(`Listening on ${bind}`)
 }
 
@@ -144,6 +148,17 @@ setTimeout(async () => {
 setImmediate(() => {
   new CronService()
 })
+
+// Send Telegram that server is running
+setTimeout(() => {
+  const message = `Event: Server is running on ${
+    process.env.NODE_ENV
+  } environment at ${new Date().toLocaleString()}`
+  TelegramUtil.sendToTelegram(message, undefined, true), 0
+})
+
+// Check health of server
+CheckHelper.checkOverload()
 
 process.on('SIGINT', async (code) => {
   logger.info(`Process is terminated by ${code.toString()}`)

@@ -18,6 +18,9 @@ class Number {
   public static readonly FIREBASE_MULTICAST_LIMIT: number = 500
   public static readonly FIREBASE_MULTICAST_DELAY: number = 1000
   public static readonly FIREBASE_DEFAULT_CHUNK_SIZE: number = 500
+
+  // Check Helper
+  public static readonly HELPER_INTERVAL_CHECK_OVERLOAD: number = 1000 * 60 * 5 // 5 minutes
 }
 
 export default Number

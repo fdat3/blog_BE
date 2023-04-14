@@ -183,6 +183,7 @@
     "@/env": "build/env",
     "@/enums": "build/enums",
     "@/firebase": "build/firebase",
+    "@/helpers": "build/helpers",
     "@/interfaces": "build/interfaces",
     "@/middlewares": "build/middlewares",
     "@/models": "build/models",
