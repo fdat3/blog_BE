@@ -1,5 +1,3 @@
-#!/usr/bin/env ts-node
-
 import 'module-alias/register'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
@@ -157,8 +155,10 @@ setTimeout(() => {
   TelegramUtil.sendToTelegram(message, undefined, true), 0
 })
 
-// Check health of server
-CheckHelper.checkOverload()
+// Check overload of server
+setInterval(() => {
+  CheckHelper.checkOverload()
+}, 10000)
 
 process.on('SIGINT', async (code) => {
   logger.info(`Process is terminated by ${code.toString()}`)
