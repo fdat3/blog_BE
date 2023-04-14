@@ -45,10 +45,10 @@ class CheckHelper {
     }
 
     const coreNumber = os.cpus().length
-    const memoryUsage = process.memoryUsage().rss
+    const memoryUsage = process.memoryUsage().rss / 1024 / 1024
 
     logger.info(`Core Number: ${coreNumber}`)
-    logger.info(`Memory Usage: ${memoryUsage}`)
+    logger.info(`Memory Usage: ${memoryUsage} MB`)
 
     if (coreNumber < 2) {
       logger.error('Core Number is too small')
