@@ -77,9 +77,19 @@ class Message {
   public static readonly JOIN_GROUP_PASSWORD_REQUIRED: string =
     'Password required'
   public static readonly JOIN_GROUP_WRONG_PASSWORD: string = 'Wrong password'
+  public static readonly MEMBER_ALREADY_IN_GROUP: string =
+    'Some Members already in group'
   public static readonly LEAVE_GROUP_ERR: string = 'Leave group error'
   public static readonly GET_MY_PUBLIC_GROUP_ERR: string =
     'Get Public Group Error'
+  public static readonly GET_MY_PRIVATE_GROUP_ERR: string =
+    'Get Private Group Error'
+  public static readonly GET_MY_GROUP_ERR: string = 'Get My Group Error'
+  public static readonly GET_GROUP_ERR: string = 'Get Group Error'
+  public static readonly ADMIN_INVITE_MEMBERS_ERR: string =
+    'Invite Members Error'
+  public static readonly ADMIN_REMOVE_MEMBERS_ERR: string =
+    'Remove Members Error'
 
   // Block
   public static readonly CREATE_BLOCK_ERR: string = 'Create Block Item Error'

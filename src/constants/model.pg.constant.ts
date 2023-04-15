@@ -1,4 +1,4 @@
-export class PgModel {
+export class PgModelConstant {
   public static readonly USER: string = 'users'
   public static readonly USER_SETTING: string = 'user_settings'
   public static readonly USER_POINTS: string = 'user_points'
@@ -25,6 +25,7 @@ export class PgModel {
   public static readonly GROUP: string = 'groups'
   public static readonly GROUP_SETTINGS: string = 'group_settings'
   public static readonly GROUP_MEMBERS: string = 'group_members'
+  public static readonly GROUP_MEMBER_REQUEST: string = 'group_member_requests'
   public static readonly GROUP_MEMBERS_SETTING: string = 'group_member_settings'
   public static readonly GROUP_ACTIVITY: string = 'group_activities'
   public static readonly GLOBAL_POINT: string = 'global_points'
@@ -42,4 +43,4 @@ export class PgModel {
     'priority_poll_by_dates'
 }
 
-export default PgModel
+export default PgModelConstant

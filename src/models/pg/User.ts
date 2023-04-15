@@ -31,6 +31,7 @@ import type { Follow } from './Follow'
 import type { Group } from './Group'
 import type { GroupActivity } from './GroupActivity'
 import type { GroupMember } from './GroupMember'
+import type { GroupMemberRequest } from './GroupMemberRequest'
 import type { Poll } from './Poll'
 import type { PollAnswer } from './PollAnswer'
 import type { PollComment } from './PollComment'
@@ -64,6 +65,9 @@ type UserAssociations =
   | 'contactInfos'
   | 'snsLinks'
   | 'boughtPackages'
+  | 'groupActivities'
+  | 'groupRequesteds'
+  | 'groupInvitedUsers'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -473,6 +477,74 @@ export class User extends Model<
   declare hasGroupActivities: HasManyHasAssociationsMixin<GroupActivity, string>
   declare countGroupActivities: HasManyCountAssociationsMixin
 
+  // User hasMany GroupMemberRequest (as GroupRequested)
+  declare groupRequesteds?: NonAttribute<GroupMemberRequest[]>
+  declare getGroupRequesteds: HasManyGetAssociationsMixin<GroupMemberRequest>
+  declare setGroupRequesteds: HasManySetAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare addGroupRequested: HasManyAddAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare addGroupRequesteds: HasManyAddAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare createGroupRequested: HasManyCreateAssociationMixin<GroupMemberRequest>
+  declare removeGroupRequested: HasManyRemoveAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare removeGroupRequesteds: HasManyRemoveAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare hasGroupRequested: HasManyHasAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare hasGroupRequesteds: HasManyHasAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare countGroupRequesteds: HasManyCountAssociationsMixin
+
+  // User hasMany GroupMemberRequest (as GroupInvitedUsers)
+  declare groupInvitedUsers?: NonAttribute<GroupMemberRequest[]>
+  declare getGroupInvitedUsers: HasManyGetAssociationsMixin<GroupMemberRequest>
+  declare setGroupInvitedUsers: HasManySetAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare addGroupInvitedUser: HasManyAddAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare addGroupInvitedUsers: HasManyAddAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare createGroupInvitedUser: HasManyCreateAssociationMixin<GroupMemberRequest>
+  declare removeGroupInvitedUser: HasManyRemoveAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare removeGroupInvitedUsers: HasManyRemoveAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare hasGroupInvitedUser: HasManyHasAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare hasGroupInvitedUsers: HasManyHasAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare countGroupInvitedUsers: HasManyCountAssociationsMixin
+
   declare static associations: {
     deviceSession: Association<User, UserDeviceSession>
     blockers: Association<User, Block>
@@ -496,6 +568,9 @@ export class User extends Model<
     snsLinks: Association<User, UserLinkSNS>
     transactions: Association<User, Transaction>
     boughtPackages: Association<User, PollUpPackageUserBought>
+    groupActivities: Association<User, GroupActivity>
+    groupRequesteds: Association<User, GroupMemberRequest>
+    groupInvitedUsers: Association<User, GroupMemberRequest>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

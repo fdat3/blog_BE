@@ -16,7 +16,23 @@ import type { Group } from './Group'
 import type { User } from './User'
 
 type GroupActivitiesAssociations = 'group' | 'user'
-type GroupActivityAction =
+export enum GROUP_ACTIVITY_ENUM {
+  CREATE_GROUP = 'CREATE_GROUP',
+  JOIN_GROUP = 'JOIN_GROUP',
+  LEAVE_GROUP = 'LEAVE_GROUP',
+  CHANGE_GROUP_SETTING = 'CHANGE_GROUP_SETTING',
+  NEW_POLL = 'NEW_POLL',
+  DELETE_POLL = 'DELETE_POLL',
+  INVITE_MEMBER_BY_ADMIN = 'INVITE_MEMBER_BY_ADMIN',
+  REMOVE_MEMBER_BY_ADMIN = 'REMOVE_MEMBER_BY_ADMIN',
+  INVITE_MEMBER_BY_OWNER = 'INVITE_MEMBER_BY_OWNER',
+  REMOVE_MEMBER_BY_OWNER = 'REMOVE_MEMBER_BY_OWNER',
+  USER_ACCEPT_INVITATION = 'USER_ACCEPT_INVITATION',
+  USER_REJECT_INVITATION = 'USER_REJECT_INVITATION',
+  MEMBER_BANNED = 'MEMBER_BANNED',
+}
+
+export type GroupActivityActionType =
   | 'CREATE_GROUP'
   | 'JOIN_GROUP'
   | 'LEAVE_GROUP'
@@ -25,15 +41,19 @@ type GroupActivityAction =
   | 'DELETE_POLL'
   | 'INVITE_MEMBER_BY_ADMIN'
   | 'REMOVE_MEMBER_BY_ADMIN'
+  | 'INVITE_MEMBER_BY_OWNER'
+  | 'REMOVE_MEMBER_BY_OWNER'
+  | 'USER_ACCEPT_INVITATION' // It's mean user is not a member of group
+  | 'USER_REJECT_INVITATION' // It's mean user is not a member of group
+  | 'MEMBER_BANNED'
   | null
-
 export class GroupActivity extends Model<
   InferAttributes<GroupActivity, { omit: GroupActivitiesAssociations }>,
   InferCreationAttributes<GroupActivity, { omit: GroupActivitiesAssociations }>
 > {
   declare id: CreationOptional<uuid>
   declare groupId: CreationOptional<uuid>
-  declare action: CreationOptional<GroupActivityAction>
+  declare action: CreationOptional<GroupActivityActionType>
   declare deletedAt: CreationOptional<Date>
   declare userId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
@@ -77,6 +97,11 @@ export class GroupActivity extends Model<
             'DELETE_POLL',
             'INVITE_MEMBER_BY_ADMIN',
             'REMOVE_MEMBER_BY_ADMIN',
+            'INVITE_MEMBER_BY_OWNER',
+            'REMOVE_MEMBER_BY_OWNER',
+            'USER_ACCEPT_INVITATION', // It's mean user is not a member of group
+            'USER_REJECT_INVITATION', // It's mean user is not a member of group
+            'MEMBER_BANNED',
           ),
         },
         deletedAt: {

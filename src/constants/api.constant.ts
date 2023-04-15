@@ -118,6 +118,10 @@ class Api {
   public static readonly ADMIN_POLL_CATEGORY_ADD: string = '/add'
   public static readonly ADMIN_POLL_CATEGORY_EDIT: string = '/edit/:id'
   public static readonly ADMIN_POLL_CATEGORY_DELETE: string = '/delete/:id'
+
+  public static readonly ADMIN_GROUP: string = '/groups'
+  public static readonly ADMIN_GROUP_INVITE_MEMBERS: string = '/invite-members'
+  public static readonly ADMIN_GROUP_REMOVE_MEMBERS: string = '/remove-members'
 }
 
 export default Api

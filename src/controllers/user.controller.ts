@@ -118,8 +118,6 @@ class UserController implements Controller {
       this.authenticated.verifyTokenAndAuthorization,
       this.updateAny,
     )
-
-    // logger.info(this.router.stack)
   }
 
   private updateUsername = async (

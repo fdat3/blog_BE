@@ -1,4 +1,6 @@
 import { ICrudOption } from '@/interfaces/controller.interface'
+// import { InviteMembersInterface } from '@/interfaces/group.interface'
+import type { GroupMember } from '@/models/pg'
 import GroupRepository from '@/repositories/group.repository'
 
 class GroupService {
@@ -39,6 +41,17 @@ class GroupService {
 
   public async publicGroup(queryInfo?: ICrudOption): Promise<any> {
     return this.repository.publicGroup(queryInfo)
+  }
+
+  public async inviteMembers(
+    groupId: uuid,
+    members: GroupMember[],
+  ): Promise<any> {
+    return this.repository.inviteMembers(groupId, members)
+  }
+
+  public async removeMembers(memberIds: uuid[]): Promise<any> {
+    return this.repository.removeMembers(memberIds)
   }
 }
 

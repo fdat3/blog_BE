@@ -36,6 +36,7 @@ import { PollUpPackage } from './PollUpPackage'
 import { PriorityPollByDate } from './PriorityPollByDate'
 import { PollUpPackageUserBought } from './PollUpPackageUserBought'
 import { GroupActivity } from './GroupActivity'
+import { GroupMemberRequest } from './GroupMemberRequest'
 
 export {
   User,
@@ -74,6 +75,8 @@ export {
   PollUpPackage,
   PriorityPollByDate,
   PollUpPackageUserBought,
+  GroupActivity,
+  GroupMemberRequest,
 }
 
 export const initModels = (): any => {
@@ -114,6 +117,7 @@ export const initModels = (): any => {
   PriorityPollByDate.initModel(sequelize)
   PollUpPackageUserBought.initModel(sequelize)
   GroupActivity.initModel(sequelize)
+  GroupMemberRequest.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -198,6 +202,14 @@ export const initModels = (): any => {
   User.hasMany(GroupActivity, {
     as: 'groupActivities',
     foreignKey: 'userId',
+  })
+  User.hasMany(GroupMemberRequest, {
+    as: 'groupRequesteds',
+    foreignKey: 'user_id',
+  })
+  User.hasMany(GroupMemberRequest, {
+    as: 'groupInvitedUsers',
+    foreignKey: 'inviter_id',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -391,6 +403,10 @@ export const initModels = (): any => {
     as: 'activities',
     foreignKey: 'groupId',
   })
+  Group.hasMany(GroupMemberRequest, {
+    as: 'memberRequests',
+    foreignKey: 'group_id',
+  })
   Group.hasOne(GroupSetting, {
     as: 'settings',
     foreignKey: 'groupId',
@@ -507,6 +523,26 @@ export const initModels = (): any => {
     as: 'package',
     foreignKey: 'package_id',
   })
+  GroupActivity.belongsTo(Group, {
+    as: 'group',
+    foreignKey: 'group_id',
+  })
+  GroupActivity.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  GroupMemberRequest.belongsTo(Group, {
+    as: 'group',
+    foreignKey: 'group_id',
+  })
+  GroupMemberRequest.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id',
+  })
+  GroupMemberRequest.belongsTo(User, {
+    as: 'inviter',
+    foreignKey: 'inviter_id',
+  })
 
   return {
     User,
@@ -545,5 +581,7 @@ export const initModels = (): any => {
     PollUpPackage,
     PriorityPollByDate,
     PollUpPackageUserBought,
+    GroupActivity,
+    GroupMemberRequest,
   }
 }

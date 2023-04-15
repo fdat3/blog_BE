@@ -24,9 +24,10 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize'
-import type { GroupMember } from './GroupMember'
-import type { GroupSetting } from './GroupSetting'
 import type { GroupActivity } from './GroupActivity'
+import type { GroupMember } from './GroupMember'
+import type { GroupMemberRequest } from './GroupMemberRequest'
+import type { GroupSetting } from './GroupSetting'
 import type { User } from './User'
 import type { Poll } from './Poll'
 import ModelPgConstant from '@/constants/model.pg.constant'
@@ -37,6 +38,7 @@ type GroupAssociations =
   | 'settings'
   | 'polls'
   | 'activities'
+  | 'memberRequests'
 
 /**
  * Group model
@@ -116,12 +118,47 @@ export class Group extends Model<
   declare hasActivities: HasManyHasAssociationsMixin<GroupActivity, string>
   declare countActivities: HasManyCountAssociationsMixin
 
+  // Group hasMany GroupMemberRequest (as MemberRequests)
+  declare memberRequests?: NonAttribute<GroupMemberRequest[]>
+  declare getMemberRequests: HasManyGetAssociationsMixin<GroupMemberRequest>
+  declare setMemberRequests: HasManySetAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare addMemberRequest: HasManyAddAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare addMemberRequests: HasManyAddAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare createMemberRequest: HasManyCreateAssociationMixin<GroupMemberRequest>
+  declare removeMemberRequest: HasManyRemoveAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare removeMemberRequests: HasManyRemoveAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare hasMemberRequest: HasManyHasAssociationMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare hasMemberRequests: HasManyHasAssociationsMixin<
+    GroupMemberRequest,
+    string
+  >
+  declare countMemberRequests: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Group, User>
     members: Association<Group, GroupMember>
     groupSetting: Association<Group, GroupSetting>
     polls: Association<Group, Poll>
     activities: Association<Group, GroupActivity>
+    memberRequests: Association<Group, GroupMemberRequest>
   }
 
   static initModel(sequelize: Sequelize): typeof Group {

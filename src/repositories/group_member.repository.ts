@@ -86,6 +86,21 @@ class GroupMemberRepository {
       },
     })
   }
+
+  public async isOneOfMemberAlreadyInGroup(
+    groupId: uuid,
+    members: GroupMember[],
+  ): Promise<boolean> {
+    const ids = members.map((member) => member.userId)
+    const count = await GroupMember.count({
+      where: {
+        groupId,
+        userId: ids,
+      },
+    })
+
+    return count > 0
+  }
 }
 
 export default GroupMemberRepository

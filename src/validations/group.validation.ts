@@ -19,6 +19,31 @@ class GroupValidation {
     isPrivate: Joi.boolean(),
     settings: groupSettingValidation.update,
   })
+
+  public inviteMembers = Joi.object({
+    groupId: Joi.string().uuid().required(),
+    members: Joi.array()
+      .items(
+        Joi.object({
+          userId: Joi.string().uuid().required(),
+          role: Joi.string().required(),
+        }),
+      )
+      .min(1)
+      .required(),
+  })
+
+  public removeMembers = Joi.object({
+    members: Joi.array()
+      .items(
+        Joi.object({
+          id: Joi.string().uuid().required(),
+          reason: Joi.string(),
+        }),
+      )
+      .min(1)
+      .required(),
+  })
 }
 
 export default GroupValidation

@@ -18,6 +18,7 @@ import type { Group } from './Group'
 import type { GroupMemberSetting } from './GroupMemberSetting'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
+// import { GROUP_ROLE } from '@/interfaces/group.interface'
 
 type GroupMemberAssociations = 'group' | 'user' | 'settings'
 
@@ -25,10 +26,10 @@ export class GroupMember extends Model<
   InferAttributes<GroupMember, { omit: GroupMemberAssociations }>,
   InferCreationAttributes<GroupMember, { omit: GroupMemberAssociations }>
 > {
-  declare id: CreationOptional<string>
-  declare groupId: string | null
-  declare userId: string | null
-  declare role: 'OWNER' | 'MEMBER' | null
+  declare id: CreationOptional<uuid>
+  declare groupId: CreationOptional<uuid>
+  declare userId: CreationOptional<uuid>
+  declare role: CreationOptional<'OWNER' | 'MEMBER'>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>

@@ -3,12 +3,14 @@ import baseController from '@/controllers/base.controller'
 
 import { ICrudOption } from '@/interfaces/controller.interface'
 import { Group, GroupMember } from '@/models/pg'
+import type { GroupMember as GroupMemberType } from '@/models/pg/GroupMember'
 import logger from '@/utils/logger.util'
 import { cloneDeep } from 'lodash'
 import GroupMemberRepository from '@/repositories/group_member.repository'
 import { GetListRepository } from '@/interfaces/base.interface'
 import GroupSecurity from '@/security/group.security'
 import Message from '@/constants/message.constant'
+import { GROUP_ACTIVITY_ENUM, GroupActivity } from '@/models/pg/GroupActivity'
 
 class GroupRepository {
   private model
@@ -56,7 +58,7 @@ class GroupRepository {
       })
     } catch (err) {
       logger.error(err)
-      return null
+      throw err
     }
   }
 
@@ -158,8 +160,8 @@ class GroupRepository {
     data: any,
   ): Promise<Group | boolean | null> {
     try {
-      return sequelize.transaction(async (transaction) => {
-        return Group.findOne({
+      sequelize.transaction(async (transaction) => {
+        await Group.findOne({
           where: {
             id,
           },
@@ -172,7 +174,8 @@ class GroupRepository {
         })
           .then(async (instance) => {
             if (instance) {
-              if (instance.ownerId !== userId) return false
+              if (instance.ownerId !== userId)
+                throw new Error(Message.GROUP_NO_AUTHORIZATION)
               await instance.update({ ...data }, { transaction })
               return instance
             } else return null
@@ -182,6 +185,8 @@ class GroupRepository {
             return null
           })
       })
+
+      return this.getItem(id)
     } catch (err) {
       logger.error(err)
       return null
@@ -364,6 +369,88 @@ class GroupRepository {
       }
 
       return this.getList(newQuery)
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+  /**
+   *
+   *
+   * @param {uuid} groupId
+   * @param {InviteMembersInterface} members
+   * @return {*}  {Promise<any>}
+   * @memberof GroupRepository
+   */
+  public async inviteMembers(
+    groupId: uuid,
+    members: GroupMemberType[],
+  ): Promise<{
+    isSuccess: boolean
+  }> {
+    let isSuccess: boolean = false
+    try {
+      await sequelize.transaction(async (transaction) => {
+        const group = await Group.findByPk(groupId, { transaction })
+        if (!group) throw Message.GROUP_NOT_FOUND
+
+        // Check is one of members is already in group
+        const isAnyoneOfMemberAlreadyInGroup =
+          await this.groupMemberRepository.isOneOfMemberAlreadyInGroup(
+            groupId,
+            members,
+          )
+        if (isAnyoneOfMemberAlreadyInGroup)
+          throw Message.MEMBER_ALREADY_IN_GROUP
+
+        const groupMembersArray: any[] = members.map((member) => {
+          return {
+            ...member,
+            groupId,
+            // isInvited: true,
+          }
+        })
+        await GroupMember.bulkCreate(groupMembersArray, { transaction })
+        // create GroupActivities
+        const groupActivitiesArray: any[] = members.map((member) => {
+          return {
+            groupId,
+            userId: member.userId,
+            action: GROUP_ACTIVITY_ENUM.INVITE_MEMBER_BY_ADMIN,
+            content: `${member.role} ${member.userId} to group`,
+          }
+        })
+
+        await GroupActivity.bulkCreate(groupActivitiesArray, { transaction })
+
+        isSuccess = true
+      })
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+    return {
+      isSuccess,
+    }
+  }
+
+  public async removeMembers(
+    memberIds: uuid[],
+  ): Promise<{ isSuccess: boolean }> {
+    try {
+      let isSuccess: boolean = false
+      await sequelize.transaction(async (transaction) => {
+        await GroupMember.destroy({
+          where: {
+            id: memberIds,
+          },
+          transaction,
+        })
+        isSuccess = true
+      })
+      return {
+        isSuccess,
+      }
     } catch (err) {
       logger.error(err)
       throw err
