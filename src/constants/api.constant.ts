@@ -70,6 +70,11 @@ class Api {
   public static readonly GROUP_SETTING_GET: string = '/:id'
   public static readonly GROUP_SETTING_UPDATE: string = '/:id'
 
+  // LIKE
+  public static readonly LIKE: string = '/likes'
+  public static readonly LIKE_CREATE: string = '/'
+  public static readonly LIKE_DELETE: string = '/:id'
+
   // Follow
   public static readonly FOLLOW: string = '/follows'
   public static readonly FOLLOW_FOLLOWED: string = '/followed'

@@ -95,5 +95,10 @@ class Message {
   public static readonly CREATE_BLOCK_ERR: string = 'Create Block Item Error'
   public static readonly DELETE_BLOCK_ITEM_ERR: string =
     'Delete Block Item Error'
+
+  // Like
+  public static readonly CREATE_LIKE_ERR: string = 'Create Like Item Error'
+  public static readonly DELETE_LIKE_ERR: string = 'Delete Like Item Error'
+  public static readonly UPDATE_LIKE_ERR: string = 'Update Like Item Error'
 }
 export default Message
