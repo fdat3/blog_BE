@@ -5,6 +5,7 @@ import { FindOptions } from 'sequelize'
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 import logger from '@/utils/logger.util'
+import NumberConstant from '@/constants/number.constant'
 
 export interface TokenInfo {
   payload?: any
@@ -92,13 +93,14 @@ export class BaseController {
     try {
       const query: Partial<FindOptions<any> | any> = {
         where: option.filter,
-        limit: option.limit || 20,
-        offset: option.offset || 0,
+        limit: option.limit || NumberConstant.QUERY_DEFAULT_LIMIT,
+        offset: option.offset || NumberConstant.QUERY_DEFAULT_OFFSET,
         order: [['updatedAt', 'desc']] || option.order,
         attributes: option.attributes,
         include: option.include,
         paranoid: option.paranoid || false,
         distinct: Array.isArray(option.include),
+        scope: option?.scope || ['defaultScope'],
       }
       return query
     } catch (error) {

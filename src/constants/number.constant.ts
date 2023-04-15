@@ -1,4 +1,8 @@
 class Number {
+  // Query
+  public static readonly QUERY_DEFAULT_LIMIT: number = 20
+  public static readonly QUERY_DEFAULT_OFFSET: number = 0
+
   // user
   public static readonly USERNAME_MIN_LENGTH: number = 3
   public static readonly USERNAME_MAX_LENGTH: number = 20

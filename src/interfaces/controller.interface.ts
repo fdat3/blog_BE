@@ -1,5 +1,6 @@
 import express, { Router } from 'express'
 import { FingerprintResult } from 'express-fingerprint'
+import { FindAttributeOptions } from 'sequelize'
 
 interface Controller {
   path: string
@@ -7,14 +8,13 @@ interface Controller {
 }
 
 export default Controller
-
 export interface ICrudOption {
   filter?: any
   limit?: number
   offset?: number
   scope?: string[]
   order?: any[]
-  attributes?: any[]
+  attributes?: FindAttributeOptions
   includes?: any[]
   distinct?: boolean
   paranoid?: boolean

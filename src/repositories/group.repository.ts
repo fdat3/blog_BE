@@ -25,12 +25,13 @@ class GroupRepository {
    * @memberof GroupRepository
    */
   public async getList(
-    queryInfo?: ICrudOption,
+    queryInfo: ICrudOption = {},
   ): Promise<{ rows: Partial<Group[]>; count: number } | null> {
     try {
-      return this.model.findAndCountAll(
-        baseController.applyFindOptions(queryInfo),
-      )
+      const { scope } = queryInfo || { scope: ['defaultScope'] }
+      return this.model
+        .scope(scope)
+        .findAndCountAll(baseController.applyFindOptions(queryInfo))
     } catch (e) {
       logger.error(e)
       return null

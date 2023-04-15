@@ -56,6 +56,7 @@ export class Group extends Model<
   declare avatar: CreationOptional<string>
   declare isVisible: CreationOptional<boolean>
   declare isPrivate: CreationOptional<boolean>
+  declare havePassword: NonAttribute<any>
   declare ownerId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -150,6 +151,12 @@ export class Group extends Model<
         },
         ownerId: {
           type: DataTypes.UUID,
+        },
+        havePassword: {
+          type: DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['password']),
+          get(this: Group): boolean {
+            return !!this.password
+          },
         },
         createdAt: {
           type: DataTypes.DATE,
