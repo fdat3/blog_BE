@@ -30,7 +30,36 @@ class GroupRepository {
     queryInfo: ICrudOption = {},
   ): Promise<{ rows: Partial<Group[]>; count: number } | null> {
     try {
-      const { scope } = queryInfo || { scope: ['defaultScope'] }
+      // const { scope } = queryInfo || { scope: ['defaultScope'] }
+      // const orderByCountMembersQuery = cloneDeep(queryInfo)
+
+      // orderByCountMembersQuery.attributes = ['id']
+
+      // const groups = await this.model.findAll(
+      //   baseController.applyFindOptions(orderByCountMembersQuery),
+      // )
+
+      // const countResults = await GroupMember.findAll({
+      //   where: {
+      //     groupId: groups.map((group) => group.id),
+      //   },
+      //   attributes: ['groupId', [sequelize.fn('COUNT', 'groupId'), 'count']],
+      //   group: ['groupId'],
+      //   order: [[sequelize.fn('COUNT', 'groupId'), 'DESC']],
+      // })
+
+      // const groupIds = countResults.map((item) => item.groupId)
+
+      // const newOrdersQueryInfo = [
+      //   [sequelize.literal('FIELD(id, ' + groupIds.join(',') + ')'), 'DESC'],
+      // ]
+
+      // if (queryInfo.order) {
+      //   newOrdersQueryInfo.push(queryInfo.order)
+      // }
+
+      // queryInfo.order = newOrdersQueryInfo
+
       return this.model
         .scope(scope)
         .findAndCountAll(baseController.applyFindOptions(queryInfo))
@@ -56,6 +85,28 @@ class GroupRepository {
       return this.model.findByPk(id, {
         ...baseController.applyFindOptions(queryInfo),
       })
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  public async getMembers(id: uuid, queryInfo: ICrudOption): Promise<any> {
+    try {
+      const group = await this.getItem(id)
+
+      if (!group) {
+        throw new Error(Message.GROUP_NOT_FOUND)
+      }
+
+      queryInfo.filter = {
+        ...queryInfo.filter,
+        groupId: id,
+      }
+
+      const members = await this.groupMemberRepository.getList(queryInfo)
+
+      return members
     } catch (err) {
       logger.error(err)
       throw err
@@ -341,14 +392,9 @@ class GroupRepository {
       const newQuery: ICrudOption = {
         ...queryInfo,
         filter: {
-          ...queryInfo?.where,
+          ...queryInfo?.filter,
           isPrivate: false,
         },
-        order: [
-          ['createdAt', 'DESC'],
-          // Order by numbers of members DESC
-          [sequelize.literal('membersCount'), 'DESC'],
-        ],
         include: [
           {
             association: 'settings',
@@ -358,7 +404,7 @@ class GroupRepository {
             include: [
               {
                 association: 'user',
-                attributes: ['id', 'fullname', 'avatar'],
+                attributes: ['id', 'username', 'fullname', 'avatar'],
               },
               {
                 association: 'settings',

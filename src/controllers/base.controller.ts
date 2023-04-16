@@ -102,6 +102,7 @@ export class BaseController {
         distinct: Array.isArray(option.include),
         scope: option?.scope || ['defaultScope'],
       }
+      logger.warn({ query })
       return query
     } catch (error) {
       logger.error(error)

@@ -23,7 +23,7 @@ export const sequelize = new Sequelize(
     port: 5432,
     database: POSTGRES_DATABASE_NAME,
     logging: (sql: string): void => {
-      process.env.NODE_ENV === 'local' && logger.http({ sql })
+      process.env.NODE_ENV === 'local' && logger.warn({ sql })
     },
     query: {
       raw: false,
@@ -96,7 +96,7 @@ export const syncSequelize = async (): Promise<void> => {
       force: !true,
       alter: true,
       logging: (sql: string) => {
-        process.env.LOGGING === 'true' && logger.http(sql)
+        process.env.LOGGING === 'true' && logger.warn(sql)
       },
     })
     logger.info('Sequelize sync has been established successfully.')

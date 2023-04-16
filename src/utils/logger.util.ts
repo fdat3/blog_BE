@@ -11,6 +11,7 @@ const levels = {
   http: 3,
   debug: 4,
   data: 5,
+  notice: 6,
 }
 
 const level = (): string => {
@@ -26,6 +27,7 @@ const colors = {
   http: 'blue',
   debug: 'white',
   data: 'blue',
+  notice: 'grey',
 }
 
 winston.addColors(colors)
@@ -54,6 +56,7 @@ const logger = winston.createLogger({
   levels,
   format,
   transports,
+  exitOnError: false,
 })
 
 export default logger

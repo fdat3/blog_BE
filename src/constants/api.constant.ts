@@ -59,6 +59,7 @@ class Api {
   // GROUP
   public static readonly GROUP: string = '/groups'
   public static readonly GROUP_INFO: string = '/:id'
+  public static readonly GROUP_INFO_MEMBERS: string = '/:id/members'
   public static readonly GROUP_CREATE: string = '/'
   public static readonly GROUP_UPDATE: string = '/:id'
   public static readonly GROUP_JOIN: string = '/join/:id'

@@ -1,25 +1,26 @@
+import ModelPgConstant from '@/constants/model.pg.constant'
 import {
   Association,
+  BelongsToCreateAssociationMixin,
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
-  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
-  HasManyGetAssociationsMixin,
-  HasManySetAssociationsMixin,
   HasManyAddAssociationMixin,
   HasManyAddAssociationsMixin,
+  HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
-  HasManyRemoveAssociationMixin,
-  HasManyRemoveAssociationsMixin,
+  HasManyGetAssociationsMixin,
   HasManyHasAssociationMixin,
   HasManyHasAssociationsMixin,
-  HasManyCountAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasOneCreateAssociationMixin,
   HasOneGetAssociationMixin,
   HasOneSetAssociationMixin,
-  HasOneCreateAssociationMixin,
-  InferCreationAttributes,
   InferAttributes,
+  InferCreationAttributes,
   Model,
   NonAttribute,
   Sequelize,
@@ -28,9 +29,8 @@ import type { GroupActivity } from './GroupActivity'
 import type { GroupMember } from './GroupMember'
 import type { GroupMemberRequest } from './GroupMemberRequest'
 import type { GroupSetting } from './GroupSetting'
-import type { User } from './User'
 import type { Poll } from './Poll'
-import ModelPgConstant from '@/constants/model.pg.constant'
+import type { User } from './User'
 
 type GroupAssociations =
   | 'user'

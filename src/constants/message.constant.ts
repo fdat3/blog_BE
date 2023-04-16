@@ -86,6 +86,7 @@ class Message {
     'Get Private Group Error'
   public static readonly GET_MY_GROUP_ERR: string = 'Get My Group Error'
   public static readonly GET_GROUP_ERR: string = 'Get Group Error'
+  public static readonly GROUP_MEMBER_NOT_FOUND: string = 'Get Members error'
   public static readonly ADMIN_INVITE_MEMBERS_ERR: string =
     'Invite Members Error'
   public static readonly ADMIN_REMOVE_MEMBERS_ERR: string =

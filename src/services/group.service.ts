@@ -18,6 +18,10 @@ class GroupService {
     return this.repository.getItem(id, queryInfo)
   }
 
+  public async getMembers(id: uuid, queryInfo: ICrudOption): Promise<any> {
+    return this.repository.getMembers(id, queryInfo)
+  }
+
   public async create(user: any, data: any): Promise<any> {
     return this.repository.create(user, data)
   }

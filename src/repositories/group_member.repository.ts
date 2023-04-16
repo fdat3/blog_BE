@@ -1,7 +1,9 @@
 import { sequelize } from '@/config/sql.config'
 import { GroupMember } from '@/models/pg'
 import GroupActivityRepository from '@/repositories/group_activity.repository'
+import baseController from '@/controllers/base.controller'
 import logger from '@/utils/logger.util'
+import { ICrudOption } from '@/interfaces/controller.interface'
 
 class GroupMemberRepository {
   private model
@@ -21,6 +23,17 @@ class GroupMemberRepository {
         userId,
       },
     })
+  }
+
+  public async getList(queryInfo?: ICrudOption): Promise<any> {
+    try {
+      return this.model.findAndCountAll(
+        baseController.applyFindOptions(queryInfo),
+      )
+    } catch (error) {
+      logger.error(error)
+      throw error
+    }
   }
 
   /**

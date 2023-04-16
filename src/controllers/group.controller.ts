@@ -95,6 +95,12 @@ class GroupController implements Controller {
       [this.queryMiddleware.run()],
       this.getItem,
     )
+
+    this.router.get(
+      `${this.path}${ConstantAPI.GROUP_INFO_MEMBERS}`,
+      [this.queryMiddleware.run()],
+      this.getMembers,
+    )
   }
 
   private getList = async (
@@ -127,8 +133,8 @@ class GroupController implements Controller {
       const { id } = req.params
       const { queryInfo } = req
 
-      const poll = await this.service.getItem(id, queryInfo)
-      if (!poll) {
+      const item = await this.service.getItem(id, queryInfo)
+      if (!item) {
         return next(
           new HttpException(
             ConstantHttpCode.NOT_FOUND,
@@ -138,13 +144,36 @@ class GroupController implements Controller {
         )
       }
 
-      this.baseController.onSuccess(res, poll, undefined)
+      this.baseController.onSuccess(res, item, undefined)
     } catch (err: any) {
       next(
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           err?.message,
+        ),
+      )
+    }
+  }
+
+  private getMembers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const { queryInfo } = req
+
+      const results = await this.service.getMembers(id, queryInfo || {})
+
+      this.baseController.onSuccessAsList(res, results, undefined, queryInfo)
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err || ConstantMessage.GROUP_MEMBER_NOT_FOUND,
         ),
       )
     }

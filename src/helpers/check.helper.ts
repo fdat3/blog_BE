@@ -33,7 +33,12 @@ class CheckHelper {
     return process.env.NODE_ENV === 'production'
   }
 
+  public static showProcessId(): void {
+    logger.warn(`Process ID: ${process.pid}`)
+  }
+
   public static checkOverload(): void {
+    CheckHelper.showProcessId()
     if (CheckHelper.isWindows()) {
       console.log('Windows')
     } else if (CheckHelper.isMacOS()) {
