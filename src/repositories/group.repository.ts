@@ -30,7 +30,7 @@ class GroupRepository {
     queryInfo: ICrudOption = {},
   ): Promise<{ rows: Partial<Group[]>; count: number } | null> {
     try {
-      // const { scope } = queryInfo || { scope: ['defaultScope'] }
+      const { scope } = queryInfo || { scope: ['defaultScope'] }
       // const orderByCountMembersQuery = cloneDeep(queryInfo)
 
       // orderByCountMembersQuery.attributes = ['id']
