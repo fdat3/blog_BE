@@ -39,6 +39,7 @@ import { GroupActivity } from './GroupActivity'
 import { GroupMemberRequest } from './GroupMemberRequest'
 import { HideComment } from './HideComment'
 import { Policy } from './Policy'
+import { HideComment } from './HideComment'
 
 export {
   User,
@@ -81,6 +82,7 @@ export {
   GroupMemberRequest,
   HideComment,
   Policy,
+  HideComment,
 }
 
 export const initModels = (): any => {
@@ -597,5 +599,6 @@ export const initModels = (): any => {
     Policy,
     HideComment,
     Policy,
+    HideComment,
   }
 }
