@@ -8,7 +8,7 @@ class AdminPollCommentRepository extends PollCommentRepository {
     super()
   }
 
-  public async hideComment(
+  public async createHiddenComment(
     commentId: uuid,
     reason?: string,
   ): Promise<HideComment> {

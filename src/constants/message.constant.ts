@@ -4,6 +4,8 @@ class Message {
   public static readonly SOMETHING_WENT_WRONG: string = 'Something went wrong'
   public static readonly UPDATE_SUCCESSFULLY: string = 'Update successfully'
   public static readonly NOT_FOUND: string = 'Resource not found!'
+  public static readonly DELETE_RESOURCE_NOT_AUTHORIZE: string =
+    'You are not authorized to delete this resource'
 
   // auth
   public static readonly USERNAME_NOT_VALID: string = 'username is not valid'
@@ -69,6 +71,19 @@ class Message {
   public static readonly GET_MY_POLL_ERROR: string = 'Get my poll error'
   public static readonly POLL_CANNOT_UPDATE_BECAUSE_HAS_VOTES_OR_COMMENTS: string =
     'Poll cannot update because this poll has votes or comments'
+
+  // POLL COMMENT
+  public static readonly CREATE_POLL_COMMENT_ERR: string =
+    'Create poll comment error'
+  public static readonly DELETE_POLL_COMMENT_ERR: string =
+    'Delete poll comment error'
+  public static readonly UPDATE_POLL_COMMENT_ERR: string =
+    'Update poll comment error'
+  public static readonly POLL_COMMENT_NOT_FOUND: string =
+    'Poll comment not found!'
+  public static readonly LIKE_POLL_COMMENT_ERR: string = 'Poll comment like err'
+  public static readonly UNLIKE_POLL_COMMENT_ERR: string =
+    'Poll comment unlike err'
 
   // GROUP
   public static readonly GROUP_NOT_FOUND: string = 'Group not found!'
