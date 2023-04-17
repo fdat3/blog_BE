@@ -1,4 +1,4 @@
-import GroupSettingRepository from '@/repositories/group_setting.repository'
+import GroupSettingRepository from '@/repositories/groupSetting.repository'
 
 class GroupSettingService {
   private service

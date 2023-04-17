@@ -18,8 +18,8 @@ import NumberUtils from '@/utils/number.utils'
 import RedisConstant from '@/constants/redis.constant'
 import * as _ from 'lodash'
 import PollConstant from '@/constants/poll.constant'
-import PollVotesRepository from './poll_votes.repository'
-import PollCommentRepository from './poll_comment.repository'
+import PollVotesRepository from './pollVotes.repository'
+import PollCommentRepository from './pollComment.repository'
 import Message from '@/constants/message.constant'
 
 class PollRepository {

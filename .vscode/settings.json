@@ -7,5 +7,6 @@
     "markdown",
     "latex",
     "plaintext"
-  ]
+  ],
+  "files.autoSave": "onFocusChange"
 }

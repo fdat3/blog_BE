@@ -19,18 +19,19 @@ import ErrorController from '@/controllers/error.controller'
 import ImageController from '@/controllers/image.controller'
 import PollController from '@/controllers/poll.controller'
 import GroupController from '@/controllers/group.controller'
-import GroupSettingController from '@/controllers/group_setting.controller'
+import GroupSettingController from '@/controllers/groupSetting.controller'
 import BlockController from '@/controllers/block.controller'
 import DeviceController from '@/controllers/device.controller'
 import AdminController from '@/controllers/admin.controller'
 import CronService from '@/services/cron.service'
 import TransactionController from '@/controllers/transaction.controller'
-import PollUpPackageController from '@/controllers/poll_up_package.controller'
-import ReportPollController from '@/controllers/report_poll.controller'
+import PollUpPackageController from '@/controllers/pollUpPackage.controller'
+import ReportPollController from '@/controllers/reportPoll.controller'
 import CheckHelper from '@/helpers/check.helper'
 import TelegramUtil from '@/utils/telegram.util'
 import LikeController from '@/controllers/like.controller'
 import PolicyController from '@/controllers/policy.controller'
+import PollCommentController from '@/controllers/pollComment.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -57,6 +58,7 @@ const { app } = new App({
     new LikeController(),
     new AdminController(),
     new PolicyController(),
+    new PollCommentController(),
   ],
 })
 

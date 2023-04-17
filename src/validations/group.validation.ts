@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import GroupSettingValidation from '@/validations/group_setting.validation'
+import GroupSettingValidation from '@/validations/groupSetting.validation'
 const groupSettingValidation = new GroupSettingValidation()
 class GroupValidation {
   public create = Joi.object({

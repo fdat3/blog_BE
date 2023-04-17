@@ -1,7 +1,7 @@
 import { SNSEnum } from '@/enums/auth.enum'
 import { CheckUserExistInterface } from '@/interfaces/auth.interface'
 import UserRepository from '@/repositories/user.repository'
-import UserDeviceSessionRepository from '@/repositories/user_device_session.repository'
+import UserDeviceSessionRepository from '@/repositories/userDeviceSession.repository'
 import UserSecurity from '@/security/user.security'
 import SNSService from '@/services/sns.service'
 

@@ -48,6 +48,15 @@ class Api {
   public static readonly POLL_POPULARITY: string = '/popularity'
   public static readonly POLL_MY_POLL: string = '/my_polls'
 
+  // POLL COMMENT
+  public static readonly POLL_COMMENT: string = '/poll_comments'
+  public static readonly POLL_COMMENT_INFO: string = '/:id'
+  public static readonly POLL_COMMENT_CREATE: string = '/'
+  public static readonly POLL_COMMENT_UPDATE: string = '/:id'
+  public static readonly POLL_COMMENT_DELETE: string = '/:id'
+  public static readonly POLL_COMMENT_LIKE: string = '/:id/like'
+  public static readonly POLL_COMMENT_UNLIKE: string = '/:id/unlike'
+
   // REPORT POLL
   public static readonly REPORT_POLL: string = '/report_polls'
   public static readonly REPORT_POLL_LIST: string = '/'

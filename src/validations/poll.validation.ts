@@ -1,8 +1,8 @@
 import Joi from 'joi'
-import PollAnswerValidate from '@/validations/poll_answer.validate'
-import PollHashtagValidation from '@/validations/poll_hashtag.validation'
-import PollMentionValidation from '@/validations/poll_mention.vaildation'
-import PollEntityValidation from '@/validations/poll_entity.validate'
+import PollAnswerValidate from '@/validations/pollAnswer.validate'
+import PollHashtagValidation from '@/validations/pollHashtag.validation'
+import PollMentionValidation from '@/validations/pollMention.vaildation'
+import PollEntityValidation from '@/validations/pollEntity.validate'
 const pollAnswerValidate = new PollAnswerValidate()
 const pollHashtagValidation = new PollHashtagValidation()
 const pollMentionValidation = new PollMentionValidation()

@@ -26,6 +26,11 @@ module.exports = {
         type: DataTypes.STRING(255),
         field: 'image'
       },
+      isHidden: {
+        type: DataTypes.BOOLEAN,
+        field: 'is_hidden',
+        defaultValue: false
+      },
       parentId: {
         type: DataTypes.UUID,
         field: 'parent_id',
