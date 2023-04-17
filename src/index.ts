@@ -38,7 +38,7 @@ const Fingerprint = require('express-fingerprint')
 
 // const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
-const swaggerUi = require('swagger-ui-express')
+// const swaggerUi = require('swagger-ui-express')
 
 class App {
   public app: Application
@@ -53,12 +53,14 @@ class App {
   private readonly redisStore
 
   constructor(versioning: Versioning) {
-    this.clientRedis =
-      Variable.NODE_ENV === 'local'
-        ? new Redis()
-        : Variable.USE_LOCAL_REDIS === 'true'
-        ? new Redis()
-        : redis
+    // this.clientRedis =
+    // Variable.USE_LOCAL_REDIS === 'true'
+    //     ? new Redis()
+    //     : Variable.NODE_ENV === 'local'
+    //     ? new Redis()
+    //     : redis
+
+    this.clientRedis = Variable.USE_LOCAL_REDIS === 'true' ? new Redis() : redis
     this.redisStore = new RedisStore({
       client: this.clientRedis,
       prefix: `session_${Variable.NODE_ENV}:`,
@@ -191,13 +193,13 @@ class App {
       },
     )
 
-    this.app.use(
-      '/docs',
-      swaggerUi.serve,
-      swaggerUi.setup(require('@/swagger/output_swagger.json'), {
-        explorer: true,
-      }),
-    )
+    // this.app.use(
+    //   '/docs',
+    //   swaggerUi.serve,
+    //   swaggerUi.setup(require('@/swagger/output_swagger.json'), {
+    //     explorer: true,
+    //   }),
+    // )
   }
 
   private initialiseControllers(versioning: Versioning): void {
