@@ -130,6 +130,12 @@ class Api {
   public static readonly ADMIN_GROUP: string = '/groups'
   public static readonly ADMIN_GROUP_INVITE_MEMBERS: string = '/invite-members'
   public static readonly ADMIN_GROUP_REMOVE_MEMBERS: string = '/remove-members'
+
+  // Policy
+  public static readonly POLICY: string = '/policy'
+  public static readonly POLICY_INFO: string = '/:id'
+  public static readonly POLICY_UPDATE: string = '/:id'
+  public static readonly POLICY_DELETE: string = '/:id'
 }
 
 export default Api

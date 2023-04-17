@@ -103,5 +103,11 @@ class Message {
   public static readonly CREATE_LIKE_ERR: string = 'Create Like Item Error'
   public static readonly DELETE_LIKE_ERR: string = 'Delete Like Item Error'
   public static readonly UPDATE_LIKE_ERR: string = 'Update Like Item Error'
+
+  //Policy
+  public static readonly POLICY_NOT_FOUND: string = 'Policy not found'
+  public static readonly CREATE_POLICY_ERR: string = 'Create policy Item Error'
+  public static readonly DELETE_POLICY_ERR: string = 'Delete policy Item Error'
+  public static readonly UPDATE_POLICY_ERR: string = 'Update policy Item Error'
 }
 export default Message

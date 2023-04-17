@@ -30,6 +30,7 @@ import ReportPollController from '@/controllers/report_poll.controller'
 import CheckHelper from '@/helpers/check.helper'
 import TelegramUtil from '@/utils/telegram.util'
 import LikeController from '@/controllers/like.controller'
+import PolicyController from '@/controllers/policy.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -55,6 +56,7 @@ const { app } = new App({
     new ReportPollController(),
     new LikeController(),
     new AdminController(),
+    new PolicyController(),
   ],
 })
 
