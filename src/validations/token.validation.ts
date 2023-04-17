@@ -50,6 +50,7 @@ export const verifyToken = async (
         Variable.JWT_SECRET,
         (err: VerifyErrors | null, payload: any) => {
           if (err) {
+            logger.http(err)
             res.status(ConstantHttpCode.FORBIDDEN).json({
               status: {
                 code: ConstantHttpCode.FORBIDDEN,

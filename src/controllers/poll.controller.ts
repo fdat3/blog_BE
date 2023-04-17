@@ -63,17 +63,26 @@ class PollController implements Controller {
 
     this.router.get(
       `${this.path}${ConstantAPI.POLL_INFO}`,
-      [this.queryMiddleware.run()],
+      [
+        verifyToken,
+        this.authenticated.verifyTokenAndAuthorization,
+        this.queryMiddleware.run(),
+      ],
       this.getItem,
     )
     this.router.post(
       `${this.path}${ConstantAPI.POLL_CREATE}`,
-      [validationMiddleware(this.validate.create)],
+      [
+        verifyToken,
+        this.authenticated.verifyTokenAndAuthorization,
+        validationMiddleware(this.validate.create),
+      ],
       this.create,
     )
     this.router.put(
       `${this.path}${ConstantAPI.POLL_UPDATE}`,
       [
+        verifyToken,
         this.authenticated.verifyTokenAndAuthorization,
         validationMiddleware(this.validate.update),
       ],
@@ -168,10 +177,10 @@ class PollController implements Controller {
   ): Promise<Response | any> => {
     try {
       const data = req.body
+      const { id } = req.params
       const user = req.session.user
-      const result = await this.pollService.update({
+      const result = await this.pollService.update(id, user?.id, {
         ...data,
-        userId: user?.id,
       })
       this.baseController.onSuccess(res, result, undefined)
     } catch (err) {

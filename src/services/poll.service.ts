@@ -1,4 +1,4 @@
-import { Poll } from './../models/pg/Poll'
+import type { Poll } from './../models/pg/Poll'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import PollRepository from '@/repositories/poll.repository'
 
@@ -33,8 +33,8 @@ class PollService {
     return this.repository.create(user, data)
   }
 
-  public async update(data: Partial<Poll>): Promise<any> {
-    return this.repository.update(data)
+  public async update(pollId: uuid, userId: uuid, data: Poll): Promise<any> {
+    return this.repository.update(pollId, userId, data)
   }
 
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {

@@ -9,6 +9,7 @@ import {
   PollMention,
   PriorityPollByDate,
 } from '@/models/pg'
+import { Poll as PollType } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { redis } from '@/config/redis.config'
 import { GetListRepository } from '@/interfaces/base.interface'
@@ -17,6 +18,9 @@ import NumberUtils from '@/utils/number.utils'
 import RedisConstant from '@/constants/redis.constant'
 import * as _ from 'lodash'
 import PollConstant from '@/constants/poll.constant'
+import PollVotesRepository from './poll_votes.repository'
+import PollCommentRepository from './poll_comment.repository'
+import Message from '@/constants/message.constant'
 
 class PollRepository {
   private model
@@ -291,10 +295,80 @@ class PollRepository {
     }
   }
 
-  public async update(queryInfo?: ICrudOption): Promise<Poll | null> {
+  /**
+   *
+   *
+   * @param {ICrudOption} [queryInfo]
+   * @return {*}  {(Promise<Poll | null>)}
+   * @memberof PollRepository
+   * @description Update poll
+   *
+   * - If poll has any comments or votes, then cannot update
+   */
+  public async update(
+    pollId: uuid,
+    userId: uuid,
+    data: PollType,
+  ): Promise<any> {
     try {
+      const countVotes = await PollVotesRepository.countAnyVoteByPoll(pollId)
+      const countComments = await PollCommentRepository.countCommentsByPollId(
+        pollId,
+      )
+
+      if (countVotes > 0 || countComments > 0)
+        throw new Error(
+          Message.POLL_CANNOT_UPDATE_BECAUSE_HAS_VOTES_OR_COMMENTS,
+        )
+
+      const includesAssociation = [
+        {
+          association: 'entities',
+        },
+        {
+          association: 'answers',
+        },
+        {
+          association: 'hashtags',
+          include: [
+            {
+              association: 'hashtag',
+            },
+          ],
+        },
+        {
+          association: 'mentions',
+          include: [
+            {
+              association: 'user',
+            },
+          ],
+        },
+      ]
+
+      await sequelize.transaction(async (transaction) => {
+        await Poll.findByPk(pollId, {
+          include: includesAssociation,
+          transaction,
+        }).then(async (poll) => {
+          if (!poll) throw new Error(Message.POLL_NOT_FOUND)
+          if (poll.userId != userId) throw new Error(Message.POLL_NOT_FOUND)
+          await poll.update(
+            { ...data },
+            {
+              transaction,
+            },
+          )
+        })
+      })
+
       const poll = await this.model.findOne(
-        baseController.applyFindOptions(queryInfo),
+        baseController.applyFindOptions({
+          filter: {
+            id: pollId,
+          },
+          includes: includesAssociation,
+        }),
       )
       return poll
     } catch (err) {
@@ -303,6 +377,13 @@ class PollRepository {
     }
   }
 
+  /**
+   *
+   *
+   * @param {ICrudOption} [queryInfo]
+   * @return {*}  {(Promise<number | null>)}
+   * @memberof PollRepository
+   */
   public async delete(queryInfo?: ICrudOption): Promise<number | null> {
     try {
       const result = await this.model.destroy(queryInfo)

@@ -2,6 +2,7 @@ import CryptoJS from 'crypto-js'
 import jwt from 'jsonwebtoken'
 
 import Variable from '@/env/variable.env'
+import AuthConstant from '@/constants/auth.constant'
 
 class UserSecurity {
   public encrypt(password: string): string {
@@ -20,7 +21,7 @@ class UserSecurity {
 
   public generateAccessToken(id: string, isAdmin: boolean): string {
     const token = jwt.sign({ id, isAdmin }, Variable.JWT_SECRET, {
-      expiresIn: '30m',
+      expiresIn: AuthConstant.ACCESS_TOKEN_EXPIRED_IN,
     })
 
     return `Bearer ${token}`
@@ -32,7 +33,7 @@ class UserSecurity {
     deviceId?: string,
   ): string {
     const token = jwt.sign({ id, isAdmin, deviceId }, Variable.JWT_SECRET, {
-      expiresIn: '1d',
+      expiresIn: AuthConstant.REFRESH_TOKEN_EXPIRED_IN,
     })
 
     return `${token}`
