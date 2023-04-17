@@ -1,7 +1,6 @@
 import type { Poll } from './../models/pg/Poll'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import PollRepository from '@/repositories/poll.repository'
-import logger from '@/utils/logger.util'
 
 class PollService {
   private repository
@@ -42,9 +41,8 @@ class PollService {
     return this.repository.delete(queryInfo)
   }
 
-  public async adminUpdate(): Promise<any> {
-    logger.info
-    return
+  public async adminUpdate(id: uuid, data: Poll): Promise<any> {
+    return this.repository.adminUpdate(id, data)
   }
 }
 

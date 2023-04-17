@@ -58,10 +58,10 @@ class Message {
   public static readonly UPLOAD_IMAGE: string = 'Please upload an image!'
 
   // POll
-  public static readonly CREAT_POLL_ERR: string =
+  public static readonly CREATE_POLL_ERR: string =
     'Can not create new poll right now! Please try again.'
   public static readonly POLL_NOT_FOUND: string = 'Poll not found!'
-  public static readonly CREAT_GROUP_ERR: string =
+  public static readonly CREATE_GROUP_ERR: string =
     'Can not create new group right now! Please try again.'
   public static readonly DELETE_POLL_ERR: string = 'Delete poll error'
   public static readonly GET_POPULARITY_POLL_ERR: string =

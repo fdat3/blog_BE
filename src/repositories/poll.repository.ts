@@ -24,6 +24,30 @@ import Message from '@/constants/message.constant'
 
 class PollRepository {
   private model
+  private defaultAssociation = [
+    {
+      association: 'entities',
+    },
+    {
+      association: 'answers',
+    },
+    {
+      association: 'hashtags',
+      include: [
+        {
+          association: 'hashtag',
+        },
+      ],
+    },
+    {
+      association: 'mentions',
+      include: [
+        {
+          association: 'user',
+        },
+      ],
+    },
+  ]
 
   constructor() {
     this.model = Poll
@@ -258,30 +282,7 @@ class PollRepository {
             userId: user.id,
           },
           {
-            include: [
-              {
-                association: 'entities',
-              },
-              {
-                association: 'answers',
-              },
-              {
-                association: 'hashtags',
-                include: [
-                  {
-                    association: 'hashtag',
-                  },
-                ],
-              },
-              {
-                association: 'mentions',
-                include: [
-                  {
-                    association: 'user',
-                  },
-                ],
-              },
-            ],
+            include: this.defaultAssociation,
             transaction,
           },
         )
@@ -548,6 +549,33 @@ class PollRepository {
     } catch (error) {
       logger.error(error)
       return []
+    }
+  }
+
+  public async adminUpdate(pollId: uuid, data: PollType): Promise<Poll | null> {
+    try {
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findByPk(pollId, {
+            include: this.defaultAssociation,
+            transaction,
+          })
+          .then(async (poll) => {
+            if (!poll) throw new Error(Message.POLL_NOT_FOUND)
+            await poll.update(data, { transaction })
+          })
+          .catch((err) => {
+            logger.error(err)
+            throw err
+          })
+      })
+
+      return this.model.findByPk(pollId, {
+        include: this.defaultAssociation,
+      })
+    } catch (err) {
+      logger.error(err)
+      throw err
     }
   }
 }

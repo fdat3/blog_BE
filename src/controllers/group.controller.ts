@@ -195,7 +195,7 @@ class GroupController implements Controller {
         new HttpException(
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
-          Message.CREAT_GROUP_ERR,
+          Message.CREATE_GROUP_ERR,
           err,
         ),
       )
