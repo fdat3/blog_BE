@@ -37,8 +37,8 @@ import { PriorityPollByDate } from './PriorityPollByDate'
 import { PollUpPackageUserBought } from './PollUpPackageUserBought'
 import { GroupActivity } from './GroupActivity'
 import { GroupMemberRequest } from './GroupMemberRequest'
-import { Policy } from './Policy'
 import { HideComment } from './HideComment'
+import { Policy } from './Policy'
 
 export {
   User,
@@ -124,6 +124,7 @@ export const initModels = (): any => {
   GroupMemberRequest.initModel(sequelize)
   Policy.initModel(sequelize)
   HideComment.initModel(sequelize)
+  Policy.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -595,5 +596,6 @@ export const initModels = (): any => {
     GroupMemberRequest,
     Policy,
     HideComment,
+    Policy,
   }
 }
