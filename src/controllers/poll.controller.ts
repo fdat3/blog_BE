@@ -164,7 +164,7 @@ class PollController implements Controller {
         new HttpException(
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
-          Message.CREAT_POLL_ERR,
+          Message.CREATE_POLL_ERR,
           err,
         ),
       )
@@ -189,7 +189,7 @@ class PollController implements Controller {
         new HttpException(
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
-          Message.CREAT_POLL_ERR,
+          Message.CREATE_POLL_ERR,
           err,
         ),
       )

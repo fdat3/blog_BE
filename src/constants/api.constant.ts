@@ -119,6 +119,8 @@ class Api {
   public static readonly ADMIN_USER_EDIT: string = '/edit/:id'
   public static readonly ADMIN_USER_DELETE: string = '/delete/:id'
 
+  public static readonly ADMIN_POLL: string = '/polls'
+
   public static readonly ADMIN_POLL_CATEGORY: string = '/poll_category'
   public static readonly ADMIN_POLL_CATEGORY_ITEM: string = '/:id'
   public static readonly ADMIN_POLL_CATEGORY_ADD: string = '/add'
