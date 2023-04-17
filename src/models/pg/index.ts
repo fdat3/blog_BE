@@ -594,7 +594,6 @@ export const initModels = (): any => {
     PollUpPackageUserBought,
     GroupActivity,
     GroupMemberRequest,
-    Policy,
     HideComment,
     Policy,
   }
