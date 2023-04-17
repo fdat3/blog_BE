@@ -38,6 +38,7 @@ import { PollUpPackageUserBought } from './PollUpPackageUserBought'
 import { GroupActivity } from './GroupActivity'
 import { GroupMemberRequest } from './GroupMemberRequest'
 import { Policy } from './Policy'
+import { HideComment } from './HideComment'
 
 export {
   User,
@@ -78,6 +79,7 @@ export {
   PollUpPackageUserBought,
   GroupActivity,
   GroupMemberRequest,
+  HideComment,
   Policy,
 }
 
@@ -121,6 +123,7 @@ export const initModels = (): any => {
   GroupActivity.initModel(sequelize)
   GroupMemberRequest.initModel(sequelize)
   Policy.initModel(sequelize)
+  HideComment.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -208,11 +211,11 @@ export const initModels = (): any => {
   })
   User.hasMany(GroupMemberRequest, {
     as: 'groupRequesteds',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   User.hasMany(GroupMemberRequest, {
     as: 'groupInvitedUsers',
-    foreignKey: 'inviter_id',
+    foreignKey: 'inviterId',
   })
   Poll.belongsTo(User, {
     as: 'user',
@@ -260,7 +263,7 @@ export const initModels = (): any => {
   })
   Poll.hasMany(PollUpPackageUserBought, {
     as: 'appliedPackages',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollAnswer.belongsTo(Poll, {
     as: 'poll',
@@ -301,6 +304,10 @@ export const initModels = (): any => {
   PollComment.hasMany(Like, {
     as: 'likes',
     foreignKey: 'pollCommentId',
+  })
+  PollComment.hasOne(HideComment, {
+    as: 'hideComment',
+    foreignKey: 'commentId',
   })
   PollCategory.hasMany(Poll, {
     as: 'polls',
@@ -408,7 +415,7 @@ export const initModels = (): any => {
   })
   Group.hasMany(GroupMemberRequest, {
     as: 'memberRequests',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   Group.hasOne(GroupSetting, {
     as: 'settings',
@@ -512,39 +519,39 @@ export const initModels = (): any => {
   })
   PollUpPackage.hasMany(PollUpPackageUserBought, {
     as: 'packageSolds',
-    foreignKey: 'package_id',
+    foreignKey: 'packageId',
   })
   PollUpPackageUserBought.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   PollUpPackageUserBought.belongsTo(Poll, {
     as: 'poll',
-    foreignKey: 'poll_id',
+    foreignKey: 'pollId',
   })
   PollUpPackageUserBought.belongsTo(PollUpPackage, {
     as: 'package',
-    foreignKey: 'package_id',
+    foreignKey: 'packageId',
   })
   GroupActivity.belongsTo(Group, {
     as: 'group',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   GroupActivity.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   GroupMemberRequest.belongsTo(Group, {
     as: 'group',
-    foreignKey: 'group_id',
+    foreignKey: 'groupId',
   })
   GroupMemberRequest.belongsTo(User, {
     as: 'user',
-    foreignKey: 'user_id',
+    foreignKey: 'userId',
   })
   GroupMemberRequest.belongsTo(User, {
     as: 'inviter',
-    foreignKey: 'inviter_id',
+    foreignKey: 'inviterId',
   })
 
   return {
@@ -587,5 +594,6 @@ export const initModels = (): any => {
     GroupActivity,
     GroupMemberRequest,
     Policy,
+    HideComment,
   }
 }

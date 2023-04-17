@@ -15,12 +15,16 @@ import {
   HasManyHasAssociationMixin,
   HasManyHasAssociationsMixin,
   HasManyCountAssociationsMixin,
+  HasOneGetAssociationMixin,
+  HasOneSetAssociationMixin,
+  HasOneCreateAssociationMixin,
   InferCreationAttributes,
   InferAttributes,
   Model,
   NonAttribute,
   Sequelize,
 } from 'sequelize'
+import type { HideComment } from './HideComment'
 import type { Like } from './Like'
 import type { Poll } from './Poll'
 import type { PollCommentHashtag } from './PollCommentHashtag'
@@ -35,6 +39,7 @@ type PollCommentAssociations =
   | 'hashtags'
   | 'likes'
   | 'user'
+  | 'hideComment'
 
 export class PollComment extends Model<
   InferAttributes<PollComment, { omit: PollCommentAssociations }>,
@@ -119,6 +124,12 @@ export class PollComment extends Model<
   declare setUser: BelongsToSetAssociationMixin<User, string>
   declare createUser: BelongsToCreateAssociationMixin<User>
 
+  // PollComment hasOne HideComment (as HideComment)
+  declare hideComment?: NonAttribute<HideComment>
+  declare getHideComment: HasOneGetAssociationMixin<HideComment>
+  declare setHideComment: HasOneSetAssociationMixin<HideComment, string>
+  declare createHideComment: HasOneCreateAssociationMixin<HideComment>
+
   declare static associations: {
     poll: Association<PollComment, Poll>
     parent: Association<PollComment, PollComment>
@@ -126,6 +137,7 @@ export class PollComment extends Model<
     hashtags: Association<PollComment, PollCommentHashtag>
     likes: Association<PollComment, Like>
     user: Association<PollComment, User>
+    hideComment: Association<PollComment, HideComment>
   }
 
   static initModel(sequelize: Sequelize): typeof PollComment {

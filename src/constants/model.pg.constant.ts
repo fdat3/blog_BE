@@ -9,6 +9,7 @@ export class PgModelConstant {
   public static readonly POLL_VOTES: string = 'poll_votes'
   public static readonly POLL_COMMENT: string = 'poll_comments'
   public static readonly POLL_CATEGORY_MODEL: string = 'poll_categories'
+  public static readonly HIDE_COMMENT: string = 'hide_comments'
   public static readonly USER_DEVICE: string = 'user_device_session'
   public static readonly BLOCK: string = 'blocks'
   public static readonly REPORT_USER: string = 'report_users'
