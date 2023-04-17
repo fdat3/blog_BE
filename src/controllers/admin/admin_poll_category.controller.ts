@@ -7,13 +7,13 @@ import Controller, {
   Request,
   Response,
 } from '@/interfaces/controller.interface'
-import PollCategoryService from '@/services/poll_category.service'
+import PollCategoryService from '@/services/pollCategory.service'
 import { Router, NextFunction } from 'express'
 import BaseController from '../base.controller'
 import QueryMiddleware from '@/middlewares/quey.middleware'
 import AuthService from '@/services/auth.service'
 import validationMiddleware from '@/middlewares/validation.middleware'
-import PollCategoryValidate from '@/validations/poll_category.validation'
+import PollCategoryValidate from '@/validations/pollCategory.validation'
 
 class AdminPollCategoryController implements Controller {
   public path: string

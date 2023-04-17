@@ -1,4 +1,4 @@
-import PollUpPackageRepository from '@/repositories/pull_up_package.repository'
+import PollUpPackageRepository from '@/repositories/pullUpPackage.repository'
 import type { PollUpPackage } from '@/models/pg'
 import { ICrudOption } from '@/interfaces/controller.interface'
 

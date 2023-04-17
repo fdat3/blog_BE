@@ -16,9 +16,9 @@ import BaseController from './base.controller'
 
 import QueryMiddleware from '@/middlewares/quey.middleware'
 import validationMiddleware from '@/middlewares/validation.middleware'
-import ReportPollService from '@/services/report_poll.service'
+import ReportPollService from '@/services/reportPoll.service'
 import logger from '@/utils/logger.util'
-import ReportPollValidation from '@/validations/report_poll.validation'
+import ReportPollValidation from '@/validations/reportPoll.validation'
 import { verifyToken } from '@/validations/token.validation'
 
 class ReportPollController implements Controller {

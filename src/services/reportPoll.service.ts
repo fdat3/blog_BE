@@ -1,7 +1,7 @@
 import { GetListRepository } from '@/interfaces/base.interface'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import type { ReportPoll, Poll } from '@/models/pg'
-import ReportPollRepository from '@/repositories/report_poll.repository'
+import ReportPollRepository from '@/repositories/reportPoll.repository'
 class ReportPollService {
   private repository = new ReportPollRepository()
 

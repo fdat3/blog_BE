@@ -45,12 +45,13 @@ export class PollComment extends Model<
   InferAttributes<PollComment, { omit: PollCommentAssociations }>,
   InferCreationAttributes<PollComment, { omit: PollCommentAssociations }>
 > {
-  declare id: CreationOptional<string>
-  declare pollId: string | null
-  declare userId: string | null
-  declare content: string | null
-  declare image: string | null
-  declare parentId: string | null
+  declare id: CreationOptional<uuid>
+  declare pollId: CreationOptional<uuid>
+  declare userId: CreationOptional<uuid>
+  declare content: CreationOptional<string>
+  declare image: CreationOptional<string>
+  declare isHidden: CreationOptional<boolean>
+  declare parentId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -160,6 +161,10 @@ export class PollComment extends Model<
         },
         image: {
           type: DataTypes.STRING(255),
+        },
+        isHidden: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
         },
         parentId: {
           type: DataTypes.UUID,

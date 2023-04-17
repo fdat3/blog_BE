@@ -15,7 +15,7 @@ import BaseController from './base.controller'
 import ConstantMessage from '@/constants/message.constant'
 import Authenticated from '@/middlewares/authenticated.middleware'
 import { verifyToken } from '@/validations/token.validation'
-import GroupSettingService from '@/services/group_setting.service'
+import GroupSettingService from '@/services/groupSetting.service'
 
 class GroupSettingController implements Controller {
   public path: string

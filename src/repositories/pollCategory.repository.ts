@@ -1,6 +1,6 @@
 import baseController from '@/controllers/base.controller'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { PollCategory } from './../models/pg/PollCategory'
+import { PollCategory } from '../models/pg/PollCategory'
 import { GetListRepository } from '@/interfaces/base.interface'
 import logger from '@/utils/logger.util'
 import { sequelize } from '@/config/sql.config'

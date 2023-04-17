@@ -1,7 +1,7 @@
 import { GetListRepository } from '@/interfaces/base.interface'
 import { ICrudOption } from '@/interfaces/controller.interface'
 import { PollCategory } from '@/models/pg'
-import PollCategoryRepository from '@/repositories/poll_category.repository'
+import PollCategoryRepository from '@/repositories/pollCategory.repository'
 
 class PollCategoryService {
   private pollCategoryRepository: PollCategoryRepository
