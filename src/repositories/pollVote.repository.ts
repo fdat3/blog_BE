@@ -1,6 +1,7 @@
 import { sequelize } from '@/config/sql.config'
 import { PollVotes } from '@/models/pg'
 import { TPollVoteRepository } from '../types/poll.type'
+import logger from '@/utils/logger.util'
 
 class PollVoteRepository {
   async createNewVote(data: TPollVoteRepository): Promise<PollVotes> {
@@ -44,6 +45,20 @@ class PollVoteRepository {
           throw error
         })
     })
+  }
+
+  // TODO: Implement this method increasePointOfPoll
+  private async increasePointOfPoll(pollId: uuid): Promise<any> {
+    logger.info('increasePointOfPoll')
+    logger.info(pollId)
+    return
+  }
+
+  // TODO: Implement this method decreasePointOfPoll
+  private async decreasePointOfPoll(pollId: uuid): Promise<any> {
+    logger.info('decreasePointOfPoll')
+    logger.info(pollId)
+    return
   }
 }
 
