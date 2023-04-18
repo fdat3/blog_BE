@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+if git diff HEAD^ HEAD --exit-code -- ./package.json; then
+  echo "package.json has not changed"
+else
+  echo "package.json has changed"
+  echo "Running yarn install for install new package(s)"
+  yarn
+fi
