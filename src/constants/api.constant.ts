@@ -147,6 +147,12 @@ class Api {
   public static readonly POLICY_INFO: string = '/:id'
   public static readonly POLICY_UPDATE: string = '/:id'
   public static readonly POLICY_DELETE: string = '/:id'
+
+  // REPORT USER
+  public static readonly REPORT_USER: string = '/report_users'
+  public static readonly REPORT_USER_UPDATE: string = '/:id'
+  public static readonly REPORT_USER_INFO: string = '/:id'
+  public static readonly REPORT_USER_DELETE: string = '/:id'
 }
 
 export default Api

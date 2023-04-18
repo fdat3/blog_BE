@@ -126,5 +126,14 @@ class Message {
   public static readonly CREATE_POLICY_ERR: string = 'Create policy Item Error'
   public static readonly DELETE_POLICY_ERR: string = 'Delete policy Item Error'
   public static readonly UPDATE_POLICY_ERR: string = 'Update policy Item Error'
+
+  // Report User
+  public static readonly REPORT_NOT_FOUND: string = 'Report not found'
+  public static readonly CREATE_REPORT_USER_ERR: string =
+    'Create report user Item Error'
+  public static readonly DELETE_REPORT_USER_ERR: string =
+    'Delete report user Item Error'
+  public static readonly UPDATE_REPORT_USER_ERR: string =
+    'Update report user Item Error'
 }
 export default Message

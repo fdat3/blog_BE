@@ -24,6 +24,7 @@ export class ReportUser extends Model<
   declare reporterId: string | null
   declare reportedId: string | null
   declare reason: string | null
+  declare description: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -61,6 +62,9 @@ export class ReportUser extends Model<
           type: DataTypes.UUID,
         },
         reason: {
+          type: DataTypes.TEXT,
+        },
+        description: {
           type: DataTypes.TEXT,
         },
         createdAt: {

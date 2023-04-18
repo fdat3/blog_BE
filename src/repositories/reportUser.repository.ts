@@ -2,14 +2,14 @@ import { sequelize } from '@/config/sql.config'
 import Message from '@/constants/message.constant'
 import BaseController from '@/controllers/base.controller'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { Policy } from '@/models/pg'
+import { ReportUser } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { GetListRepository } from '@/interfaces/base.interface'
 
-class PolicyRepository {
-  private model = Policy
+class ReportUserRepository {
+  private model = ReportUser
 
-  public async create(data: Policy): Promise<Policy | null> {
+  public async create(data: ReportUser): Promise<ReportUser | null> {
     try {
       return sequelize.transaction(async (transaction) => {
         return this.model.create(data, { transaction })
@@ -23,7 +23,7 @@ class PolicyRepository {
   public async findOne(
     id: uuid,
     queryInfo?: ICrudOption,
-  ): Promise<Policy | null> {
+  ): Promise<ReportUser | null> {
     try {
       return this.model.findByPk(id, BaseController.applyFindOptions(queryInfo))
     } catch (err) {
@@ -34,7 +34,7 @@ class PolicyRepository {
 
   public async getList(
     queryInfo?: ICrudOption,
-  ): Promise<GetListRepository<Policy>> {
+  ): Promise<GetListRepository<ReportUser>> {
     try {
       return this.model.findAndCountAll(
         BaseController.applyFindOptions(queryInfo),
@@ -45,14 +45,14 @@ class PolicyRepository {
     }
   }
 
-  public async update(id: uuid, data: Policy): Promise<Policy | null> {
+  public async update(id: uuid, data: ReportUser): Promise<ReportUser | null> {
     try {
       await sequelize.transaction(async (transaction) => {
         await this.model
           .findByPk(id, { transaction })
-          .then(async (policy) => {
-            if (!policy) throw Message.POLICY_NOT_FOUND
-            await policy.update({ ...data }, { transaction })
+          .then(async (reportUser) => {
+            if (!reportUser) throw Message.REPORT_NOT_FOUND
+            await reportUser.update({ ...data }, { transaction })
           })
           .catch((err) => {
             throw err
@@ -72,9 +72,9 @@ class PolicyRepository {
       await sequelize.transaction(async (transaction) => {
         await this.model
           .findByPk(id, { transaction })
-          .then(async (policy) => {
-            if (!policy) throw Message.POLICY_NOT_FOUND
-            await policy.destroy({ transaction })
+          .then(async (reportUser) => {
+            if (!reportUser) throw Message.REPORT_NOT_FOUND
+            await reportUser.destroy({ transaction })
             isSuccess = true
           })
           .catch((err) => {
@@ -92,4 +92,4 @@ class PolicyRepository {
   }
 }
 
-export default PolicyRepository
+export default ReportUserRepository
