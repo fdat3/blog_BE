@@ -1,11 +1,27 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-color_echo () {
-  echo -e "\033[1;97;44m==> $1 \033[m"
+color_echo1 () {
+  NO_FORMAT="\033[0m"
+  F_BOLD="\033[1m"
+  C_WHITE="\033[38;5;15m"
+  C_DEEPPINK2="\033[48;5;197m"
+
+  echo "${F_BOLD}${C_WHITE}${C_DEEPPINK2}  $1  ${NO_FORMAT}"
 }
 
-color_echo "yarn build"
+color_echo2 () {
+  NO_FORMAT="\033[0m"
+  F_BOLD="\033[1m"
+  C_WHITE="\033[38;5;15m"
+  C_BLUE="\033[48;5;12m"
+  
+  echo "${F_BOLD}${C_WHITE}${C_BLUE}  $1  ${NO_FORMAT}"
+}
+
+color_echo2 "START BUILDING..."
+
+color_echo1 "yarn build"
 yarn build
 
-color_echo "DONE!"
+color_echo2 "BUILD DONE!"
