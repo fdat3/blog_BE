@@ -1,8 +1,7 @@
-import type { Poll } from './../models/pg/Poll'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { PollViewHistory } from '@/models/pg'
 import PollRepository from '@/repositories/poll.repository'
 import PollViewHistoryRepository from '@/repositories/pollViewHistory.repository'
+import type { Poll } from './../models/pg/Poll'
 
 class PollService {
   private repository = new PollRepository()
@@ -28,11 +27,10 @@ class PollService {
     const result = await this.repository.getItem(id, queryInfo)
 
     if (result && queryInfo?.user.isAdmin === false) {
-      const data: PollViewHistory = {
-        pollId: result.id,
-        userId: queryInfo?.user.id,
+      const { user } = queryInfo
+      if (user) {
+        await this.pollViewHistoryRepository.create(id, user.id)
       }
-      await this.pollViewHistoryRepository.create(data)
     }
 
     return result

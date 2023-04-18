@@ -1,19 +1,20 @@
 import logger from '@/utils/logger.util'
 import { PollViewHistory } from '@/models/pg'
-import type { PollViewHistory as PollViewHistoryType } from '@/models/pg'
 import { sequelize } from '@/config/sql.config'
 class PollViewHistoryRepository {
   public model = PollViewHistory
 
-  public async create(data: PollViewHistoryType): Promise<void> {
+  public async create(pollId: uuid, userId?: uuid): Promise<void> {
     try {
       sequelize.transaction(async (transaction) => {
         await this.model.findOrCreate({
           where: {
-            ...data,
+            userId,
+            pollId,
           },
           defaults: {
-            ...data,
+            userId,
+            pollId,
           },
           transaction,
         })

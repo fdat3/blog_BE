@@ -23,9 +23,9 @@ export class PollViewHistory extends Model<
     { omit: PollViewHistoryAssociations }
   >
 > {
-  declare id: CreationOptional<string>
-  declare userId: CreationOptional<string>
-  declare pollId: CreationOptional<string>
+  declare id: CreationOptional<uuid>
+  declare userId: CreationOptional<uuid>
+  declare pollId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
