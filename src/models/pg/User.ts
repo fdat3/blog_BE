@@ -33,6 +33,7 @@ import type { GroupActivity } from './GroupActivity'
 import type { GroupMember } from './GroupMember'
 import type { GroupMemberRequest } from './GroupMemberRequest'
 import type { Poll } from './Poll'
+import type { PollViewHistory } from './PollViewHistory'
 import type { PollAnswer } from './PollAnswer'
 import type { PollComment } from './PollComment'
 import type { PollUpPackageUserBought } from './PollUpPackageUserBought'
@@ -68,6 +69,7 @@ type UserAssociations =
   | 'groupActivities'
   | 'groupRequesteds'
   | 'groupInvitedUsers'
+  | 'pollViewHistories'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -545,6 +547,40 @@ export class User extends Model<
   >
   declare countGroupInvitedUsers: HasManyCountAssociationsMixin
 
+  // User hasMany PollViewHistory (as PollViewHistories)
+  declare pollViewHistories?: NonAttribute<PollViewHistory[]>
+  declare getPollViewHistories: HasManyGetAssociationsMixin<PollViewHistory>
+  declare setPollViewHistories: HasManySetAssociationsMixin<
+    PollViewHistory,
+    string
+  >
+  declare addPollViewHistory: HasManyAddAssociationMixin<
+    PollViewHistory,
+    string
+  >
+  declare addPollViewHistories: HasManyAddAssociationsMixin<
+    PollViewHistory,
+    string
+  >
+  declare createPollViewHistory: HasManyCreateAssociationMixin<PollViewHistory>
+  declare removePollViewHistory: HasManyRemoveAssociationMixin<
+    PollViewHistory,
+    string
+  >
+  declare removePollViewHistories: HasManyRemoveAssociationsMixin<
+    PollViewHistory,
+    string
+  >
+  declare hasPollViewHistory: HasManyHasAssociationMixin<
+    PollViewHistory,
+    string
+  >
+  declare hasPollViewHistories: HasManyHasAssociationsMixin<
+    PollViewHistory,
+    string
+  >
+  declare countPollViewHistories: HasManyCountAssociationsMixin
+
   declare static associations: {
     deviceSession: Association<User, UserDeviceSession>
     blockers: Association<User, Block>
@@ -571,6 +607,7 @@ export class User extends Model<
     groupActivities: Association<User, GroupActivity>
     groupRequesteds: Association<User, GroupMemberRequest>
     groupInvitedUsers: Association<User, GroupMemberRequest>
+    pollViewHistories: Association<User, PollViewHistory>
   }
 
   static initModel(sequelize: Sequelize): typeof User {

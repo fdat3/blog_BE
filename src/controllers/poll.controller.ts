@@ -135,9 +135,18 @@ class PollController implements Controller {
   ): Promise<Response | any> => {
     try {
       const { id } = req.params
-      const { queryInfo } = req
+      const queryInfo = req.queryInfo || {}
 
-      const poll = await this.pollService.getItem(id, queryInfo)
+      if (req.user) {
+        queryInfo.userId = req.user.id
+      }
+
+      const { user } = req
+      if (user) {
+        queryInfo.user = user
+      }
+
+      const poll = await this.pollService.getItem(id as uuid, queryInfo)
       if (!poll) {
         return next(
           new HttpException(

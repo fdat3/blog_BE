@@ -42,6 +42,7 @@ export class PgModelConstant {
     'poll_up_package_user_boughts'
   public static readonly PRIORITY_POLL_BY_DATE: string =
     'priority_poll_by_dates'
+  public static readonly POLL_VIEW_HISTORY: string = 'poll_view_histories'
 }
 
 export default PgModelConstant
