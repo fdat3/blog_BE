@@ -71,6 +71,7 @@ class Message {
   public static readonly GET_MY_POLL_ERROR: string = 'Get my poll error'
   public static readonly POLL_CANNOT_UPDATE_BECAUSE_HAS_VOTES_OR_COMMENTS: string =
     'Poll cannot update because this poll has votes or comments'
+  public static readonly POLL_LIKE_ERR: string = 'Poll like error'
 
   // POLL COMMENT
   public static readonly CREATE_POLL_COMMENT_ERR: string =
@@ -118,6 +119,7 @@ class Message {
   public static readonly CREATE_LIKE_ERR: string = 'Create Like Item Error'
   public static readonly DELETE_LIKE_ERR: string = 'Delete Like Item Error'
   public static readonly UPDATE_LIKE_ERR: string = 'Update Like Item Error'
+  public static readonly LIKE_NOT_FOUND: string = 'Like not found'
 
   //Policy
   public static readonly POLICY_NOT_FOUND: string = 'Policy not found'

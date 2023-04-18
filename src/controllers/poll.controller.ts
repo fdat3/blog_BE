@@ -90,8 +90,20 @@ class PollController implements Controller {
     )
     this.router.delete(
       `${this.path}${ConstantAPI.POLL_DELETE}`,
-      [this.authenticated.verifyTokenAndAuthorization],
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
       this.delete,
+    )
+
+    this.router.post(
+      `${this.path}${ConstantAPI.POLL_LIKE}`,
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
+      this.like,
+    )
+
+    this.router.delete(
+      `${this.path}${ConstantAPI.POLL_UNLIKE}`,
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
+      this.unlike,
     )
   }
 
@@ -295,6 +307,52 @@ class PollController implements Controller {
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
           Message.GET_MY_POLL_ERROR,
+          err,
+        ),
+      )
+    }
+  }
+
+  public like = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const { user } = req.session
+      const result = await this.pollService.like(id, user?.id)
+      this.baseController.onSuccess(res, result, undefined)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.POLL_LIKE_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  public unlike = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const { user } = req.session
+      const result = await this.pollService.unlike(id, user?.id)
+      this.baseController.onSuccess(res, result, undefined)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.POLL_LIKE_ERR,
           err,
         ),
       )

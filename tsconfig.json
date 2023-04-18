@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "es2022",
     "module": "commonjs",
     "rootDir": "src",
@@ -42,6 +43,9 @@
       ],
       "@/firebase/*": [
         "firebase/*"
+      ],
+      "@/globals": [
+        "globals/*"
       ],
       "@/helpers/*": [
         "helpers/*"
