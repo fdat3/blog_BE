@@ -184,6 +184,7 @@
     "@/env": "build/env",
     "@/enums": "build/enums",
     "@/firebase": "build/firebase",
+    "@/globals": "build/globals",
     "@/helpers": "build/helpers",
     "@/interfaces": "build/interfaces",
     "@/middlewares": "build/middlewares",

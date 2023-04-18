@@ -44,6 +44,24 @@ class PollService {
   public async adminUpdate(id: uuid, data: Poll): Promise<any> {
     return this.repository.adminUpdate(id, data)
   }
+
+  public async like(
+    pollId: uuid,
+    userId: uuid,
+  ): Promise<{
+    isSuccess: boolean
+  }> {
+    return this.repository.like(pollId, userId)
+  }
+
+  public async unlike(
+    pollId: uuid,
+    userId: uuid,
+  ): Promise<{
+    isSuccess: boolean
+  }> {
+    return this.repository.unlike(pollId, userId)
+  }
 }
 
 export default PollService

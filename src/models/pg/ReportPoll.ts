@@ -15,16 +15,29 @@ import type { Poll } from './Poll'
 import type { User } from './User'
 import ModelPgConstant from '@/constants/model.pg.constant'
 
-type ReportPollAssociations = 'user' | 'poll'
+export enum EReportType {
+  MISLEADING_OR_SCAM = 'MISLEADING_OR_SCAM',
+  SEXUALLY_INAPPROPRIATE = 'SEXUALLY_INAPPROPRIATE',
+  OFFENSIVE = 'OFFENSIVE',
+  VIOLENCE = 'VIOLENCE',
+  FAKE_ADS_TO_BE_SOMEONE_ELSE = 'FAKE_ADS_TO_BE_SOMEONE_ELSE',
+  PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
+  SPAM = 'SPAM',
+  FALSE_NEWS = 'FALSE_NEWS',
+  OTHER = 'OTHER',
+}
 
+export type TReportType = keyof typeof EReportType
+
+type ReportPollAssociations = 'user' | 'poll'
 export class ReportPoll extends Model<
   InferAttributes<ReportPoll, { omit: ReportPollAssociations }>,
   InferCreationAttributes<ReportPoll, { omit: ReportPollAssociations }>
 > {
-  declare id: CreationOptional<string>
-  declare pollId: string | null
-  declare userId: string | null
-  declare reason: string | null
+  declare id: CreationOptional<uuid>
+  declare pollId: CreationOptional<uuid>
+  declare userId: CreationOptional<uuid>
+  declare reason_type: CreationOptional<TReportType>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
@@ -60,8 +73,10 @@ export class ReportPoll extends Model<
         userId: {
           type: DataTypes.UUID,
         },
-        reason: {
-          type: DataTypes.STRING,
+        reason_type: {
+          type: DataTypes.ENUM({
+            values: Object.values(EReportType as Record<string, string>), // Auto generate enum value as records
+          }),
         },
         createdAt: {
           type: DataTypes.DATE,

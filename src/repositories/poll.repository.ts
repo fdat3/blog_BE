@@ -8,6 +8,7 @@ import {
   Poll,
   PollMention,
   PriorityPollByDate,
+  Like,
 } from '@/models/pg'
 import { Poll as PollType } from '@/models/pg'
 import logger from '@/utils/logger.util'
@@ -573,6 +574,127 @@ class PollRepository {
       return this.model.findByPk(pollId, {
         include: this.defaultAssociation,
       })
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {uuid} pollId
+   * @param {uuid} userId
+   * @return {*}  {Promise<{
+   *     isSuccess: boolean
+   *   }>}
+   * @memberof PollRepository
+   * @description Like poll
+   */
+  public async like(
+    pollId: uuid,
+    userId: uuid,
+  ): Promise<{
+    isSuccess: boolean
+  }> {
+    try {
+      let isSuccess: boolean = false
+
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findByPk(pollId, {
+            include: this.defaultAssociation,
+            transaction,
+          })
+          .then(async (poll) => {
+            if (!poll) throw new Error(Message.POLL_NOT_FOUND)
+
+            await Like.create(
+              {
+                userId,
+                pollId,
+              },
+              {
+                transaction,
+              },
+            )
+              .then(async (like) => {
+                if (!like) throw new Error(Message.LIKE_NOT_FOUND)
+                isSuccess = true
+              })
+              .catch((err) => {
+                logger.error(err)
+                throw err
+              })
+          })
+          .catch((err) => {
+            logger.error(err)
+            throw err
+          })
+      })
+
+      return {
+        isSuccess,
+      }
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  /**
+   *
+   *
+   * @param {uuid} pollId
+   * @param {uuid} userId
+   * @return {*}  {Promise<{
+   *     isSuccess: boolean
+   *   }>}
+   * @memberof PollRepository
+   *
+   * @description Unlike poll
+   */
+  public async unlike(
+    pollId: uuid,
+    userId: uuid,
+  ): Promise<{
+    isSuccess: boolean
+  }> {
+    try {
+      let isSuccess: boolean = false
+
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findByPk(pollId, {
+            include: this.defaultAssociation,
+            transaction,
+          })
+          .then(async (poll) => {
+            if (!poll) throw new Error(Message.POLL_NOT_FOUND)
+
+            await poll
+              .hasLike(userId)
+              .then(async (hasLike) => {
+                if (!hasLike) throw new Error(Message.LIKE_NOT_FOUND)
+                await poll.removeLike(userId, {
+                  transaction,
+                })
+                isSuccess = true
+              })
+              .catch((err) => {
+                logger.error(err)
+                throw err
+              })
+          })
+          .catch((err) => {
+            logger.error(err)
+            throw err
+          })
+      })
+
+      return {
+        isSuccess,
+      }
     } catch (err) {
       logger.error(err)
       throw err
