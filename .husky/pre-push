@@ -1,4 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+color_echo () {
+  echo -e "\033[1;97;44m==> $1 \033[m"
+}
+
+color_echo "yarn build"
 yarn build
+
+color_echo "DONE!"
