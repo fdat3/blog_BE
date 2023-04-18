@@ -1,4 +1,5 @@
 import { ICrudOption } from '@/interfaces/controller.interface'
+import { PollVoteInterface } from '@/interfaces/poll.interface'
 import PollRepository from '@/repositories/poll.repository'
 import PollViewHistoryRepository from '@/repositories/pollViewHistory.repository'
 import type { Poll } from './../models/pg/Poll'
@@ -68,6 +69,12 @@ class PollService {
     isSuccess: boolean
   }> {
     return this.repository.unlike(pollId, userId)
+  }
+
+  public async vote(data: PollVoteInterface): Promise<{
+    isSuccess: boolean
+  }> {
+    return this.repository.vote(data)
   }
 }
 

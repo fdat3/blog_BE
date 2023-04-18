@@ -22,10 +22,10 @@ export class PollVotes extends Model<
   InferAttributes<PollVotes, { omit: PollAnswerChosenAssociations }>,
   InferCreationAttributes<PollVotes, { omit: PollAnswerChosenAssociations }>
 > {
-  declare id: CreationOptional<string>
-  declare pollAnswerId: string | null
+  declare id: CreationOptional<uuid>
+  declare pollAnswerId: CreationOptional<uuid>
   declare pollId: CreationOptional<uuid>
-  declare userId: string | null
+  declare userId: CreationOptional<uuid>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>

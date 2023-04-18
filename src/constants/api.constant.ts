@@ -49,6 +49,8 @@ class Api {
   public static readonly POLL_MY_POLL: string = '/my_polls'
   public static readonly POLL_LIKE: string = '/:id/like'
   public static readonly POLL_UNLIKE: string = '/:id/unlike'
+  public static readonly POLL_VOTE: string = '/:id/vote'
+  public static readonly POLL_VOTE_MULTI: string = '/:id/vote/multi'
 
   // POLL COMMENT
   public static readonly POLL_COMMENT: string = '/poll_comments'

@@ -22,6 +22,10 @@ import Message from '@/constants/message.constant'
 import logger from '@/utils/logger.util'
 import Authenticated from '@/middlewares/authenticated.middleware'
 import { verifyToken } from '@/validations/token.validation'
+import {
+  PollVoteBodyInterface,
+  PollVoteInterface,
+} from '@/interfaces/poll.interface'
 
 class PollController implements Controller {
   public path: string
@@ -104,6 +108,12 @@ class PollController implements Controller {
       `${this.path}${ConstantAPI.POLL_UNLIKE}`,
       [verifyToken, this.authenticated.verifyTokenAndAuthorization],
       this.unlike,
+    )
+
+    this.router.post(
+      `${this.path}${ConstantAPI.POLL_VOTE}`,
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
+      this.vote,
     )
   }
 
@@ -362,6 +372,36 @@ class PollController implements Controller {
           ConstantHttpCode.METHOD_FAILURE,
           ConstantHttpReason.METHOD_FAILURE,
           Message.POLL_LIKE_ERR,
+          err,
+        ),
+      )
+    }
+  }
+
+  public vote = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const { user } = req.session
+      const { action, pollAnswerId }: PollVoteBodyInterface = req.body
+      const data: PollVoteInterface = {
+        action,
+        pollAnswerId,
+        pollId: id,
+        userId: user?.id,
+      }
+      const result = await this.pollService.vote(data)
+      this.baseController.onSuccess(res, result, undefined)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.METHOD_FAILURE,
+          ConstantHttpReason.METHOD_FAILURE,
+          Message.POLL_VOTE_ERR,
           err,
         ),
       )

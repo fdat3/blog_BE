@@ -22,6 +22,10 @@ import PollConstant from '@/constants/poll.constant'
 import PollVotesRepository from './pollVotes.repository'
 import PollCommentRepository from './pollComment.repository'
 import Message from '@/constants/message.constant'
+import { PollVoteInterface } from '@/interfaces/poll.interface'
+import { SuccessInterface } from '@/interfaces/handle.interface'
+import { EPollVoteActionType } from '@/enums/pollVote.enum'
+import { pollVoteRepository } from '.'
 
 class PollRepository {
   private model
@@ -691,6 +695,34 @@ class PollRepository {
             throw err
           })
       })
+
+      return {
+        isSuccess,
+      }
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  public async vote(data: PollVoteInterface): Promise<SuccessInterface> {
+    try {
+      const { action, ...body } = data
+      let isSuccess: boolean = false
+
+      switch (action) {
+        case EPollVoteActionType.VOTE:
+          isSuccess = !!(await pollVoteRepository.createNewVote(body))
+          break
+        case EPollVoteActionType.RE_VOTE:
+          isSuccess = !!(await pollVoteRepository.reVote(body))
+          break
+        case EPollVoteActionType.UN_VOTE:
+          isSuccess = !!(await pollVoteRepository.unVote(body))
+          break
+        default:
+          throw new Error(Message.POLL_VOTE_ACTION_NOT_FOUND)
+      }
 
       return {
         isSuccess,

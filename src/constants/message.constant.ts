@@ -72,6 +72,9 @@ class Message {
   public static readonly POLL_CANNOT_UPDATE_BECAUSE_HAS_VOTES_OR_COMMENTS: string =
     'Poll cannot update because this poll has votes or comments'
   public static readonly POLL_LIKE_ERR: string = 'Poll like error'
+  public static readonly POLL_VOTE_ERR: string = 'Poll vote error'
+  public static readonly POLL_VOTE_ACTION_NOT_FOUND: string =
+    'Poll vote action not found'
 
   // POLL COMMENT
   public static readonly CREATE_POLL_COMMENT_ERR: string =
