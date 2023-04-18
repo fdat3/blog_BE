@@ -35,6 +35,7 @@ import ModelPgConstant from '@/constants/model.pg.constant'
 import { PollAnswer } from '@/models/pg/PollAnswer'
 import { PollEntity } from '@/models/pg/PollEntity'
 import { PollVotes } from './PollVotes'
+import { PollViewHistory } from './PollViewHistory'
 
 type PollAssociations =
   | 'user'
@@ -50,6 +51,7 @@ type PollAssociations =
   | 'handlePriorities'
   | 'votes'
   | 'appliedPackages'
+  | 'viewHistories'
 
 export class Poll extends Model<
   InferAttributes<Poll, { omit: PollAssociations }>,
@@ -271,6 +273,25 @@ export class Poll extends Model<
   >
   declare countAppliedPackages: HasManyCountAssociationsMixin
 
+  // Poll hasMany PollViewHistory (as ViewHistories)
+  declare viewHistories?: NonAttribute<PollViewHistory[]>
+  declare getViewHistories: HasManyGetAssociationsMixin<PollViewHistory>
+  declare setViewHistories: HasManySetAssociationsMixin<PollViewHistory, string>
+  declare addViewHistory: HasManyAddAssociationMixin<PollViewHistory, string>
+  declare addViewHistories: HasManyAddAssociationsMixin<PollViewHistory, string>
+  declare createViewHistory: HasManyCreateAssociationMixin<PollViewHistory>
+  declare removeViewHistory: HasManyRemoveAssociationMixin<
+    PollViewHistory,
+    string
+  >
+  declare removeViewHistories: HasManyRemoveAssociationsMixin<
+    PollViewHistory,
+    string
+  >
+  declare hasViewHistory: HasManyHasAssociationMixin<PollViewHistory, string>
+  declare hasViewHistories: HasManyHasAssociationsMixin<PollViewHistory, string>
+  declare countViewHistories: HasManyCountAssociationsMixin
+
   declare static associations: {
     user: Association<Poll, User>
     category: Association<Poll, PollCategory>
@@ -285,6 +306,7 @@ export class Poll extends Model<
     handlePriorities: Association<Poll, PollHandlePriority>
     votes: Association<Poll, PollVotes>
     appliedPackages: Association<Poll, PollUpPackageUserBought>
+    viewHistories: Association<Poll, PollViewHistory>
   }
 
   static initModel(sequelize: Sequelize): typeof Poll {

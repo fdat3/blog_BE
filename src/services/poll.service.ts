@@ -1,13 +1,12 @@
 import type { Poll } from './../models/pg/Poll'
 import { ICrudOption } from '@/interfaces/controller.interface'
+import { PollViewHistory } from '@/models/pg'
 import PollRepository from '@/repositories/poll.repository'
+import PollViewHistoryRepository from '@/repositories/pollViewHistory.repository'
 
 class PollService {
-  private repository
-
-  constructor() {
-    this.repository = new PollRepository()
-  }
+  private repository = new PollRepository()
+  private pollViewHistoryRepository = new PollViewHistoryRepository()
 
   public async getList(queryInfo?: ICrudOption): Promise<any> {
     return this.repository.getList(queryInfo)
@@ -26,7 +25,17 @@ class PollService {
   }
 
   public async getItem(id: uuid, queryInfo?: ICrudOption): Promise<any> {
-    return this.repository.getItem(id, queryInfo)
+    const result = await this.repository.getItem(id, queryInfo)
+
+    if (result && queryInfo?.user.isAdmin === false) {
+      const data: PollViewHistory = {
+        pollId: result.id,
+        userId: queryInfo?.user.id,
+      }
+      await this.pollViewHistoryRepository.create(data)
+    }
+
+    return result
   }
 
   public async create(user: any, data: any): Promise<any> {

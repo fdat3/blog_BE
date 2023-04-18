@@ -39,6 +39,7 @@ import { GroupActivity } from './GroupActivity'
 import { GroupMemberRequest } from './GroupMemberRequest'
 import { HideComment } from './HideComment'
 import { Policy } from './Policy'
+import { PollViewHistory } from './PollViewHistory'
 
 export {
   User,
@@ -81,6 +82,7 @@ export {
   GroupMemberRequest,
   Policy,
   HideComment,
+  PollViewHistory,
 }
 
 export const initModels = (): any => {
@@ -125,6 +127,7 @@ export const initModels = (): any => {
   Policy.initModel(sequelize)
   HideComment.initModel(sequelize)
   Policy.initModel(sequelize)
+  PollViewHistory.initModel(sequelize)
 
   User.hasMany(UserDeviceSession, {
     as: 'deviceSession',
@@ -218,6 +221,10 @@ export const initModels = (): any => {
     as: 'groupInvitedUsers',
     foreignKey: 'inviterId',
   })
+  User.hasMany(PollViewHistory, {
+    as: 'pollViewHistories',
+    foreignKey: 'userId',
+  })
   Poll.belongsTo(User, {
     as: 'user',
     foreignKey: 'userId',
@@ -264,6 +271,10 @@ export const initModels = (): any => {
   })
   Poll.hasMany(PollUpPackageUserBought, {
     as: 'appliedPackages',
+    foreignKey: 'pollId',
+  })
+  Poll.hasMany(PollViewHistory, {
+    as: 'viewHistories',
     foreignKey: 'pollId',
   })
   PollAnswer.belongsTo(Poll, {
@@ -554,6 +565,14 @@ export const initModels = (): any => {
     as: 'inviter',
     foreignKey: 'inviterId',
   })
+  PollViewHistory.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'userId',
+  })
+  PollViewHistory.belongsTo(Poll, {
+    as: 'poll',
+    foreignKey: 'pollId',
+  })
 
   return {
     User,
@@ -596,5 +615,6 @@ export const initModels = (): any => {
     GroupMemberRequest,
     HideComment,
     Policy,
+    PollViewHistory,
   }
 }
