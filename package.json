@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "This is the Trendypoll Backend",
   "main": "build/bin/www.js",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/hitek01/trendy-poll-be.git"
+  },
   "scripts": {
     "start": "yarn swagger_auto && node build/bin/www.js",
     "clean": "rimraf build",
@@ -22,9 +26,7 @@
     "run_migrate": "npx sequelize-cli db:migrate",
     "swagger": "tsoa spec",
     "test": "jest",
-    "sequelize": "node_modules/.bin/sequelize",
-    "apply-seeders": "node -r dotenv-flow/config ./node_modules/.bin/sequelize db:seed:all",
-    "revert-seeders": "node -r dotenv-flow/config ./node_modules/.bin/sequelize db:seed:undo:all"
+    "sequelize": "node_modules/.bin/sequelize"
   },
   "keywords": [],
   "author": "@nhanlethanh1198",
