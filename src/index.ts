@@ -32,13 +32,8 @@ import { initModels } from '@/models/pg'
 import morgan from 'morgan'
 import { redis } from '@/config/redis.config'
 import logger from './utils/logger.util'
-// import runAdminPage from '@/admin/.'
 const session = require('express-session')
 const Fingerprint = require('express-fingerprint')
-
-// const SequelizeStore = require('connect-session-sequelize')(session.Store)
-
-// const swaggerUi = require('swagger-ui-express')
 
 class App {
   public app: Application
