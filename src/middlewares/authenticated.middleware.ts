@@ -48,35 +48,35 @@ class AuthenticatedMiddleware {
     })
   }
 
-  public async verifyTokenAndAdmin(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    return await verifyToken(req, res, () => {
-      try {
-        if (req?.user?.isAdmin) {
-          return next()
-        } else {
-          return next(
-            new HttpException(
-              ConstantHttpCode.FORBIDDEN,
-              ConstantHttpReason.FORBIDDEN,
-              ConstantMessage.NOT_ALLOWED,
-            ),
-          )
-        }
-      } catch (err) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.FORBIDDEN,
-            ConstantHttpReason.FORBIDDEN,
-            ConstantMessage.NOT_ALLOWED,
-          ),
-        )
-      }
-    })
-  }
+  // public async verifyTokenAndAdmin(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ): Promise<void> {
+  //   return await verifyToken(req, res, () => {
+  //     try {
+  //       if (req?.user?.isAdmin) {
+  //         return next()
+  //       } else {
+  //         return next(
+  //           new HttpException(
+  //             ConstantHttpCode.FORBIDDEN,
+  //             ConstantHttpReason.FORBIDDEN,
+  //             ConstantMessage.NOT_ALLOWED,
+  //           ),
+  //         )
+  //       }
+  //     } catch (err) {
+  //       return next(
+  //         new HttpException(
+  //           ConstantHttpCode.FORBIDDEN,
+  //           ConstantHttpReason.FORBIDDEN,
+  //           ConstantMessage.NOT_ALLOWED,
+  //         ),
+  //       )
+  //     }
+  //   })
+  // }
 }
 
 export default AuthenticatedMiddleware
