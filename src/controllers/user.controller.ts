@@ -27,7 +27,6 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import logger from '@/utils/logger.util'
 import QueryMiddleware from '@/middlewares/quey.middleware'
 import BaseController from '@/controllers/base.controller'
-import FollowService from '@/services/follow.service'
 
 class UserController implements Controller {
   public path: string
@@ -37,7 +36,6 @@ class UserController implements Controller {
   private validate: Validate
   private queryMiddleware: QueryMiddleware
   private baseController: BaseController
-  private followService: FollowService
 
   constructor() {
     this.path = `${ConstantAPI.USERS}`
@@ -47,7 +45,6 @@ class UserController implements Controller {
     this.validate = new Validate()
     this.queryMiddleware = new QueryMiddleware()
     this.baseController = new BaseController()
-    this.followService = new FollowService()
 
     this.initialiseRoutes()
   }
@@ -753,14 +750,6 @@ class UserController implements Controller {
             ConstantMessage.USER_NOT_FOUND,
           ),
         )
-      }
-
-      // Update clickCount by followed user
-      const sessionUser = req.session?.user
-      if (sessionUser) {
-        setTimeout(() => {
-          this.followService.updateClickCount(sessionUser.id, user.id)
-        }, 0)
       }
 
       return res.status(ConstantHttpCode.OK).json({
