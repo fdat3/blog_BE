@@ -4,9 +4,6 @@ import Controller from '@/interfaces/controller.interface'
 import Authenticated from '@/middlewares/authenticated.middleware'
 import { verifyToken } from '@/validations/token.validation'
 import { Router } from 'express'
-import adminPollCategoryController from './admin/admin_poll_category.controller'
-import adminGroupController from './admin/admin_group.controller'
-import adminPollController from './admin/admin_poll.controller'
 
 class AdminController implements Controller {
   public router: Router
@@ -26,24 +23,6 @@ class AdminController implements Controller {
       `${this.path}${ConstantAPI.ADMIN_USER}`,
       [verifyToken, this.authenticated.verifyTokenAndAdmin],
       adminUserController.router,
-    )
-
-    this.router.use(
-      `${this.path}${ConstantAPI.ADMIN_POLL_CATEGORY}`,
-      [verifyToken, this.authenticated.verifyTokenAndAdmin],
-      adminPollCategoryController.router,
-    )
-
-    this.router.use(
-      `${this.path}${ConstantAPI.ADMIN_GROUP}`,
-      [verifyToken, this.authenticated.verifyTokenAndAdmin],
-      adminGroupController.router,
-    )
-
-    this.router.use(
-      `${this.path}${ConstantAPI.ADMIN_POLL}`,
-      [verifyToken, this.authenticated.verifyTokenAndAdmin],
-      adminPollController.router,
     )
   }
 }

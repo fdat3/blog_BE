@@ -1,5 +1,4 @@
 import ModelPgConstant from '@/constants/model.pg.constant'
-import { RecommendedCategoryList } from '@/models/pg/RecommendedCategoryList'
 import { SearchHistory } from '@/models/pg/SearchHistory'
 import UserUtils from '@/utils/user.utils'
 import {
@@ -16,11 +15,6 @@ import {
   HasManyRemoveAssociationMixin,
   HasManyRemoveAssociationsMixin,
   HasManySetAssociationsMixin,
-  HasOneCreateAssociationMixin,
-  HasOneGetAssociationMixin,
-  HasOneSetAssociationMixin,
-  InferAttributes,
-  InferCreationAttributes,
   Model,
   NonAttribute,
   Sequelize,
@@ -28,53 +22,10 @@ import {
 import type { Block } from './Block'
 import type { ContactList } from './ContactList'
 import type { Follow } from './Follow'
-import type { Group } from './Group'
-import type { GroupActivity } from './GroupActivity'
-import type { GroupMember } from './GroupMember'
-import type { GroupMemberRequest } from './GroupMemberRequest'
-import type { Poll } from './Poll'
-import type { PollViewHistory } from './PollViewHistory'
-import type { PollAnswer } from './PollAnswer'
-import type { PollComment } from './PollComment'
-import type { PollUpPackageUserBought } from './PollUpPackageUserBought'
-import type { PollVotes } from './PollVotes'
 import type { ReportUser } from './ReportUser'
 import { Transaction } from './Transaction'
-import type { UserDeviceSession } from './UserDevice'
-import { UserLinkSNS } from './UserLinkSNS'
-import type { UserPoint } from './UserPoint'
-import type { UserSetting } from './UserSetting'
 
-type UserAssociations =
-  | 'deviceSession'
-  | 'blockers'
-  | 'blockeds'
-  | 'polls'
-  | 'pollAnswers'
-  | 'pollVotes'
-  | 'pollComments'
-  | 'reports'
-  | 'isReporteds'
-  | 'myGroups'
-  | 'members'
-  | 'setting'
-  | 'followings'
-  | 'followeds'
-  | 'point'
-  | 'searchHistories'
-  | 'contacts'
-  | 'contactInfos'
-  | 'snsLinks'
-  | 'boughtPackages'
-  | 'groupActivities'
-  | 'groupRequesteds'
-  | 'groupInvitedUsers'
-  | 'pollViewHistories'
-
-export class User extends Model<
-  InferAttributes<User, { omit: UserAssociations }>,
-  InferCreationAttributes<User, { omit: UserAssociations }>
-> {
+export class User extends Model {
   declare id: CreationOptional<string>
   declare fullname: CreationOptional<string>
   declare password: CreationOptional<string>
@@ -110,38 +61,6 @@ export class User extends Model<
   declare updatedAt: CreationOptional<Date>
   declare deletedAt: CreationOptional<Date>
 
-  // User hasMany UserDevice (as Devices)
-  declare deviceSession?: NonAttribute<UserDeviceSession[]>
-  declare getDeviceSession: HasManyGetAssociationsMixin<UserDeviceSession>
-  declare setDeviceSession: HasManySetAssociationsMixin<
-    UserDeviceSession,
-    string
-  >
-  declare addDeviceSessions: HasManyAddAssociationMixin<
-    UserDeviceSession,
-    string
-  >
-  declare addDeviceSession: HasManyAddAssociationsMixin<
-    UserDeviceSession,
-    string
-  >
-  declare createDeviceSession: HasManyCreateAssociationMixin<UserDeviceSession>
-  declare removeDeviceSessions: HasManyRemoveAssociationMixin<
-    UserDeviceSession,
-    string
-  >
-  declare removeDeviceSession: HasManyRemoveAssociationsMixin<
-    UserDeviceSession,
-    string
-  >
-  declare hasDeviceSessions: HasManyHasAssociationMixin<
-    UserDeviceSession,
-    string
-  >
-  declare hasDeviceSession: HasManyHasAssociationsMixin<
-    UserDeviceSession,
-    string
-  >
   declare countDeviceSession: HasManyCountAssociationsMixin
 
   // User hasMany Block (as Blockers)
@@ -170,61 +89,6 @@ export class User extends Model<
   declare hasBlockeds: HasManyHasAssociationsMixin<Block, string>
   declare countBlockeds: HasManyCountAssociationsMixin
 
-  // User hasMany Poll (as Polls)
-  declare polls?: NonAttribute<Poll[]>
-  declare getPolls: HasManyGetAssociationsMixin<Poll>
-  declare setPolls: HasManySetAssociationsMixin<Poll, string>
-  declare addPoll: HasManyAddAssociationMixin<Poll, string>
-  declare addPolls: HasManyAddAssociationsMixin<Poll, string>
-  declare createPoll: HasManyCreateAssociationMixin<Poll>
-  declare removePoll: HasManyRemoveAssociationMixin<Poll, string>
-  declare removePolls: HasManyRemoveAssociationsMixin<Poll, string>
-  declare hasPoll: HasManyHasAssociationMixin<Poll, string>
-  declare hasPolls: HasManyHasAssociationsMixin<Poll, string>
-  declare countPolls: HasManyCountAssociationsMixin
-
-  // User hasMany PollAnswer (as PollAnswers)
-  declare pollAnswers?: NonAttribute<PollAnswer[]>
-  declare getPollAnswers: HasManyGetAssociationsMixin<PollAnswer>
-  declare setPollAnswers: HasManySetAssociationsMixin<PollAnswer, string>
-  declare addPollAnswer: HasManyAddAssociationMixin<PollAnswer, string>
-  declare addPollAnswers: HasManyAddAssociationsMixin<PollAnswer, string>
-  declare createPollAnswer: HasManyCreateAssociationMixin<PollAnswer>
-  declare removePollAnswer: HasManyRemoveAssociationMixin<PollAnswer, string>
-  declare removePollAnswers: HasManyRemoveAssociationsMixin<PollAnswer, string>
-  declare hasPollAnswer: HasManyHasAssociationMixin<PollAnswer, string>
-  declare hasPollAnswers: HasManyHasAssociationsMixin<PollAnswer, string>
-  declare countPollAnswers: HasManyCountAssociationsMixin
-
-  // User hasMany PollVotes (as PollChoosen)
-  declare pollVotes?: NonAttribute<PollVotes[]>
-  declare getPollVotes: HasManyGetAssociationsMixin<PollVotes>
-  declare setPollVotes: HasManySetAssociationsMixin<PollVotes, string>
-  declare addPollVote: HasManyAddAssociationMixin<PollVotes, string>
-  declare addPollVotes: HasManyAddAssociationsMixin<PollVotes, string>
-  declare createPollVote: HasManyCreateAssociationMixin<PollVotes>
-  declare removePollVote: HasManyRemoveAssociationMixin<PollVotes, string>
-  declare removePollVotes: HasManyRemoveAssociationsMixin<PollVotes, string>
-  declare hasPollVote: HasManyHasAssociationMixin<PollVotes, string>
-  declare hasPollVotes: HasManyHasAssociationsMixin<PollVotes, string>
-  declare countPollVotes: HasManyCountAssociationsMixin
-
-  // User hasMany PollComment (as PollComments)
-  declare pollComments?: NonAttribute<PollComment[]>
-  declare getPollComments: HasManyGetAssociationsMixin<PollComment>
-  declare setPollComments: HasManySetAssociationsMixin<PollComment, string>
-  declare addPollComment: HasManyAddAssociationMixin<PollComment, string>
-  declare addPollComments: HasManyAddAssociationsMixin<PollComment, string>
-  declare createPollComment: HasManyCreateAssociationMixin<PollComment>
-  declare removePollComment: HasManyRemoveAssociationMixin<PollComment, string>
-  declare removePollComments: HasManyRemoveAssociationsMixin<
-    PollComment,
-    string
-  >
-  declare hasPollComment: HasManyHasAssociationMixin<PollComment, string>
-  declare hasPollComments: HasManyHasAssociationsMixin<PollComment, string>
-  declare countPollComments: HasManyCountAssociationsMixin
-
   // User hasMany ReportUser (as Reports)
   declare reports?: NonAttribute<ReportUser[]>
   declare getReports: HasManyGetAssociationsMixin<ReportUser>
@@ -251,38 +115,6 @@ export class User extends Model<
   declare hasIsReporteds: HasManyHasAssociationsMixin<ReportUser, string>
   declare countIsReporteds: HasManyCountAssociationsMixin
 
-  // User hasMany Group (as MyGroups)
-  declare myGroups?: NonAttribute<Group[]>
-  declare getMyGroups: HasManyGetAssociationsMixin<Group>
-  declare setMyGroups: HasManySetAssociationsMixin<Group, string>
-  declare addMyGroup: HasManyAddAssociationMixin<Group, string>
-  declare addMyGroups: HasManyAddAssociationsMixin<Group, string>
-  declare createMyGroup: HasManyCreateAssociationMixin<Group>
-  declare removeMyGroup: HasManyRemoveAssociationMixin<Group, string>
-  declare removeMyGroups: HasManyRemoveAssociationsMixin<Group, string>
-  declare hasMyGroup: HasManyHasAssociationMixin<Group, string>
-  declare hasMyGroups: HasManyHasAssociationsMixin<Group, string>
-  declare countMyGroups: HasManyCountAssociationsMixin
-
-  // User hasMany GroupMember (as Members)
-  declare members?: NonAttribute<GroupMember[]>
-  declare getMembers: HasManyGetAssociationsMixin<GroupMember>
-  declare setMembers: HasManySetAssociationsMixin<GroupMember, string>
-  declare addMember: HasManyAddAssociationMixin<GroupMember, string>
-  declare addMembers: HasManyAddAssociationsMixin<GroupMember, string>
-  declare createMember: HasManyCreateAssociationMixin<GroupMember>
-  declare removeMember: HasManyRemoveAssociationMixin<GroupMember, string>
-  declare removeMembers: HasManyRemoveAssociationsMixin<GroupMember, string>
-  declare hasMember: HasManyHasAssociationMixin<GroupMember, string>
-  declare hasMembers: HasManyHasAssociationsMixin<GroupMember, string>
-  declare countMembers: HasManyCountAssociationsMixin
-
-  // User hasOne UserSetting (as Settings)
-  declare setting?: NonAttribute<UserSetting>
-  declare getSetting: HasOneGetAssociationMixin<UserSetting>
-  declare setSetting: HasOneSetAssociationMixin<UserSetting, string>
-  declare createSetting: HasOneCreateAssociationMixin<UserSetting>
-
   // User hasMany Follow (as Following)
   declare followings?: NonAttribute<Follow[]>
   declare getFollowings: HasManyGetAssociationsMixin<Follow>
@@ -308,46 +140,6 @@ export class User extends Model<
   declare hasFollowed: HasManyHasAssociationMixin<Follow, string>
   declare hasFolloweds: HasManyHasAssociationsMixin<Follow, string>
   declare countFolloweds: HasManyCountAssociationsMixin
-
-  // User hasOne UserPoint (as Point)
-  declare point?: NonAttribute<UserPoint>
-  declare getPoint: HasOneGetAssociationMixin<UserPoint>
-  declare setPoint: HasOneSetAssociationMixin<UserPoint, string>
-  declare createPoint: HasOneCreateAssociationMixin<UserPoint>
-
-  // User hasMany RecommendedCategoryList (as RecommentCategory)
-  declare recommentCategories?: NonAttribute<RecommendedCategoryList[]>
-  declare getRecommentCategories: HasManyGetAssociationsMixin<RecommendedCategoryList>
-  declare setRecommentCategories: HasManySetAssociationsMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare addRecommentCategory: HasManyAddAssociationMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare addRecommentCategories: HasManyAddAssociationsMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare createRecommentCategory: HasManyCreateAssociationMixin<RecommendedCategoryList>
-  declare removeRecommentCategory: HasManyRemoveAssociationMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare removeRecommentCategories: HasManyRemoveAssociationsMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare hasRecommentCategory: HasManyHasAssociationMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare hasRecommentCategories: HasManyHasAssociationsMixin<
-    RecommendedCategoryList,
-    string
-  >
-  declare countRecommentCategories: HasManyCountAssociationsMixin
 
   // User hasMany SearchHistory (as SearchHistory)
   declare searchHistories?: NonAttribute<SearchHistory[]>
@@ -397,19 +189,6 @@ export class User extends Model<
   declare hasContactInfos: HasManyHasAssociationsMixin<ContactList, string>
   declare countContactInfos: HasManyCountAssociationsMixin
 
-  // User hasMany UserLinkSNS (as SnsLink)
-  declare snsLinks?: NonAttribute<UserLinkSNS[]>
-  declare getSnsLinks: HasManyGetAssociationsMixin<UserLinkSNS>
-  declare setSnsLinks: HasManySetAssociationsMixin<UserLinkSNS, string>
-  declare addSnsLink: HasManyAddAssociationMixin<UserLinkSNS, string>
-  declare addSnsLinks: HasManyAddAssociationsMixin<UserLinkSNS, string>
-  declare createSnsLink: HasManyCreateAssociationMixin<UserLinkSNS>
-  declare removeSnsLink: HasManyRemoveAssociationMixin<UserLinkSNS, string>
-  declare removeSnsLinks: HasManyRemoveAssociationsMixin<UserLinkSNS, string>
-  declare hasSnsLink: HasManyHasAssociationMixin<UserLinkSNS, string>
-  declare hasSnsLinks: HasManyHasAssociationsMixin<UserLinkSNS, string>
-  declare countSnsLinks: HasManyCountAssociationsMixin
-
   // User hasMany Transaction (as Transactions)
   declare transactions?: NonAttribute<Transaction[]>
   declare getTransactions: HasManyGetAssociationsMixin<Transaction>
@@ -426,188 +205,17 @@ export class User extends Model<
   declare hasTransactions: HasManyHasAssociationsMixin<Transaction, string>
   declare countTransactions: HasManyCountAssociationsMixin
 
-  // User hasMany PollUpPackageUserBought (as BoughtPackages)
-  declare boughtPackages?: NonAttribute<PollUpPackageUserBought[]>
-  declare getBoughtPackages: HasManyGetAssociationsMixin<PollUpPackageUserBought>
-  declare setBoughtPackages: HasManySetAssociationsMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare addBoughtPackage: HasManyAddAssociationMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare addBoughtPackages: HasManyAddAssociationsMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare createBoughtPackage: HasManyCreateAssociationMixin<PollUpPackageUserBought>
-  declare removeBoughtPackage: HasManyRemoveAssociationMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare removeBoughtPackages: HasManyRemoveAssociationsMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare hasBoughtPackage: HasManyHasAssociationMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare hasBoughtPackages: HasManyHasAssociationsMixin<
-    PollUpPackageUserBought,
-    string
-  >
-  declare countBoughtPackages: HasManyCountAssociationsMixin
-
-  // User hasMany GroupActivity (as GroupActivities)
-  declare groupActivities?: NonAttribute<GroupActivity[]>
-  declare getGroupActivities: HasManyGetAssociationsMixin<GroupActivity>
-  declare setGroupActivities: HasManySetAssociationsMixin<GroupActivity, string>
-  declare addGroupActivity: HasManyAddAssociationMixin<GroupActivity, string>
-  declare addGroupActivities: HasManyAddAssociationsMixin<GroupActivity, string>
-  declare createGroupActivity: HasManyCreateAssociationMixin<GroupActivity>
-  declare removeGroupActivity: HasManyRemoveAssociationMixin<
-    GroupActivity,
-    string
-  >
-  declare removeGroupActivities: HasManyRemoveAssociationsMixin<
-    GroupActivity,
-    string
-  >
-  declare hasGroupActivity: HasManyHasAssociationMixin<GroupActivity, string>
-  declare hasGroupActivities: HasManyHasAssociationsMixin<GroupActivity, string>
-  declare countGroupActivities: HasManyCountAssociationsMixin
-
-  // User hasMany GroupMemberRequest (as GroupRequested)
-  declare groupRequesteds?: NonAttribute<GroupMemberRequest[]>
-  declare getGroupRequesteds: HasManyGetAssociationsMixin<GroupMemberRequest>
-  declare setGroupRequesteds: HasManySetAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare addGroupRequested: HasManyAddAssociationMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare addGroupRequesteds: HasManyAddAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare createGroupRequested: HasManyCreateAssociationMixin<GroupMemberRequest>
-  declare removeGroupRequested: HasManyRemoveAssociationMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare removeGroupRequesteds: HasManyRemoveAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare hasGroupRequested: HasManyHasAssociationMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare hasGroupRequesteds: HasManyHasAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare countGroupRequesteds: HasManyCountAssociationsMixin
-
-  // User hasMany GroupMemberRequest (as GroupInvitedUsers)
-  declare groupInvitedUsers?: NonAttribute<GroupMemberRequest[]>
-  declare getGroupInvitedUsers: HasManyGetAssociationsMixin<GroupMemberRequest>
-  declare setGroupInvitedUsers: HasManySetAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare addGroupInvitedUser: HasManyAddAssociationMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare addGroupInvitedUsers: HasManyAddAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare createGroupInvitedUser: HasManyCreateAssociationMixin<GroupMemberRequest>
-  declare removeGroupInvitedUser: HasManyRemoveAssociationMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare removeGroupInvitedUsers: HasManyRemoveAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare hasGroupInvitedUser: HasManyHasAssociationMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare hasGroupInvitedUsers: HasManyHasAssociationsMixin<
-    GroupMemberRequest,
-    string
-  >
-  declare countGroupInvitedUsers: HasManyCountAssociationsMixin
-
-  // User hasMany PollViewHistory (as PollViewHistories)
-  declare pollViewHistories?: NonAttribute<PollViewHistory[]>
-  declare getPollViewHistories: HasManyGetAssociationsMixin<PollViewHistory>
-  declare setPollViewHistories: HasManySetAssociationsMixin<
-    PollViewHistory,
-    string
-  >
-  declare addPollViewHistory: HasManyAddAssociationMixin<
-    PollViewHistory,
-    string
-  >
-  declare addPollViewHistories: HasManyAddAssociationsMixin<
-    PollViewHistory,
-    string
-  >
-  declare createPollViewHistory: HasManyCreateAssociationMixin<PollViewHistory>
-  declare removePollViewHistory: HasManyRemoveAssociationMixin<
-    PollViewHistory,
-    string
-  >
-  declare removePollViewHistories: HasManyRemoveAssociationsMixin<
-    PollViewHistory,
-    string
-  >
-  declare hasPollViewHistory: HasManyHasAssociationMixin<
-    PollViewHistory,
-    string
-  >
-  declare hasPollViewHistories: HasManyHasAssociationsMixin<
-    PollViewHistory,
-    string
-  >
-  declare countPollViewHistories: HasManyCountAssociationsMixin
-
   declare static associations: {
-    deviceSession: Association<User, UserDeviceSession>
     blockers: Association<User, Block>
     blockeds: Association<User, Block>
-    polls: Association<User, Poll>
-    pollAnswers: Association<User, PollAnswer>
-    pollVotes: Association<User, PollVotes>
-    pollComments: Association<User, PollComment>
     reports: Association<User, ReportUser>
     isReporteds: Association<User, ReportUser>
-    myGroups: Association<User, Group>
-    members: Association<User, GroupMember>
-    setting: Association<User, UserSetting>
     followings: Association<User, Follow>
     followeds: Association<User, Follow>
-    point: Association<User, UserPoint>
-    recommentCategories: Association<User, RecommendedCategoryList>
     searchHistories: Association<User, SearchHistory>
     contacts: Association<User, ContactList>
     contactInfos: Association<User, ContactList>
-    snsLinks: Association<User, UserLinkSNS>
     transactions: Association<User, Transaction>
-    boughtPackages: Association<User, PollUpPackageUserBought>
-    groupActivities: Association<User, GroupActivity>
-    groupRequesteds: Association<User, GroupMemberRequest>
-    groupInvitedUsers: Association<User, GroupMemberRequest>
-    pollViewHistories: Association<User, PollViewHistory>
   }
 
   static initModel(sequelize: Sequelize): typeof User {
@@ -647,42 +255,8 @@ export class User extends Model<
         avatar: {
           type: DataTypes.STRING(),
         },
-        inviteCode: {
-          type: DataTypes.STRING(20),
-          unique: true,
-        },
-        refCode: {
-          type: DataTypes.STRING(20),
-          unique: true,
-        },
         gender: {
           type: DataTypes.STRING(10),
-        },
-        instagram: {
-          type: DataTypes.STRING(100),
-        },
-        mbti: {
-          type: DataTypes.ENUM(
-            'INTJ',
-            'INTP',
-            'ENTJ',
-            'ENTP',
-            'INFJ',
-            'INFP',
-            'ENFJ',
-            'ENFP',
-            'ISTJ',
-            'ISFJ',
-            'ESTI',
-            'ESFJ',
-            'ISTP',
-            'ISFP',
-            'ESTP',
-            'ESFP',
-          ),
-        },
-        identify: {
-          type: DataTypes.STRING(100),
         },
         isAdmin: {
           type: DataTypes.BOOLEAN,

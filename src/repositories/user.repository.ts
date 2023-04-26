@@ -6,7 +6,7 @@ import {
   default as baseController,
 } from '@/controllers/base.controller'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { User, UserDeviceSession } from '@/models/pg'
+import { User } from '@/models/pg'
 import logger from '@/utils/logger.util'
 
 class UserRepository {
@@ -312,23 +312,6 @@ class UserRepository {
     } catch (err) {
       logger.error(err)
       return null
-    }
-  }
-
-  public async addDevice(user: User, device: UserDeviceSession): Promise<void> {
-    try {
-      await UserDeviceSession.findOrCreate({
-        where: {
-          ...device,
-        },
-        defaults: {
-          ...device,
-          userId: user.id,
-        },
-      })
-    } catch (err) {
-      logger.error('Error while create new device')
-      logger.error(err)
     }
   }
 }

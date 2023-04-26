@@ -1,7 +1,6 @@
 import { SNSEnum } from '@/enums/auth.enum'
 import { CheckUserExistInterface } from '@/interfaces/auth.interface'
 import UserRepository from '@/repositories/user.repository'
-import UserDeviceSessionRepository from '@/repositories/userDeviceSession.repository'
 import UserSecurity from '@/security/user.security'
 import SNSService from '@/services/sns.service'
 
@@ -9,13 +8,11 @@ class AuthService {
   private userRepository: UserRepository
   private userSecurity: UserSecurity
   private snsService: SNSService
-  private userDeviceSessionService: UserDeviceSessionRepository
 
   constructor() {
     this.userRepository = new UserRepository()
     this.userSecurity = new UserSecurity()
     this.snsService = new SNSService()
-    this.userDeviceSessionService = new UserDeviceSessionRepository()
   }
 
   public async findByUsername(username: string): Promise<any> {
@@ -78,20 +75,11 @@ class AuthService {
     let result: any
     const { token } = data
     switch (type) {
-      case SNSEnum.APPLE:
-        result = await this.snsService.appleSignIn(token)
-        break
       case SNSEnum.FACEBOOK:
         result = await this.snsService.facebookSignIn(token)
         break
       case SNSEnum.GOOGLE:
         result = await this.snsService.googleSignIn(token)
-        break
-      case SNSEnum.KAKAO:
-        result = await this.snsService.kakaoSignIn(token)
-        break
-      case SNSEnum.NAVER:
-        result = await this.snsService.naverSignIn(token)
         break
       default:
         result = null
@@ -123,41 +111,6 @@ class AuthService {
       return !!user
     }
     return false
-  }
-
-  public async handleDeviceSession(
-    userId: string,
-    metaData: any,
-  ): Promise<any> {
-    const currentDevice = await this.userDeviceSessionService.findDeviceExisted(
-      metaData.deviceId,
-      userId,
-    )
-
-    if (currentDevice) {
-      return currentDevice
-    }
-    /**
-     * Create new device session
-     */
-    const secretKey = this.userSecurity.generateSecretKey()
-
-    const devicePayload: any = {
-      userId,
-      deviceId: metaData.deviceId,
-      secretKey,
-      ua: metaData.ua,
-      ipAddress: metaData.ipAddress,
-      lastSession: new Date(),
-      refreshToken: metaData?.refreshToken,
-      fcmToken: metaData?.fcmToken,
-      expiredAt: metaData?.expiredAt,
-    }
-
-    const device = await this.userDeviceSessionService.createNewDevice(
-      devicePayload,
-    )
-    return device
   }
 }
 

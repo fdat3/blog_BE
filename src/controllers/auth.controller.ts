@@ -24,7 +24,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 // logger
 import { SNSEnum } from '@/enums/auth.enum'
 import logger from '@/utils/logger.util'
-import { DateTime } from 'luxon'
+// import { DateTime } from 'luxon'
 import BaseController from '@/controllers/base.controller'
 import * as _ from 'lodash'
 
@@ -285,12 +285,12 @@ class AuthController implements Controller {
        */
 
       const { fingerprint } = req
-      const ip: string | undefined = ((): string | undefined => {
-        const forwardedIpsStr = req.header('x-forwarded-for')
-        const resultIp = req.connection.remoteAddress
-        return forwardedIpsStr ?? resultIp
-      })()
-      const ua = req.header('user-agent')
+      // const ip: string | undefined = ((): string | undefined => {
+      //   const forwardedIpsStr = req.header('x-forwarded-for')
+      //   const resultIp = req.connection.remoteAddress
+      //   return forwardedIpsStr ?? resultIp
+      // })()
+      // const ua = req.header('user-agent')
       const deviceId = fingerprint?.hash
 
       /**
@@ -309,18 +309,16 @@ class AuthController implements Controller {
         deviceId,
       )
 
-      const metaData = {
-        ipAddress: ip,
-        ua,
-        deviceId,
-        refreshToken,
-        fcmToken: req.body?.fcmToken,
-        expiredAt: DateTime.now().plus({
-          month: 1,
-        }),
-      }
-
-      await this.authService.handleDeviceSession(user.id, metaData)
+      // const metaData = {
+      //   ipAddress: ip,
+      //   ua,
+      //   deviceId,
+      //   refreshToken,
+      //   fcmToken: req.body?.fcmToken,
+      //   expiredAt: DateTime.now().plus({
+      //     month: 1,
+      //   }),
+      // }
 
       res.cookie('jwt', refreshToken)
 
