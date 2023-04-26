@@ -36,7 +36,6 @@ const runAdminPage = (app: Application, PORT: number): void => {
       Models.User.initModel(sequelize),
       // Models.Poll.initModel(sequelize),
       {
-        resource: Models.Poll.initModel(sequelize),
         options: {
           navigation: {
             name: 'Users',
@@ -46,7 +45,6 @@ const runAdminPage = (app: Application, PORT: number): void => {
       },
       // Models.PollAnswer.initModel(sequelize),
       Models.ReportUser.initModel(sequelize),
-      Models.ReportPoll.initModel(sequelize),
     ],
   })
 

@@ -17,21 +17,12 @@ import dotenv from 'dotenv'
 import process from 'node:process'
 import ErrorController from '@/controllers/error.controller'
 import ImageController from '@/controllers/image.controller'
-import PollController from '@/controllers/poll.controller'
-import GroupController from '@/controllers/group.controller'
-import GroupSettingController from '@/controllers/groupSetting.controller'
 import BlockController from '@/controllers/block.controller'
-import DeviceController from '@/controllers/device.controller'
 import AdminController from '@/controllers/admin.controller'
-import CronService from '@/services/cron.service'
 import TransactionController from '@/controllers/transaction.controller'
-import PollUpPackageController from '@/controllers/pollUpPackage.controller'
-import ReportPollController from '@/controllers/reportPoll.controller'
 import CheckHelper from '@/helpers/check.helper'
 import TelegramUtil from '@/utils/telegram.util'
-import LikeController from '@/controllers/like.controller'
-import PolicyController from '@/controllers/policy.controller'
-import PollCommentController from '@/controllers/pollComment.controller'
+// import LikeController from '@/controllers/like.controller'
 import ReportUserController from '@/controllers/reportUser.controller'
 
 dotenv.config({
@@ -49,17 +40,9 @@ const { app } = new App({
     new UserController(),
     new BlockController(),
     new ImageController(),
-    new PollController(),
-    new GroupController(),
-    new GroupSettingController(),
-    new DeviceController(),
     new TransactionController(),
-    new PollUpPackageController(),
-    new ReportPollController(),
-    new LikeController(),
+    // new LikeController(),
     new AdminController(),
-    new PolicyController(),
-    new PollCommentController(),
     new ReportUserController(),
   ],
 })
@@ -147,13 +130,6 @@ setTimeout(async () => {
   await socketServer.initSocketServer()
   console.log(`Socket server run on ${SocketServer.SOCKET_PORT}`)
 }, 0)
-
-/**
- * Set cron service run on only main process with setImmediate
- */
-setImmediate(() => {
-  new CronService()
-})
 
 // Send Telegram that server is running
 setTimeout(() => {
