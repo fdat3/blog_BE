@@ -17,13 +17,10 @@ import dotenv from 'dotenv'
 import process from 'node:process'
 import ErrorController from '@/controllers/error.controller'
 import ImageController from '@/controllers/image.controller'
-import BlockController from '@/controllers/block.controller'
 import AdminController from '@/controllers/admin.controller'
-import TransactionController from '@/controllers/transaction.controller'
 import CheckHelper from '@/helpers/check.helper'
 import TelegramUtil from '@/utils/telegram.util'
 // import LikeController from '@/controllers/like.controller'
-import ReportUserController from '@/controllers/reportUser.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -38,12 +35,8 @@ const { app } = new App({
   v1: [
     new AuthController(),
     new UserController(),
-    new BlockController(),
     new ImageController(),
-    new TransactionController(),
-    // new LikeController(),
     new AdminController(),
-    new ReportUserController(),
   ],
 })
 

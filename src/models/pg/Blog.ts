@@ -18,10 +18,10 @@ import {
   NonAttribute,
   Sequelize,
 } from 'sequelize'
-// import type { Comment } from './Comment'
-import type { Like } from './Like'
+import type { Comment } from './Comment'
+import type { UpVote } from './UpVote'
 
-type BlogAssociations = 'likes' | 'comments'
+type BlogAssociations = 'upVotes' | 'comments'
 
 export class Blog extends Model<
   InferAttributes<Blog, { omit: BlogAssociations }>,
@@ -42,18 +42,18 @@ export class Blog extends Model<
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // Blog hasMany Like
-  declare likes?: NonAttribute<Like[]>
-  declare getLikes: HasManyGetAssociationsMixin<Like>
-  declare setLikes: HasManySetAssociationsMixin<Like, number>
-  declare addLike: HasManyAddAssociationMixin<Like, number>
-  declare addLikes: HasManyAddAssociationsMixin<Like, number>
-  declare createLike: HasManyCreateAssociationMixin<Like>
-  declare removeLike: HasManyRemoveAssociationMixin<Like, number>
-  declare removeLikes: HasManyRemoveAssociationsMixin<Like, number>
-  declare hasLike: HasManyHasAssociationMixin<Like, number>
-  declare hasLikes: HasManyHasAssociationsMixin<Like, number>
-  declare countLikes: HasManyCountAssociationsMixin
+  // Blog hasMany UpVote
+  declare upVotes?: NonAttribute<UpVote[]>
+  declare getUpVotes: HasManyGetAssociationsMixin<UpVote>
+  declare setUpVotes: HasManySetAssociationsMixin<UpVote, number>
+  declare addUpVote: HasManyAddAssociationMixin<UpVote, number>
+  declare addUpVotes: HasManyAddAssociationsMixin<UpVote, number>
+  declare createUpVote: HasManyCreateAssociationMixin<UpVote>
+  declare removeUpVote: HasManyRemoveAssociationMixin<UpVote, number>
+  declare removeUpVotes: HasManyRemoveAssociationsMixin<UpVote, number>
+  declare hasUpVote: HasManyHasAssociationMixin<UpVote, number>
+  declare hasUpVotes: HasManyHasAssociationsMixin<UpVote, number>
+  declare countUpVotes: HasManyCountAssociationsMixin
 
   // Blog hasMany Comment
   declare comments?: NonAttribute<Comment[]>
@@ -61,7 +61,7 @@ export class Blog extends Model<
   declare setComments: HasManySetAssociationsMixin<Comment, number>
   declare addComment: HasManyAddAssociationMixin<Comment, number>
   declare addComments: HasManyAddAssociationsMixin<Comment, number>
-  // declare createComment: HasManyCreateAssociationMixin<Comment>
+  declare createComment: HasManyCreateAssociationMixin<Comment>
   declare removeComment: HasManyRemoveAssociationMixin<Comment, number>
   declare removeComments: HasManyRemoveAssociationsMixin<Comment, number>
   declare hasComment: HasManyHasAssociationMixin<Comment, number>
@@ -69,15 +69,15 @@ export class Blog extends Model<
   declare countComments: HasManyCountAssociationsMixin
 
   declare static associations: {
-    likes: Association<Blog, Like>
-    // comments: Association<Blog, Comment>
+    upVotes: Association<Blog, UpVote>
+    comments: Association<Blog, Comment>
   }
 
   static initModel(sequelize: Sequelize): typeof Blog {
     Blog.init(
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.INTEGER.UNSIGNED,
           primaryKey: true,
           autoIncrement: true,
           allowNull: false,

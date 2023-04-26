@@ -19,8 +19,8 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Blog } from './Blog'
-// import type { Comment } from './Comment'
-import type { Like } from './Like'
+import type { Comment } from './Comment'
+import type { UpVote } from './UpVote'
 
 type EmployeeAssociations = 'empLikes' | 'empComments' | 'empBlogs'
 
@@ -39,17 +39,17 @@ export class Employee extends Model<
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // Employee hasMany Like (as EmpLike)
-  declare empLikes?: NonAttribute<Like[]>
-  declare getEmpLikes: HasManyGetAssociationsMixin<Like>
-  declare setEmpLikes: HasManySetAssociationsMixin<Like, number>
-  declare addEmpLike: HasManyAddAssociationMixin<Like, number>
-  declare addEmpLikes: HasManyAddAssociationsMixin<Like, number>
-  declare createEmpLike: HasManyCreateAssociationMixin<Like>
-  declare removeEmpLike: HasManyRemoveAssociationMixin<Like, number>
-  declare removeEmpLikes: HasManyRemoveAssociationsMixin<Like, number>
-  declare hasEmpLike: HasManyHasAssociationMixin<Like, number>
-  declare hasEmpLikes: HasManyHasAssociationsMixin<Like, number>
+  // Employee hasMany UpVote (as EmpLike)
+  declare empLikes?: NonAttribute<UpVote[]>
+  declare getEmpLikes: HasManyGetAssociationsMixin<UpVote>
+  declare setEmpLikes: HasManySetAssociationsMixin<UpVote, number>
+  declare addEmpLike: HasManyAddAssociationMixin<UpVote, number>
+  declare addEmpLikes: HasManyAddAssociationsMixin<UpVote, number>
+  declare createEmpLike: HasManyCreateAssociationMixin<UpVote>
+  declare removeEmpLike: HasManyRemoveAssociationMixin<UpVote, number>
+  declare removeEmpLikes: HasManyRemoveAssociationsMixin<UpVote, number>
+  declare hasEmpLike: HasManyHasAssociationMixin<UpVote, number>
+  declare hasEmpLikes: HasManyHasAssociationsMixin<UpVote, number>
   declare countEmpLikes: HasManyCountAssociationsMixin
 
   // Employee hasMany Comment (as EmpComment)
@@ -58,7 +58,7 @@ export class Employee extends Model<
   declare setEmpComments: HasManySetAssociationsMixin<Comment, number>
   declare addEmpComment: HasManyAddAssociationMixin<Comment, number>
   declare addEmpComments: HasManyAddAssociationsMixin<Comment, number>
-  // declare createEmpComment: HasManyCreateAssociationMixin<Comment>
+  declare createEmpComment: HasManyCreateAssociationMixin<Comment>
   declare removeEmpComment: HasManyRemoveAssociationMixin<Comment, number>
   declare removeEmpComments: HasManyRemoveAssociationsMixin<Comment, number>
   declare hasEmpComment: HasManyHasAssociationMixin<Comment, number>
@@ -79,8 +79,8 @@ export class Employee extends Model<
   declare countEmpBlogs: HasManyCountAssociationsMixin
 
   declare static associations: {
-    empLikes: Association<Employee, Like>
-    // empComments: Association<Employee, Comment>,
+    empLikes: Association<Employee, UpVote>
+    empComments: Association<Employee, Comment>
     empBlogs: Association<Employee, Blog>
   }
 
@@ -88,7 +88,7 @@ export class Employee extends Model<
     Employee.init(
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.INTEGER.UNSIGNED,
           primaryKey: true,
           autoIncrement: true,
           allowNull: false,
