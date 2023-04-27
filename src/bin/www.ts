@@ -11,7 +11,7 @@ import logger from '@/utils/logger.util'
 
 // controllers
 // import AuthController from '@/controllers/auth.controller'
-// import UserController from '@/controllers/user.controller'
+import UserController from '@/controllers/user.controller'
 // import GithubController from '@/controllers/github.controller'
 import dotenv from 'dotenv'
 import process from 'node:process'
@@ -34,7 +34,7 @@ logger.warn(
 const { app } = new App({
   v1: [
     // new AuthController(),
-    // new UserController(),
+    new UserController(),
     new ImageController(),
     // new AdminController(),
   ],

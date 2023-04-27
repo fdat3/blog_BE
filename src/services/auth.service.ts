@@ -1,18 +1,18 @@
 // import { SNSEnum } from '@/enums/auth.enum'
 // import { CheckUserExistInterface } from '@/interfaces/auth.interface'
-// import UserRepository from '@/repositories/user.repository'
-// import UserSecurity from '@/security/user.security'
+import UserRepository from '@/repositories/user.repository'
+import UserSecurity from '@/security/user.security'
 // import SNSService from '@/services/sns.service'
 
 class AuthService {
-  // private userRepository: UserRepository
-  // private userSecurity: UserSecurity
+  private userRepository: UserRepository
+  private userSecurity: UserSecurity
   // private snsService: SNSService
-  // constructor() {
-  //   this.userRepository = new UserRepository()
-  //   this.userSecurity = new UserSecurity()
-  //   this.snsService = new SNSService()
-  // }
+  constructor() {
+    this.userRepository = new UserRepository()
+    this.userSecurity = new UserSecurity()
+    //   this.snsService = new SNSService()
+  }
   // public async findByUsername(username: string): Promise<any> {
   //   const user = await this.userRepository.findByUsername(username)
   //   return user
@@ -33,18 +33,18 @@ class AuthService {
   //   const user = await this.userRepository.findByEmailWithPassword(email)
   //   return user
   // }
-  // public comparePassword(password: string, decryptedPassword: string): boolean {
-  //   return this.userSecurity.comparePassword(password, decryptedPassword)
-  // }
-  // public async createUser(user: any): Promise<any> {
-  //   const encryptedPassword = this.userSecurity.encrypt(user.password)
-  //   const newUser = {
-  //     ...user,
-  //     password: encryptedPassword,
-  //   }
-  //   const savedUser = await this.userRepository.createUser(newUser)
-  //   return savedUser
-  // }
+  public comparePassword(password: string, decryptedPassword: string): boolean {
+    return this.userSecurity.comparePassword(password, decryptedPassword)
+  }
+  public async createUser(user: any): Promise<any> {
+    const encryptedPassword = this.userSecurity.encrypt(user.password)
+    const newUser = {
+      ...user,
+      password: encryptedPassword,
+    }
+    const savedUser = await this.userRepository.createUser(newUser)
+    return savedUser
+  }
   // public async generateAccessToken(
   //   id: string,
   //   isAdmin: boolean,

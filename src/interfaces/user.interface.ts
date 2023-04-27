@@ -1,7 +1,10 @@
 export default interface User {
-  username: string
   fullname: string
   email: string
   password: string
-  phone: string
+  dob: string
+  avatar: string
+  followCount: number
+  loginType: string
+  active: boolean
 }

@@ -27,8 +27,10 @@ class Api {
 
   // users
   public static readonly USERS: string = '/users'
+  public static readonly USERS_CREATE: string = '/'
   public static readonly USER_UPDATE_ANY: string = '/:id'
   public static readonly USER_UPDATE_USERNAME: string = '/update-username/:id'
+  public static readonly USER_UPDATE_FULLNAME: string = '/update-fullname/:id'
   public static readonly USER_UPDATE_NAME: string = '/update-name/:id'
   public static readonly USER_UPDATE_EMAIL: string = '/update-email/:id'
   public static readonly USER_UPDATE_PASSWORD: string = '/update-password/:id'
@@ -36,7 +38,7 @@ class Api {
   public static readonly USER_UPDATE_ADDRESS: string = '/update-address/:id'
   public static readonly USER_DELETE: string = '/delete/:id'
   public static readonly USER_GET: string = '/find/:id'
-  public static readonly USER_GET_ALL: string = '/'
+  public static readonly USER_GET_ALL: string = '/get-all'
   public static readonly USER_GET_ALL_STATS: string = '/stats'
 
   // POLL
