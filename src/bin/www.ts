@@ -20,6 +20,8 @@ import ImageController from '@/controllers/image.controller'
 // import AdminController from '@/controllers/admin.controller'
 import CheckHelper from '@/helpers/check.helper'
 import TelegramUtil from '@/utils/telegram.util'
+import BlogController from '@/controllers/blog.controller'
+import AuthController from '@/controllers/auth.controller'
 // import LikeController from '@/controllers/like.controller'
 
 dotenv.config({
@@ -33,9 +35,10 @@ logger.warn(
 
 const { app } = new App({
   v1: [
-    // new AuthController(),
+    new AuthController(),
     new UserController(),
     new ImageController(),
+    new BlogController(),
     // new AdminController(),
   ],
 })

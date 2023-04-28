@@ -57,6 +57,13 @@ class UserController implements Controller {
       this.createUser,
     )
 
+    this.router.post(
+      `${this.path}${ConstantAPI.USER_LOGIN}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      validationMiddleware(this.validate.login),
+      this.userLogin,
+    )
+
     this.router.delete(
       `${this.path}${ConstantAPI.USER_DELETE}`,
       this.authenticated.verifyTokenAndAuthorization,
@@ -210,7 +217,7 @@ class UserController implements Controller {
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.USERNAME_NOT_VALID,
+            ConstantMessage.FULLNAME_NOT_VALID,
           ),
         )
       }
@@ -256,7 +263,7 @@ class UserController implements Controller {
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.USERNAME_NOT_CHANGE,
+            ConstantMessage.FULLNAME_NOT_CHANGE,
           ),
         )
       }
@@ -267,7 +274,7 @@ class UserController implements Controller {
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.USERNAME_NOT_CHANGE,
+            ConstantMessage.FULLNAME_NOT_CHANGE,
           ),
         )
       }
@@ -278,7 +285,7 @@ class UserController implements Controller {
           code: ConstantHttpCode.OK,
           msg: ConstantHttpReason.OK,
         },
-        msg: ConstantMessage.USERNAME_CHANGE_SUCCESS,
+        msg: ConstantMessage.FULLNAME_CHANGE_SUCCESS,
         data: {
           user: updatedUser,
         },
@@ -321,7 +328,7 @@ class UserController implements Controller {
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.FULLNAME_NOT_VALID,
+            ConstantMessage.NAME_NOT_CHANGE,
           ),
         )
       }
@@ -723,6 +730,81 @@ class UserController implements Controller {
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           err?.message,
+        ),
+      )
+    }
+  }
+
+  private userLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { fullname, password } = req.body
+      const fullnameValidated = this.validate.validateFullname(fullname)
+      if (!fullnameValidated) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.INTERNAL_SERVER_ERROR,
+            ConstantHttpReason.INTERNAL_SERVER_ERROR,
+            ConstantMessage.FULLNAME_NOT_VALID,
+          ),
+        )
+      }
+
+      const passwordValidated = this.validate.validatePassword(password)
+      if (!passwordValidated) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.INTERNAL_SERVER_ERROR,
+            ConstantHttpReason.INTERNAL_SERVER_ERROR,
+            ConstantMessage.PASSWORD_NOT_VALID,
+          ),
+        )
+      }
+      logger.info(`password ${password} is valid`)
+
+      const user = await this.userService.findByFullnameWithPassword(fullname)
+      if (!user) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.INTERNAL_SERVER_ERROR,
+            ConstantHttpReason.INTERNAL_SERVER_ERROR,
+            ConstantMessage.USER_NOT_FOUND,
+          ),
+        )
+      }
+
+      const isMatch = this.userService.comparePassword(password, user.password)
+      if (!isMatch) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.INTERNAL_SERVER_ERROR,
+            ConstantHttpReason.INTERNAL_SERVER_ERROR,
+            ConstantMessage.PASSWORD_NOT_MATCH,
+          ),
+        )
+      }
+
+      const result = {
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
+        },
+      }
+
+      this.baseController.onSuccess(res, result)
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
         ),
       )
     }

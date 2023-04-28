@@ -19,8 +19,11 @@ class Message {
   public static readonly PHONE_EXIST: string = 'phone is exist'
   public static readonly USER_NOT_CREATE: string =
     'user is not create, please try again'
+  public static readonly BLOG_NOT_CREATE: string =
+    'user is not create, please try again'
   public static readonly USER_CREATE_SUCCESS: string =
     'user is create success, please login'
+  public static readonly BLOG_CREATE_SUCCESS: string = 'blog is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'
   public static readonly PASSWORD_NOT_MATCH: string = 'password is not match'
   public static readonly USER_LOGIN_SUCCESS: string = 'user is login success'
@@ -37,6 +40,9 @@ class Message {
   public static readonly USERNAME_NOT_CHANGE: string = 'username is not change'
   public static readonly USERNAME_CHANGE_SUCCESS: string =
     'username is change success'
+  public static readonly FULLNAME_NOT_CHANGE: string = 'fullname is not change'
+  public static readonly FULLNAME_CHANGE_SUCCESS: string =
+    'fullname is change success'
   public static readonly NAME_NOT_CHANGE: string = 'name is not change'
   public static readonly NAME_CHANGE_SUCCESS: string = 'name is change success'
   public static readonly EMAIL_NOT_CHANGE: string = 'email is not change'

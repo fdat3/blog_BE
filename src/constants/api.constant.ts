@@ -40,6 +40,11 @@ class Api {
   public static readonly USER_GET: string = '/find/:id'
   public static readonly USER_GET_ALL: string = '/get-all'
   public static readonly USER_GET_ALL_STATS: string = '/stats'
+  public static readonly USER_LOGIN: string = '/login'
+
+  // blog
+  public static readonly BLOGS: string = '/blogs'
+  public static readonly BLOG_CREATE: string = '/'
 
   // POLL
   public static readonly POLL: string = '/polls'

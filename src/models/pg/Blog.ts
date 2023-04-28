@@ -77,7 +77,7 @@ export class Blog extends Model<
     Blog.init(
       {
         id: {
-          type: DataTypes.INTEGER.UNSIGNED,
+          type: DataTypes.INTEGER,
           primaryKey: true,
           autoIncrement: true,
           allowNull: false,

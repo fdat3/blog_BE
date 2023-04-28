@@ -40,6 +40,10 @@ class UserService {
     const user = await this.userRepository.findByFullname(fullname)
     return user
   }
+  public async findByFullnameWithPassword(fullname: string): Promise<any> {
+    const user = await this.userRepository.findByFullnameWithPassword(fullname)
+    return user
+  }
   public async findByEmail(email: string): Promise<any> {
     const user = await this.userRepository.findByEmail(email)
     return user

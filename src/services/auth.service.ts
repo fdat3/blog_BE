@@ -17,14 +17,14 @@ class AuthService {
   //   const user = await this.userRepository.findByUsername(username)
   //   return user
   // }
-  // public async findByUsernameWithPassword(username: string): Promise<any> {
-  //   const user = await this.userRepository.findByUsernameWithPassword(username)
-  //   return user
-  // }
-  // public async findByEmail(email: string): Promise<any> {
-  //   const user = await this.userRepository.findByEmail(email)
-  //   return user
-  // }
+  public async findByFullnameWithPassword(fullname: string): Promise<any> {
+    const user = await this.userRepository.findByFullnameWithPassword(fullname)
+    return user
+  }
+  public async findByEmail(email: string): Promise<any> {
+    const user = await this.userRepository.findByEmail(email)
+    return user
+  }
   // public async findByPhone(phone: string): Promise<any> {
   //   const user = await this.userRepository.findByPhone(phone)
   //   return user
@@ -45,21 +45,21 @@ class AuthService {
     const savedUser = await this.userRepository.createUser(newUser)
     return savedUser
   }
-  // public async generateAccessToken(
-  //   id: string,
-  //   isAdmin: boolean,
-  // ): Promise<string> {
-  //   const token = this.userSecurity.generateAccessToken(id, isAdmin)
-  //   return token
-  // }
-  // public async generateRefreshToken(
-  //   id: string,
-  //   isAdmin: boolean,
-  //   deviceId?: string,
-  // ): Promise<string> {
-  //   const token = this.userSecurity.generateRefreshToken(id, isAdmin, deviceId)
-  //   return token
-  // }
+  public async generateAccessToken(
+    id: string,
+    isAdmin: boolean,
+  ): Promise<string> {
+    const token = this.userSecurity.generateAccessToken(id, isAdmin)
+    return token
+  }
+  public async generateRefreshToken(
+    id: string,
+    isAdmin: boolean,
+    deviceId?: string,
+  ): Promise<string> {
+    const token = this.userSecurity.generateRefreshToken(id, isAdmin, deviceId)
+    return token
+  }
   // public async snsLogin(data: any, type: SNSEnum): Promise<any> {
   //   let result: any
   //   const { token } = data

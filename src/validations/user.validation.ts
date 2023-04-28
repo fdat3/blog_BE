@@ -9,7 +9,7 @@ class UserValidation {
   })
 
   public login = Joi.object({
-    username: Joi.string().required(),
+    email: Joi.string().required(),
     password: Joi.string().min(6).max(30).required(),
   })
 
@@ -26,6 +26,13 @@ class UserValidation {
     fullname: Joi.string().max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
+  })
+
+  public createBlog = Joi.object({
+    userId: Joi.number().max(8).required(),
+    title: Joi.string().max(30).required(),
+    subTitle: Joi.string().max(30).required(),
+    slug: Joi.string().max(30).required(),
   })
 
   public updateFullname = Joi.object({
