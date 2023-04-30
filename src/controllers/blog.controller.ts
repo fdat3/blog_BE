@@ -48,15 +48,6 @@ class BlogController implements Controller {
       validationMiddleware(this.validate.createBlog),
       this.createBlog,
     )
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.BLOG_CREATE}`,
-    //     [
-    //         verifyToken,
-    //         this.authenticated.verifyTokenAndAuthorization,
-    //         validationMiddleware(this.validate.createBlog),
-    //     ],
-    //     this.createBlog
-    // )
   }
 
   private createBlog = async (
