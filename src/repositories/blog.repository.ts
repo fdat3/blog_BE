@@ -10,18 +10,10 @@ class BlogRepository {
     this.model = Blog
   }
 
-  public async createBlog(data: any): Promise<Partial<Blog> | null> {
+  public async createBlog(data: Blog): Promise<Partial<Blog> | null> {
     try {
       const result: Blog = await sequelize.transaction(async (transaction) => {
-        const newBlog: Blog = await Blog.create(
-          {
-            ...data,
-          },
-          {
-            transaction,
-          },
-        )
-        return newBlog
+        return this.model.create(data, { transaction })
       })
       return result.get({ plain: true })
     } catch (error) {

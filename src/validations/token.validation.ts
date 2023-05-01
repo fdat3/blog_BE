@@ -17,7 +17,7 @@ export const verifyToken = async (
   req: Request,
   res: Response,
   next: NextFunction,
-): Promise<any> => {
+): Promise<void> => {
   try {
     const bearer = req.headers.authorization
 
@@ -39,6 +39,76 @@ export const verifyToken = async (
           ConstantMessage.UNAUTHORIZED,
         ),
       )
+    }
+
+    const accessToken = bearer.split('Bearer ')[1].trim()
+
+    const checkDeviceId = req.fingerprint?.hash
+    if (checkDeviceId) {
+      jwt.verify(
+        req.cookies['jwt'],
+        Variable.JWT_SECRET,
+        (err: VerifyErrors | null, payload: any) => {
+          if (err) {
+            logger.http(err)
+            res.status(ConstantHttpCode.FORBIDDEN).json({
+              status: {
+                code: ConstantHttpCode.FORBIDDEN,
+                msg: ConstantHttpReason.FORBIDDEN,
+              },
+              msg: ConstantMessage.TOKEN_NOT_VALID,
+            })
+          }
+
+          if (checkDeviceId !== payload.deviceId) {
+            res.status(ConstantHttpCode.FORBIDDEN).json({
+              status: {
+                code: ConstantHttpCode.FORBIDDEN,
+                msg: ConstantHttpReason.FORBIDDEN,
+              },
+              msg: ConstantMessage.TOKEN_NOT_ISSUED_FOR_THIS_DEVICE,
+            })
+          }
+
+          return payload
+        },
+      )
+    }
+
+    return jwt.verify(accessToken, Variable.JWT_SECRET, (err, user: any) => {
+      if (err) {
+        res.status(ConstantHttpCode.FORBIDDEN).json({
+          status: {
+            code: ConstantHttpCode.FORBIDDEN,
+            msg: ConstantHttpReason.FORBIDDEN,
+          },
+          msg: ConstantMessage.TOKEN_NOT_VALID,
+        })
+      }
+
+      req.user = user
+      return next()
+    })
+  } catch (err) {
+    logger.error(err)
+    throw err
+  }
+}
+
+export const optionalVerify = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const bearer = req.headers.authorization
+
+    if (!bearer) {
+      return next()
+    }
+
+    if (!bearer || !bearer.startsWith('Bearer ')) {
+      return next()
     }
 
     const accessToken = bearer.split('Bearer ')[1].trim()

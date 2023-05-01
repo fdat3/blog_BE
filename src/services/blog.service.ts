@@ -7,8 +7,8 @@ class BlogService {
     this.blogRepository = new BlogRepository()
   }
 
-  public async createBlog(data: any): Promise<Partial<Blog> | null> {
-    return (data = await this.blogRepository.createBlog(data))
+  public async createBlog(data: Blog): Promise<Partial<Blog> | null> {
+    return this.blogRepository.createBlog(data)
   }
 }
 
