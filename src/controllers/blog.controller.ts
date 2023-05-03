@@ -16,8 +16,6 @@ import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 // logger
 import logger from '@/utils/logger.util'
-import QueryMiddleware from '@/middlewares/quey.middleware'
-import BaseController from '@/controllers/base.controller'
 import Authenticated from '@/middlewares/authenticated.middleware'
 import Message from '@/constants/message.constant'
 
@@ -27,8 +25,6 @@ class BlogController implements Controller {
   private blogService: BlogService
   private validate: Validate
   private authenticated: Authenticated
-  private queryMiddleware: QueryMiddleware
-  private baseController: BaseController
 
   constructor() {
     this.path = `${ConstantAPI.BLOGS}`
@@ -36,8 +32,6 @@ class BlogController implements Controller {
     this.blogService = new BlogService()
     this.validate = new Validate()
     this.authenticated = new Authenticated()
-    this.queryMiddleware = new QueryMiddleware()
-    this.baseController = new BaseController()
     this.initialiseRoutes()
   }
 
