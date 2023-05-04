@@ -29,14 +29,13 @@ class UserValidation {
   })
 
   public createBlog = Joi.object({
-    userId: Joi.number().max(8).required(),
     title: Joi.string().max(30).required(),
     subTitle: Joi.string().max(30).required(),
     slug: Joi.string().max(30).required(),
   })
 
   public updateFullname = Joi.object({
-    fullname: Joi.string().max(30).required(),
+    fullname: Joi.string().max(200).required(),
     password: Joi.string().min(6).max(30).required(),
   })
 

@@ -51,15 +51,15 @@ class BlogController implements Controller {
   ): Promise<Response | any> => {
     try {
       const data = req.body
-      const newBlogData = data
-      await this.blogService.createBlog(newBlogData)
+      const newBlogData = { ...data }
+      const blog = await this.blogService.createBlog(newBlogData)
       return res.status(ConstantHttpCode.CREATED).json({
         status: {
           code: ConstantHttpCode.CREATED,
           msg: ConstantHttpReason.CREATED,
         },
         msg: ConstantMessage.BLOG_CREATE_SUCCESS,
-        data: newBlogData,
+        data: blog,
       })
     } catch (error) {
       logger.error(error)
@@ -67,7 +67,7 @@ class BlogController implements Controller {
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
-          error || Message.BLOG_CREATE_SUCCESS,
+          error || Message.BLOG_NOT_CREATE,
           error,
         ),
       )

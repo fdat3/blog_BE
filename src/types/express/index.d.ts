@@ -1,9 +1,10 @@
-import { User, UserDevice } from '@/models/pg'
+import { User, UserDevice, Blog } from '@/models/pg'
 
 declare global {
   namespace Express {
     export interface Request {
       user: User
+      blog: Blog
     }
 
     export type TypedResponse<T> = Omit<Response, 'json' | 'status'> & {

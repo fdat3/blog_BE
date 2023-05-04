@@ -83,12 +83,10 @@ export class Blog extends Model<
           allowNull: false,
         },
         userId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.BIGINT,
         },
         employeeId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.BIGINT,
         },
         title: {
           type: DataTypes.TEXT,

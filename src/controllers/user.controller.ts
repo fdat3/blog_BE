@@ -122,14 +122,12 @@ class UserController implements Controller {
     next: NextFunction,
   ): Promise<Response | any> => {
     try {
-      const { username, fullname, email, password, phone } = req.body
+      const { fullname, email, password } = req.body
 
       const newUserData = {
-        username,
         fullname,
         email,
         password,
-        phone,
       }
       const user = await this.userService.createUser(newUserData)
       const newUser = { ...user }

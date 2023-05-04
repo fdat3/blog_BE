@@ -1,4 +1,4 @@
-import { Blog } from '@/models/pg'
+import type { Blog } from '@/models/pg'
 import BlogRepository from '@/repositories/blog.repository'
 
 class BlogService {
@@ -7,8 +7,8 @@ class BlogService {
     this.blogRepository = new BlogRepository()
   }
 
-  public async createBlog(data: Blog): Promise<Partial<Blog> | null> {
-    return this.blogRepository.createBlog(data)
+  public async createBlog(data: any): Promise<Partial<Blog> | null> {
+    return await this.blogRepository.createBlog(data)
   }
 }
 

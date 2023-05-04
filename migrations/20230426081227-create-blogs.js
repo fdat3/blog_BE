@@ -4,21 +4,19 @@ module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('blogs', {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
                 field: 'id',
                 primaryKey: true,
                 autoIncrement: true,
                 allowNull: false
             },
             userId: {
-                type: DataTypes.UUID,
+                type: DataTypes.BIGINT,
                 field: 'user_id',
-                defaultValue: DataTypes.UUIDV4
             },
             employeeId: {
-                type: DataTypes.UUID,
+                type: DataTypes.BIGINT,
                 field: 'employee_id',
-                defaultValue: DataTypes.UUIDV4
             },
             title: {
                 type: DataTypes.TEXT,
