@@ -69,8 +69,8 @@ class Variable {
 
   public static readonly TELEGRAM_URL: string = process.env.TELEGRAM_URL!
   public static readonly TELEGRAM_ROOM: string = process.env.TELEGRAM_ROOM!
-  public static readonly TELEGRAM_THREAD_ID: string =
-    process.env.TELEGRAM_THREAD_ID!
+  public static readonly TELEGRAM_THREAD_ID: string | undefined =
+    process.env.TELEGRAM_THREAD_ID || undefined
 
   //
   // public static readonly SESSION_SAVE_UNINITIALIZED: string = process.env.SESSION_SAVE_UNINITIALIZED!;

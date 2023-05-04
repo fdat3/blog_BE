@@ -45,6 +45,9 @@ class Api {
   // blog
   public static readonly BLOGS: string = '/blogs'
   public static readonly BLOG_CREATE: string = '/'
+  public static readonly BLOG_GET_ALL: string = '/get-all'
+  public static readonly BLOG_DELETE: string = '/delete/:id'
+  public static readonly BLOG_UPDATE_TITLE: string = '/update-title/:id'
 
   // POLL
   public static readonly POLL: string = '/polls'

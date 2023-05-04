@@ -25,6 +25,7 @@ class Message {
     'user is create success, please login'
   public static readonly BLOG_CREATE_SUCCESS: string = 'blog is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'
+  public static readonly BLOG_NOT_FOUND: string = 'blog is not found'
   public static readonly PASSWORD_NOT_MATCH: string = 'password is not match'
   public static readonly USER_LOGIN_SUCCESS: string = 'user is login success'
 
@@ -45,6 +46,9 @@ class Message {
     'fullname is change success'
   public static readonly NAME_NOT_CHANGE: string = 'name is not change'
   public static readonly NAME_CHANGE_SUCCESS: string = 'name is change success'
+  public static readonly BLOG_TITLE_NOT_CHANGE: string = 'blog is not change'
+  public static readonly BLOG_TITLE_CHANGE_SUCCESS: string =
+    'blog title is change success'
   public static readonly EMAIL_NOT_CHANGE: string = 'email is not change'
   public static readonly EMAIL_CHANGE_SUCCESS: string =
     'email is change success'
@@ -62,6 +66,10 @@ class Message {
   public static readonly USER_DELETE_SUCCESS: string = 'user is delete success'
   public static readonly USER_FOUND: string = 'user is found'
 
+  // BLOG
+  public static readonly BLOG_NOT_DELETE: string =
+    'blog is not delete, please try again'
+  public static readonly BLOG_DELETE_SUCCESS: string = 'blog is delete success'
   // Files
   public static readonly UPLOAD_IMAGE: string = 'Please upload an image!'
 
