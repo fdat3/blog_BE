@@ -45,7 +45,7 @@ export const verifyToken = async (
 
     const checkDeviceId = req.fingerprint?.hash
     if (checkDeviceId) {
-      jwt.verify(
+      return jwt.verify(
         req.cookies['jwt'],
         Variable.JWT_SECRET,
         (err: VerifyErrors | null, payload: any) => {
@@ -59,18 +59,18 @@ export const verifyToken = async (
               msg: ConstantMessage.TOKEN_NOT_VALID,
             })
           }
-
-          if (checkDeviceId !== payload.deviceId) {
-            res.status(ConstantHttpCode.FORBIDDEN).json({
-              status: {
-                code: ConstantHttpCode.FORBIDDEN,
-                msg: ConstantHttpReason.FORBIDDEN,
-              },
-              msg: ConstantMessage.TOKEN_NOT_ISSUED_FOR_THIS_DEVICE,
-            })
-          }
-
-          return payload
+          // if (checkDeviceId !== payload.deviceId) {
+          //   res.status(ConstantHttpCode.FORBIDDEN).json({
+          //     status: {
+          //       code: ConstantHttpCode.FORBIDDEN,
+          //       msg: ConstantHttpReason.FORBIDDEN,
+          //     },
+          //     msg: ConstantMessage.TOKEN_NOT_ISSUED_FOR_THIS_DEVICE,
+          //   })
+          // }
+          req.user = payload
+          console.log('@@@@', payload)
+          return next()
         },
       )
     }
@@ -115,7 +115,7 @@ export const optionalVerify = async (
 
     const checkDeviceId = req.fingerprint?.hash
     if (checkDeviceId) {
-      jwt.verify(
+      return jwt.verify(
         req.cookies['jwt'],
         Variable.JWT_SECRET,
         (err: VerifyErrors | null, payload: any) => {
@@ -130,17 +130,18 @@ export const optionalVerify = async (
             })
           }
 
-          if (checkDeviceId !== payload.deviceId) {
-            res.status(ConstantHttpCode.FORBIDDEN).json({
-              status: {
-                code: ConstantHttpCode.FORBIDDEN,
-                msg: ConstantHttpReason.FORBIDDEN,
-              },
-              msg: ConstantMessage.TOKEN_NOT_ISSUED_FOR_THIS_DEVICE,
-            })
-          }
+          // if (checkDeviceId !== payload.deviceId) {
+          //   res.status(ConstantHttpCode.FORBIDDEN).json({
+          //     status: {
+          //       code: ConstantHttpCode.FORBIDDEN,
+          //       msg: ConstantHttpReason.FORBIDDEN,
+          //     },
+          //     msg: ConstantMessage.TOKEN_NOT_ISSUED_FOR_THIS_DEVICE,
+          //   })
+          // }
 
-          return payload
+          req.user = payload
+          return next()
         },
       )
     }

@@ -70,14 +70,14 @@ class UserRepository {
     return null
   }
 
-  // public async findByFullnameWithPassword(
-  //   fullname: string,
-  // ): Promise<User | null> {
-  //   const user = await User.scope('withPassword').findOne({
-  //     where: { fullname },
-  //   })
-  //   return user
-  // }
+  public async findByFullnameWithPassword(
+    fullname: string,
+  ): Promise<User | null> {
+    const user = await User.scope('withPassword').findOne({
+      where: { fullname },
+    })
+    return user
+  }
 
   // public async findByEmailWithPassword(
   //   email: string,
