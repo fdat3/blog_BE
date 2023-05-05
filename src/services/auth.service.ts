@@ -13,14 +13,14 @@ class AuthService {
     this.userSecurity = new UserSecurity()
     //   this.snsService = new SNSService()
   }
-  // public async findByUsername(username: string): Promise<any> {
-  //   const user = await this.userRepository.findByUsername(username)
-  //   return user
-  // }
-  public async findByFullnameWithPassword(fullname: string): Promise<any> {
-    const user = await this.userRepository.findByFullnameWithPassword(fullname)
+  public async findByFullname(fullname: string): Promise<any> {
+    const user = await this.userRepository.findByFullname(fullname)
     return user
   }
+  // public async findByFullnameWithPassword(fullname: string): Promise<any> {
+  //   const user = await this.userRepository.findByFullnameWithPassword(fullname)
+  //   return user
+  // }
   public async findByEmail(email: string): Promise<any> {
     const user = await this.userRepository.findByEmail(email)
     return user

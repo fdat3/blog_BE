@@ -70,31 +70,31 @@ class UserRepository {
     return null
   }
 
-  public async findByFullnameWithPassword(
-    fullname: string,
-  ): Promise<User | null> {
-    const user = await User.scope('withPassword').findOne({
-      where: { fullname },
-    })
-    return user
-  }
+  // public async findByFullnameWithPassword(
+  //   fullname: string,
+  // ): Promise<User | null> {
+  //   const user = await User.scope('withPassword').findOne({
+  //     where: { fullname },
+  //   })
+  //   return user
+  // }
 
-  public async findByEmailWithPassword(
-    email: string,
-  ): Promise<Partial<User> | null> {
-    try {
-      const user = await User.scope('withPassword').findOne({
-        where: { email },
-      })
-      if (user) {
-        return user.get({ plain: true })
-      }
-      return null
-    } catch (err) {
-      logger.error(err)
-      return null
-    }
-  }
+  // public async findByEmailWithPassword(
+  //   email: string,
+  // ): Promise<Partial<User> | null> {
+  //   try {
+  //     const user = await User.scope('withPassword').findOne({
+  //       where: { email },
+  //     })
+  //     if (user) {
+  //       return user.get({ plain: true })
+  //     }
+  //     return null
+  //   } catch (err) {
+  //     logger.error(err)
+  //     return null
+  //   }
+  // }
 
   public async createUser(data: any): Promise<Partial<User> | null> {
     try {

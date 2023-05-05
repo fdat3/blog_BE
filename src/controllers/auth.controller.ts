@@ -55,32 +55,6 @@ class AuthController implements Controller {
       validationMiddleware(this.validate.login),
       this.login,
     )
-
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.AUTH_KAKAO}`,
-    //     validationMiddleware(this.validate.sns),
-    //     this.kakaoLogin,
-    // )
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.AUTH_NAVER}`,
-    //     validationMiddleware(this.validate.sns),
-    //     this.naverLogin,
-    // )
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.AUTH_FACEBOOK}`,
-    //     validationMiddleware(this.validate.sns),
-    //     this.facebookLogin,
-    // )
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.AUTH_GOOGLE}`,
-    //     validationMiddleware(this.validate.sns),
-    //     this.googleLogin,
-    // )
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.AUTH_APPLE}`,
-    //     validationMiddleware(this.validate.sns),
-    //     this.appleLogin,
-    // )
   }
 
   private register = async (
@@ -91,17 +65,17 @@ class AuthController implements Controller {
     try {
       const { fullname, email, password } = req.body
 
-      const fullnameValidated = this.validate.validateFullname(fullname)
-      if (!fullnameValidated) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.CONFLICT,
-            ConstantHttpReason.CONFLICT,
-            ConstantMessage.FULLNAME_NOT_VALID,
-          ),
-        )
-      }
-      logger.info(`fullname ${fullname} is valid`)
+      // const fullnameValidated = this.validate.validateFullname(fullname)
+      // if (!fullnameValidated) {
+      //   return next(
+      //     new HttpException(
+      //       ConstantHttpCode.CONFLICT,
+      //       ConstantHttpReason.CONFLICT,
+      //       ConstantMessage.FULLNAME_NOT_VALID,
+      //     ),
+      //   )
+      // }
+      // logger.info(`fullname ${fullname} is valid`)
 
       const emailValidated = this.validate.validateEmail(email)
       if (!emailValidated) {
@@ -115,28 +89,28 @@ class AuthController implements Controller {
       }
       logger.info(`email ${email} is valid`)
 
-      const passwordValidated = this.validate.validatePassword(password)
-      if (!passwordValidated) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.CONFLICT,
-            ConstantHttpReason.CONFLICT,
-            ConstantMessage.PASSWORD_NOT_VALID,
-          ),
-        )
-      }
-      logger.info(`password ${password} is valid`)
+      // const passwordValidated = this.validate.validatePassword(password)
+      // if (!passwordValidated) {
+      //   return next(
+      //     new HttpException(
+      //       ConstantHttpCode.CONFLICT,
+      //       ConstantHttpReason.CONFLICT,
+      //       ConstantMessage.PASSWORD_NOT_VALID,
+      //     ),
+      //   )
+      // }
+      // logger.info(`password ${password} is valid`)
 
-      const emailCheck = await this.authService.findByEmail(email)
-      if (emailCheck) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.CONFLICT,
-            ConstantHttpReason.CONFLICT,
-            ConstantMessage.EMAIL_EXIST,
-          ),
-        )
-      }
+      // const emailCheck = await this.authService.findByEmail(email)
+      // if (emailCheck) {
+      //   return next(
+      //     new HttpException(
+      //       ConstantHttpCode.CONFLICT,
+      //       ConstantHttpReason.CONFLICT,
+      //       ConstantMessage.EMAIL_EXIST,
+      //     ),
+      //   )
+      // }
 
       const newUserData = {
         fullname,
@@ -185,7 +159,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { fullname, password } = req.body
+      const { fullname, password, email } = req.body
       const fullnameValidated = this.validate.validateFullname(fullname)
       if (!fullnameValidated) {
         return next(
@@ -197,19 +171,31 @@ class AuthController implements Controller {
         )
       }
 
-      // const passwordValidated = this.validate.validatePassword(password)
-      // if (!passwordValidated) {
-      //     return next(
-      //         new HttpException(
-      //             ConstantHttpCode.INTERNAL_SERVER_ERROR,
-      //             ConstantHttpReason.INTERNAL_SERVER_ERROR,
-      //             ConstantMessage.PASSWORD_NOT_VALID,
-      //         ),
-      //     )
-      // }
-      // logger.info(`password ${password} is valid`)
+      const passwordValidated = this.validate.validatePassword(password)
+      if (!passwordValidated) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.INTERNAL_SERVER_ERROR,
+            ConstantHttpReason.INTERNAL_SERVER_ERROR,
+            ConstantMessage.PASSWORD_NOT_VALID,
+          ),
+        )
+      }
+      logger.info(`password ${password} is valid`)
 
-      const user = await this.authService.findByFullnameWithPassword(fullname)
+      const emailValidated = this.validate.validateEmail(email)
+      if (!emailValidated) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.INTERNAL_SERVER_ERROR,
+            ConstantHttpReason.INTERNAL_SERVER_ERROR,
+            ConstantMessage.EMAIL_NOT_VALID,
+          ),
+        )
+      }
+      logger.info(`email ${email} is valid`)
+
+      const user = await this.authService.findByEmail(email)
       if (!user) {
         return next(
           new HttpException(
@@ -231,23 +217,6 @@ class AuthController implements Controller {
         )
       }
 
-      /**
-       * Check fingerprint here
-       */
-
-      const { fingerprint } = req
-      // const ip: string | undefined = ((): string | undefined => {
-      //   const forwardedIpsStr = req.header('x-forwarded-for')
-      //   const resultIp = req.connection.remoteAddress
-      //   return forwardedIpsStr ?? resultIp
-      // })()
-      // const ua = req.header('user-agent')
-      const deviceId = fingerprint?.hash
-
-      /**
-       * TODO: Check Device here to create new refresh token
-       */
-
       const accessToken = await this.authService.generateAccessToken(
         user.id,
         user.isAdmin,
@@ -257,25 +226,13 @@ class AuthController implements Controller {
       const refreshToken: string = await this.authService.generateRefreshToken(
         user.id,
         user.isAdmin,
-        deviceId,
       )
-
-      // const metaData = {
-      //   ipAddress: ip,
-      //   ua,
-      //   deviceId,
-      //   refreshToken,
-      //   fcmToken: req.body?.fcmToken,
-      //   expiredAt: DateTime.now().plus({
-      //     month: 1,
-      //   }),
-      // }
 
       res.cookie('jwt', refreshToken)
 
       const newUser = _.cloneDeep(user)
 
-      delete newUser.dataValues.password
+      delete newUser.password
 
       req.session.user = newUser
 
@@ -303,172 +260,6 @@ class AuthController implements Controller {
       )
     }
   }
-
-  // private facebookLogin = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const user = await this.authService.snsLogin(req.body, SNSEnum.FACEBOOK)
-
-  //         const accessToken = await this.authService.generateAccessToken(
-  //             user.id,
-  //             user.isAdmin,
-  //         )
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.USER_LOGIN_SUCCESS,
-  //             data: {
-  //                 user: user,
-  //                 accessToken,
-  //             },
-  //         })
-  //     } catch (err: any) {
-  //         return next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err.message,
-  //             ),
-  //         )
-  //     }
-  // }
-  // private kakaoLogin = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const user = await this.authService.snsLogin(req.body, SNSEnum.KAKAO)
-
-  //         const accessToken = await this.authService.generateAccessToken(
-  //             user.id,
-  //             user.isAdmin,
-  //         )
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.USER_LOGIN_SUCCESS,
-  //             data: {
-  //                 user: user,
-  //                 accessToken,
-  //             },
-  //         })
-  //     } catch (err: any) {
-  //         return next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err.message,
-  //             ),
-  //         )
-  //     }
-  // }
-  // private naverLogin = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const user = await this.authService.snsLogin(req.body, SNSEnum.NAVER)
-
-  //         const accessToken = await this.authService.generateAccessToken(
-  //             user.id,
-  //             user.isAdmin,
-  //         )
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.USER_LOGIN_SUCCESS,
-  //             data: {
-  //                 user: user,
-  //                 accessToken,
-  //             },
-  //         })
-  //     } catch (err: any) {
-  //         return next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err.message,
-  //             ),
-  //         )
-  //     }
-  // }
-  // private googleLogin = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const user = await this.authService.snsLogin(req.body, SNSEnum.GOOGLE)
-
-  //         const accessToken = await this.authService.generateAccessToken(
-  //             user.id,
-  //             user.isAdmin,
-  //         )
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.USER_LOGIN_SUCCESS,
-  //             data: {
-  //                 user: user,
-  //                 accessToken,
-  //             },
-  //         })
-  //     } catch (err: any) {
-  //         return next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err.message,
-  //             ),
-  //         )
-  //     }
-  // }
-  // private appleLogin = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const user = await this.authService.snsLogin(req.body, SNSEnum.APPLE)
-
-  //         const accessToken = await this.authService.generateAccessToken(
-  //             user.id,
-  //             user.isAdmin,
-  //         )
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.USER_LOGIN_SUCCESS,
-  //             data: {
-  //                 user: user,
-  //                 accessToken,
-  //             },
-  //         })
-  //     } catch (err: any) {
-  //         return next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err.message,
-  //             ),
-  //         )
-  //     }
-  // }
 }
 
 export default AuthController

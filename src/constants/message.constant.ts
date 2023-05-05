@@ -9,7 +9,7 @@ class Message {
 
   // auth
   public static readonly USERNAME_NOT_VALID: string = 'username is not valid'
-  public static readonly FULLNAME_NOT_VALID: string = 'name is not valid'
+  public static readonly FULLNAME_NOT_VALID: string = 'fullname is not valid'
   public static readonly EMAIL_NOT_VALID: string = 'email is not valid'
   public static readonly PASSWORD_NOT_VALID: string = 'password is not valid'
   public static readonly PHONE_NOT_VALID: string = 'phone is not valid'

@@ -74,6 +74,7 @@ class BlogController implements Controller {
   ): Promise<Response | any> => {
     try {
       const data = req.body
+      data.userId = req.user.id
       const newBlogData = { ...data }
       const blog = await this.blogService.createBlog(newBlogData)
       return res.status(ConstantHttpCode.CREATED).json({
