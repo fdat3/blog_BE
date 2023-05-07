@@ -8,11 +8,7 @@ import helmet from 'helmet'
 import Redis from 'ioredis'
 // const passport = require('passport')
 import mongoConnectDB from '@/config/db.config'
-import {
-  postgresTestConnectDB,
-  sequelize,
-  syncSequelize,
-} from '@/config/sql.config'
+import { postgresTestConnectDB, syncSequelize } from '@/config/sql.config'
 import Controller from '@/interfaces/controller.interface'
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
@@ -221,7 +217,7 @@ class App {
   private async initialisePostgresConnection(): Promise<void> {
     await postgresTestConnectDB()
       .then(() => {
-        initModels(sequelize)
+        initModels()
       })
       .then(() => {
         process.env.NODE_ENV !== 'production' && syncSequelize()
