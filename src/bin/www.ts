@@ -22,7 +22,7 @@ import CheckHelper from '@/helpers/check.helper'
 import TelegramUtil from '@/utils/telegram.util'
 import BlogController from '@/controllers/blog.controller'
 import AuthController from '@/controllers/auth.controller'
-// import LikeController from '@/controllers/like.controller'
+import UpVoteController from '@/controllers/upvote.controller'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -39,6 +39,7 @@ const { app } = new App({
     new UserController(),
     new ImageController(),
     new BlogController(),
+    new UpVoteController(),
     // new AdminController(),
   ],
 })

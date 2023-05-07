@@ -99,6 +99,11 @@ class Api {
   public static readonly LIKE_CREATE: string = '/'
   public static readonly LIKE_DELETE: string = '/:id'
 
+  // UPVOTE
+  public static readonly UPVOTE: string = '/upvotes'
+  public static readonly UPVOTE_CREATE: string = '/'
+  public static readonly UPVOTE_DELETE: string = '/:id'
+
   // Follow
   public static readonly FOLLOW: string = '/follows'
   public static readonly FOLLOW_FOLLOWED: string = '/followed'

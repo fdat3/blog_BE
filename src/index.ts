@@ -1,5 +1,4 @@
 import express, { Application, NextFunction, Request, Response } from 'express'
-
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import RedisStore from 'connect-redis'
@@ -9,10 +8,15 @@ import helmet from 'helmet'
 import Redis from 'ioredis'
 // const passport = require('passport')
 import mongoConnectDB from '@/config/db.config'
-import { postgresTestConnectDB, syncSequelize } from '@/config/sql.config'
+import {
+  postgresTestConnectDB,
+  sequelize,
+  syncSequelize,
+} from '@/config/sql.config'
 import Controller from '@/interfaces/controller.interface'
 import ErrorMiddleware from '@/middlewares/error.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
+// import { Sequelize } from 'sequelize'
 
 // variable
 import Variable from '@/env/variable.env'
@@ -217,7 +221,7 @@ class App {
   private async initialisePostgresConnection(): Promise<void> {
     await postgresTestConnectDB()
       .then(() => {
-        initModels()
+        initModels(sequelize)
       })
       .then(() => {
         process.env.NODE_ENV !== 'production' && syncSequelize()

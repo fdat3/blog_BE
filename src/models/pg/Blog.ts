@@ -28,8 +28,8 @@ export class Blog extends Model<
   InferCreationAttributes<Blog, { omit: BlogAssociations }>
 > {
   declare id: CreationOptional<number>
-  declare userId: string | null
-  declare employeeId: string | null
+  declare userId: number | null
+  declare employeeId: number | null
   declare title: string | null
   declare subTitle: string | null
   declare slug: string | null
@@ -77,16 +77,16 @@ export class Blog extends Model<
     Blog.init(
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.INTEGER.UNSIGNED,
           primaryKey: true,
           autoIncrement: true,
           allowNull: false,
         },
         userId: {
-          type: DataTypes.BIGINT,
+          type: DataTypes.INTEGER,
         },
         employeeId: {
-          type: DataTypes.BIGINT,
+          type: DataTypes.INTEGER,
         },
         title: {
           type: DataTypes.TEXT,

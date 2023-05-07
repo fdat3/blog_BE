@@ -69,7 +69,6 @@ export const verifyToken = async (
           //   })
           // }
           req.user = payload
-          console.log('@@@@', payload)
           return next()
         },
       )

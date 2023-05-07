@@ -24,6 +24,8 @@ class Message {
   public static readonly USER_CREATE_SUCCESS: string =
     'user is create success, please login'
   public static readonly BLOG_CREATE_SUCCESS: string = 'blog is create success'
+  public static readonly UPVOTE_CREATE_SUCCESS: string =
+    'upvote post is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'
   public static readonly BLOG_NOT_FOUND: string = 'blog is not found'
   public static readonly PASSWORD_NOT_MATCH: string = 'password is not match'

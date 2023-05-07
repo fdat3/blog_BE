@@ -22,10 +22,10 @@ export class Comment extends Model<
   InferCreationAttributes<Comment, { omit: CommentAssociations }>
 > {
   declare id: CreationOptional<number>
-  declare blogId: string | null
-  declare userId: string | null
-  declare employeeId: string | null
-  declare parentId: string | null
+  declare blogId: number | null
+  declare userId: number | null
+  declare employeeId: number | null
+  declare parentId: number | null
   declare content: string | null
   declare image: string | null
   declare createdAt: CreationOptional<Date>
@@ -72,20 +72,16 @@ export class Comment extends Model<
           allowNull: false,
         },
         blogId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         userId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         employeeId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         parentId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         content: {
           type: DataTypes.TEXT,

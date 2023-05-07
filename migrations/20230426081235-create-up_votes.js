@@ -1,4 +1,3 @@
-
 const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
@@ -12,24 +11,20 @@ module.exports = {
                 allowNull: false
             },
             userId: {
-                type: DataTypes.UUID,
-                field: 'user_id',
-                defaultValue: DataTypes.UUIDV4
+                type: DataTypes.INTEGER,
+                field: 'user_id'
             },
             employeeId: {
-                type: DataTypes.UUID,
-                field: 'employee_id',
-                defaultValue: DataTypes.UUIDV4
+                type: DataTypes.INTEGER,
+                field: 'employee_id'
             },
             blogId: {
-                type: DataTypes.UUID,
-                field: 'blog_id',
-                defaultValue: DataTypes.UUIDV4
+                type: DataTypes.INTEGER,
+                field: 'blog_id'
             },
             commentId: {
-                type: DataTypes.UUID,
-                field: 'comment_id',
-                defaultValue: DataTypes.UUIDV4
+                type: DataTypes.INTEGER,
+                field: 'comment_id'
             },
             createdAt: {
                 type: DataTypes.DATE,

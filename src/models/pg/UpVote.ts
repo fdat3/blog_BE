@@ -26,10 +26,10 @@ export class UpVote extends Model<
   InferCreationAttributes<UpVote, { omit: UpVoteAssociations }>
 > {
   declare id: CreationOptional<number>
-  declare userId: string | null
-  declare employeeId: string | null
-  declare blogId: string | null
-  declare commentId: string | null
+  declare userId: number | null
+  declare employeeId: number | null
+  declare blogId: number | null
+  declare commentId: number | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
@@ -74,20 +74,16 @@ export class UpVote extends Model<
           allowNull: false,
         },
         userId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         employeeId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         blogId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         commentId: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
+          type: DataTypes.INTEGER,
         },
         createdAt: {
           type: DataTypes.DATE,
