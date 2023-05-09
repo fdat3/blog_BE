@@ -1,4 +1,3 @@
-import { Employee } from './Employee'
 import { Blog } from './Blog'
 import { UpVote } from './UpVote'
 import { Comment } from './Comment'
@@ -8,10 +7,9 @@ import { Theme } from './Theme'
 import { User } from './User'
 import { sequelize } from '@/config/sql.config'
 
-export { Employee, Blog, UpVote, Comment, Setting, Banner, Theme, User }
+export { Blog, UpVote, Comment, Setting, Banner, Theme, User }
 
 export const initModels = (): any => {
-  Employee.initModel(sequelize)
   Blog.initModel(sequelize)
   UpVote.initModel(sequelize)
   Comment.initModel(sequelize)
@@ -20,48 +18,24 @@ export const initModels = (): any => {
   Theme.initModel(sequelize)
   User.initModel(sequelize)
 
-  Employee.hasMany(UpVote, {
-    as: 'empLikes',
-    foreignKey: 'employee_id',
-  })
-  Employee.hasMany(Comment, {
-    as: 'empComments',
-    foreignKey: 'employee_id',
-  })
-  Employee.hasMany(Blog, {
-    as: 'empBlogs',
-    foreignKey: 'employee_id',
-  })
-  Blog.hasMany(UpVote, {
-    as: 'upVotes',
-    foreignKey: 'blog_id',
-  })
   Blog.hasMany(Comment, {
     as: 'comments',
     foreignKey: 'blog_id',
   })
-  UpVote.hasOne(Comment, {
-    as: 'comment',
-    foreignKey: 'comment_id',
+  Blog.hasMany(UpVote, {
+    as: 'votes',
+    foreignKey: 'blog_id',
   })
   UpVote.belongsTo(Blog, {
     as: 'blogFkId',
-    foreignKey: 'id',
-  })
-  UpVote.belongsTo(Employee, {
-    as: 'empId',
-    foreignKey: 'id',
+    foreignKey: 'blog_id',
   })
   UpVote.belongsTo(User, {
     as: 'userFkId',
-    foreignKey: 'id',
+    foreignKey: 'user_id',
   })
   Comment.belongsTo(Blog, {
     as: 'blogFkId',
-    foreignKey: 'id',
-  })
-  Comment.belongsTo(Employee, {
-    as: 'empId',
     foreignKey: 'id',
   })
   Comment.belongsTo(User, {
@@ -102,7 +76,6 @@ export const initModels = (): any => {
   })
 
   return {
-    Employee,
     Blog,
     UpVote,
     Comment,

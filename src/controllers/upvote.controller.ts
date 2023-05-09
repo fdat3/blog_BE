@@ -63,8 +63,6 @@ class UpVoteController implements Controller {
       return this.baseController.onSuccess(res, result)
     } catch (error) {
       logger.error(error)
-      console.log('checking err:', error)
-
       next(
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,

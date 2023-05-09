@@ -40,7 +40,6 @@ module.exports = {
             },
             upVote: {
                 type: DataTypes.INTEGER,
-                defaultValue: 0,
                 field: 'up_vote'
             },
             downVote: {

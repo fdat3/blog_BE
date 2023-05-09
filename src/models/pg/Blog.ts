@@ -21,7 +21,7 @@ import {
 import type { Comment } from './Comment'
 import type { UpVote } from './UpVote'
 
-type BlogAssociations = 'upVotes' | 'comments'
+type BlogAssociations = 'comments' | 'votes'
 
 export class Blog extends Model<
   InferAttributes<Blog, { omit: BlogAssociations }>,
@@ -42,19 +42,6 @@ export class Blog extends Model<
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // Blog hasMany UpVote
-  declare upVotes?: NonAttribute<UpVote[]>
-  declare getUpVotes: HasManyGetAssociationsMixin<UpVote>
-  declare setUpVotes: HasManySetAssociationsMixin<UpVote, number>
-  declare addUpVote: HasManyAddAssociationMixin<UpVote, number>
-  declare addUpVotes: HasManyAddAssociationsMixin<UpVote, number>
-  declare createUpVote: HasManyCreateAssociationMixin<UpVote>
-  declare removeUpVote: HasManyRemoveAssociationMixin<UpVote, number>
-  declare removeUpVotes: HasManyRemoveAssociationsMixin<UpVote, number>
-  declare hasUpVote: HasManyHasAssociationMixin<UpVote, number>
-  declare hasUpVotes: HasManyHasAssociationsMixin<UpVote, number>
-  declare countUpVotes: HasManyCountAssociationsMixin
-
   // Blog hasMany Comment
   declare comments?: NonAttribute<Comment[]>
   declare getComments: HasManyGetAssociationsMixin<Comment>
@@ -68,9 +55,22 @@ export class Blog extends Model<
   declare hasComments: HasManyHasAssociationsMixin<Comment, number>
   declare countComments: HasManyCountAssociationsMixin
 
+  // Blog hasMany UpVote (as Votes)
+  declare votes?: NonAttribute<UpVote[]>
+  declare getVotes: HasManyGetAssociationsMixin<UpVote>
+  declare setVotes: HasManySetAssociationsMixin<UpVote, number>
+  declare addVote: HasManyAddAssociationMixin<UpVote, number>
+  declare addVotes: HasManyAddAssociationsMixin<UpVote, number>
+  declare createVote: HasManyCreateAssociationMixin<UpVote>
+  declare removeVote: HasManyRemoveAssociationMixin<UpVote, number>
+  declare removeVotes: HasManyRemoveAssociationsMixin<UpVote, number>
+  declare hasVote: HasManyHasAssociationMixin<UpVote, number>
+  declare hasVotes: HasManyHasAssociationsMixin<UpVote, number>
+  declare countVotes: HasManyCountAssociationsMixin
+
   declare static associations: {
-    upVotes: Association<Blog, UpVote>
     comments: Association<Blog, Comment>
+    votes: Association<Blog, UpVote>
   }
 
   static initModel(sequelize: Sequelize): typeof Blog {
@@ -109,9 +109,11 @@ export class Blog extends Model<
         },
         downVote: {
           type: DataTypes.INTEGER,
+          defaultValue: 0,
         },
         averageVote: {
           type: DataTypes.FLOAT,
+          defaultValue: 0.0,
         },
         readCount: {
           type: DataTypes.INTEGER,

@@ -41,10 +41,6 @@ module.exports = {
             updatedAt: {
                 type: DataTypes.DATE,
                 field: 'updated_at'
-            },
-            commentId: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                field: 'comment_id'
             }
         })
     },
