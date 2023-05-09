@@ -20,10 +20,14 @@ class Message {
   public static readonly USER_NOT_CREATE: string =
     'user is not create, please try again'
   public static readonly BLOG_NOT_CREATE: string =
-    'user is not create, please try again'
+    'blog is not create, please try again'
+  public static readonly COMMENT_NOT_CREATE: string =
+    'comment is not create, please try again'
   public static readonly USER_CREATE_SUCCESS: string =
     'user is create success, please login'
   public static readonly BLOG_CREATE_SUCCESS: string = 'blog is create success'
+  public static readonly COMMENT_CREATE_SUCCESS: string =
+    'comment is create success'
   public static readonly UPVOTE_CREATE_SUCCESS: string =
     'upvote post is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'

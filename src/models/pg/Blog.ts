@@ -105,6 +105,7 @@ export class Blog extends Model<
         },
         upVote: {
           type: DataTypes.INTEGER,
+          defaultValue: 0,
         },
         downVote: {
           type: DataTypes.INTEGER,

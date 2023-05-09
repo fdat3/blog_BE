@@ -49,6 +49,10 @@ class Api {
   public static readonly BLOG_DELETE: string = '/delete/:id'
   public static readonly BLOG_UPDATE_TITLE: string = '/update-title/:id'
 
+  //comment
+  public static readonly COMMENTS: string = '/comments'
+  public static readonly COMMENT_CREATE: string = '/'
+
   // POLL
   public static readonly POLL: string = '/polls'
   public static readonly POLL_INFO: string = '/:id'
