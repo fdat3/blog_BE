@@ -23,7 +23,6 @@ export class Comment extends Model<
   declare id: CreationOptional<number>
   declare blogId: number | null
   declare userId: number | null
-  declare employeeId: number | null
   declare parentId: number | null
   declare content: string | null
   declare image: string | null
@@ -67,9 +66,6 @@ export class Comment extends Model<
           type: DataTypes.INTEGER,
         },
         userId: {
-          type: DataTypes.INTEGER,
-        },
-        employeeId: {
           type: DataTypes.INTEGER,
         },
         parentId: {

@@ -22,7 +22,6 @@ export class UpVote extends Model<
 > {
   declare id: CreationOptional<number>
   declare userId: number | null
-  declare employeeId: number | null
   declare blogId: number | null
   declare commentId: number | null
   declare createdAt: CreationOptional<Date>
@@ -55,9 +54,6 @@ export class UpVote extends Model<
           allowNull: false,
         },
         userId: {
-          type: DataTypes.INTEGER,
-        },
-        employeeId: {
           type: DataTypes.INTEGER,
         },
         blogId: {
