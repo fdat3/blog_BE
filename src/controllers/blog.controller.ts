@@ -60,6 +60,11 @@ class BlogController implements Controller {
       [this.queryMiddleware.run()],
       this.getAllBlogs,
     )
+    this.router.get(
+      `${this.path}${ConstantAPI.BLOG_GET}`,
+      [this.queryMiddleware.run()],
+      this.getBlog,
+    )
     this.router.post(
       `${this.path}${ConstantAPI.BLOG_UPDATE_CONTENT}`,
       this.authenticated.verifyTokenAndAuthorization,
@@ -282,6 +287,43 @@ class BlogController implements Controller {
         data: {
           blog: updatedTitle,
         },
+      })
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
+  private getBlog = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { id } = req.params
+      const blog = await this.blogService.findById(id)
+
+      if (!blog) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.BLOG_NOT_FOUND,
+          ),
+        )
+      }
+
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.BLOG_FOUND,
+        data: { blog },
       })
     } catch (err: any) {
       next(

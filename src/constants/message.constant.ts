@@ -87,6 +87,7 @@ class Message {
   public static readonly BLOG_NOT_DELETE: string =
     'blog is not delete, please try again'
   public static readonly BLOG_DELETE_SUCCESS: string = 'blog is delete success'
+  public static readonly BLOG_FOUND: string = 'blog is found'
   // Files
   public static readonly UPLOAD_IMAGE: string = 'Please upload an image!'
 

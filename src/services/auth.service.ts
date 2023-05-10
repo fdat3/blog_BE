@@ -1,17 +1,17 @@
-// import { SNSEnum } from '@/enums/auth.enum'
-// import { CheckUserExistInterface } from '@/interfaces/auth.interface'
+import { SNSEnum } from '@/enums/auth.enum'
+import { CheckUserExistInterface } from '@/interfaces/auth.interface'
 import UserRepository from '@/repositories/user.repository'
 import UserSecurity from '@/security/user.security'
-// import SNSService from '@/services/sns.service'
+import SNSService from '@/services/sns.service'
 
 class AuthService {
   private userRepository: UserRepository
   private userSecurity: UserSecurity
-  // private snsService: SNSService
+  private snsService: SNSService
   constructor() {
     this.userRepository = new UserRepository()
     this.userSecurity = new UserSecurity()
-    //   this.snsService = new SNSService()
+    this.snsService = new SNSService()
   }
   public async findByFullname(fullname: string): Promise<any> {
     const user = await this.userRepository.findByFullname(fullname)
@@ -49,44 +49,44 @@ class AuthService {
     const token = this.userSecurity.generateRefreshToken(id, isAdmin, deviceId)
     return token
   }
-  // public async snsLogin(data: any, type: SNSEnum): Promise<any> {
-  //   let result: any
-  //   const { token } = data
-  //   switch (type) {
-  //     case SNSEnum.FACEBOOK:
-  //       result = await this.snsService.facebookSignIn(token)
-  //       break
-  //     case SNSEnum.GOOGLE:
-  //       result = await this.snsService.googleSignIn(token)
-  //       break
-  //     default:
-  //       result = null
-  //   }
-  //   // check user existed in db
-  //   const isUserExisted: boolean = await this.checkUserExisted(result)
-  //   if (!isUserExisted) {
-  //     // create new SNS User
-  //     const snsUser = {
-  //       email: result.email,
-  //       username: result.username || result.email,
-  //     }
-  //     return await this.userRepository.createUser(snsUser)
-  //   } else {
-  //     const { email } = result
-  //     const snsUser = await this.userRepository.findByEmail(email)
-  //     return snsUser
-  //   }
-  // }
-  // private async checkUserExisted(
-  //   data: Partial<CheckUserExistInterface>,
-  // ): Promise<boolean> {
-  //   const { email } = data
-  //   if (email) {
-  //     const user = await this.userRepository.findByEmail(email)
-  //     return !!user
-  //   }
-  //   return false
-  // }
+  public async snsLogin(data: any, type: SNSEnum): Promise<any> {
+    let result: any
+    const { token } = data
+    switch (type) {
+      case SNSEnum.FACEBOOK:
+        result = await this.snsService.facebookSignIn(token)
+        break
+      case SNSEnum.GOOGLE:
+        result = await this.snsService.googleSignIn(token)
+        break
+      default:
+        result = null
+    }
+    // check user existed in db
+    const isUserExisted: boolean = await this.checkUserExisted(result)
+    if (!isUserExisted) {
+      // create new SNS User
+      const snsUser = {
+        email: result.email,
+        username: result.username || result.email,
+      }
+      return await this.userRepository.createUser(snsUser)
+    } else {
+      const { email } = result
+      const snsUser = await this.userRepository.findByEmail(email)
+      return snsUser
+    }
+  }
+  private async checkUserExisted(
+    data: Partial<CheckUserExistInterface>,
+  ): Promise<boolean> {
+    const { email } = data
+    if (email) {
+      const user = await this.userRepository.findByEmail(email)
+      return !!user
+    }
+    return false
+  }
 }
 
 export default AuthService

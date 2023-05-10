@@ -109,12 +109,6 @@ class UserController implements Controller {
       [this.queryMiddleware.run()],
       this.getAllUsers,
     )
-
-    //     this.router.put(
-    //       `${this.path}${ConstantAPI.USER_UPDATE_ANY}`,
-    //       this.authenticated.verifyTokenAndAuthorization,
-    //       this.updateAny,
-    //     )
   }
   private createUser = async (
     req: Request,
@@ -153,7 +147,7 @@ class UserController implements Controller {
     }
   }
 
-  deleteUser = async (
+  private deleteUser = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -577,6 +571,8 @@ class UserController implements Controller {
         )
       }
 
+      delete updatedUser.password
+
       return res.status(ConstantHttpCode.OK).json({
         status: {
           code: ConstantHttpCode.OK,
@@ -668,44 +664,6 @@ class UserController implements Controller {
     }
   }
 
-  private getUsersStats = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<Response | void> => {
-    try {
-      const usersStats = await this.userService.getUsersStats()
-      if (!usersStats) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.NOT_FOUND,
-            ConstantHttpReason.NOT_FOUND,
-            ConstantMessage.USER_NOT_FOUND,
-          ),
-        )
-      }
-
-      return res.status(ConstantHttpCode.OK).json({
-        status: {
-          code: ConstantHttpCode.OK,
-          msg: ConstantHttpReason.OK,
-        },
-        msg: ConstantMessage.USER_FOUND,
-        data: {
-          users: usersStats,
-        },
-      })
-    } catch (err: any) {
-      next(
-        new HttpException(
-          ConstantHttpCode.INTERNAL_SERVER_ERROR,
-          ConstantHttpReason.INTERNAL_SERVER_ERROR,
-          err?.message,
-        ),
-      )
-    }
-  }
-
   private userLogin = async (
     req: Request,
     res: Response,
@@ -780,36 +738,6 @@ class UserController implements Controller {
       )
     }
   }
-
-  //   private updateAny = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  //   ): Promise<Response | void> => {
-  //     try {
-  //       const { user, body } = req
-  //       body.id = user.id
-  //       const result = await this.userService.updateAny(body)
-  //       return res.status(ConstantHttpCode.OK).json({
-  //         status: {
-  //           code: ConstantHttpCode.OK,
-  //           msg: ConstantHttpReason.OK,
-  //         },
-  //         msg: ConstantMessage.UPDATE_SUCCESSFULLY,
-  //         data: {
-  //           user: result,
-  //         },
-  //       })
-  //     } catch (err: any) {
-  //       next(
-  //         new HttpException(
-  //           ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //           ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //           err?.message,
-  //         ),
-  //       )
-  //     }
-  //   }
 }
 
 export default UserController

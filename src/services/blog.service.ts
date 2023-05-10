@@ -29,8 +29,8 @@ class BlogService {
     return blogs
   }
   public async findById(id: string): Promise<any> {
-    const user = await this.blogRepository.findById(id)
-    return user
+    const blog = await this.blogRepository.findById(id)
+    return blog
   }
 }
 

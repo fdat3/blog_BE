@@ -26,6 +26,7 @@ import logger from '@/utils/logger.util'
 // import { DateTime } from 'luxon'
 import BaseController from '@/controllers/base.controller'
 import * as _ from 'lodash'
+import { SNSEnum } from '@/enums/auth.enum'
 
 class AuthController implements Controller {
   public path: string
@@ -54,6 +55,12 @@ class AuthController implements Controller {
       `${this.path}${ConstantAPI.AUTH_LOGIN}`,
       validationMiddleware(this.validate.login),
       this.login,
+    )
+
+    this.router.post(
+      `${this.path}${ConstantAPI.AUTH_FACEBOOK}`,
+      validationMiddleware(this.validate.sns),
+      this.facebookLogin,
     )
   }
 
@@ -229,6 +236,40 @@ class AuthController implements Controller {
       }
 
       this.baseController.onSuccess(res, result)
+    } catch (err: any) {
+      return next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err.message,
+        ),
+      )
+    }
+  }
+
+  private facebookLogin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const user = await this.authService.snsLogin(req.body, SNSEnum.FACEBOOK)
+
+      const accessToken = await this.authService.generateAccessToken(
+        user.id,
+        user.isAdmin,
+      )
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.USER_LOGIN_SUCCESS,
+        data: {
+          user: user,
+          accessToken,
+        },
+      })
     } catch (err: any) {
       return next(
         new HttpException(
