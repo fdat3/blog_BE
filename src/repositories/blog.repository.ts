@@ -37,6 +37,18 @@ class BlogRepository {
     return null
   }
 
+  public async findBlog(keyword: string): Promise<Partial<Blog> | undefined> {
+    const blog = await Blog.findOne({
+      where: {
+        title: keyword,
+      },
+    })
+    if (keyword) {
+      return blog?.get({ plain: true })
+    }
+    return undefined
+  }
+
   public async updateTitle(
     id: string,
     title: string,

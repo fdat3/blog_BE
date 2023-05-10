@@ -54,6 +54,11 @@ class CommentController implements Controller {
       this.authenticated.verifyTokenAndAuthorization,
       this.updateComment,
     )
+    this.router.get(
+      `${this.path}${ConstantAPI.COMMENT_GET}`,
+      [this.queryMiddleware.run()],
+      this.getComment,
+    )
     // this.router.delete(
     //     `${this.path}${ConstantAPI.BLOG_DELETE}`,
     //     this.authenticated.verifyTokenAndAuthorization,
@@ -92,6 +97,35 @@ class CommentController implements Controller {
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           error || Message.COMMENT_NOT_CREATE,
+          error,
+        ),
+      )
+    }
+  }
+
+  private getComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Comment | any> => {
+    try {
+      const { id } = req.params
+      const comment = await this.commentService.findById(id)
+      return res.status(ConstantHttpCode.CREATED).json({
+        status: {
+          code: ConstantHttpCode.CREATED,
+          msg: ConstantHttpReason.CREATED,
+        },
+        msg: ConstantMessage.COMMENT_FOUND,
+        data: { comment },
+      })
+    } catch (error) {
+      logger.error(error)
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          error || Message.COMMENT_NOT_FOUND,
           error,
         ),
       )

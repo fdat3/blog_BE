@@ -12,8 +12,8 @@ class CommentService {
   }
 
   public async findById(id: string): Promise<any> {
-    const user = await this.commentRepository.findById(id)
-    return user
+    const comment = await this.commentRepository.findById(id)
+    return comment
   }
 
   // public async deleteBlog(id: any): Promise<any> {

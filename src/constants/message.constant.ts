@@ -33,6 +33,7 @@ class Message {
   public static readonly USER_NOT_FOUND: string = 'user is not found'
   public static readonly BLOG_NOT_FOUND: string = 'blog is not found'
   public static readonly COMMENT_NOT_FOUND: string = 'comment is not found'
+  public static readonly COMMENT_FOUND: string = 'comment found'
   public static readonly PASSWORD_NOT_MATCH: string = 'password is not match'
   public static readonly USER_LOGIN_SUCCESS: string = 'user is login success'
 

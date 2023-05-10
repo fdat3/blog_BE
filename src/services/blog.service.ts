@@ -28,6 +28,10 @@ class BlogService {
     const blogs = await this.blogRepository.findAll(queryInfo)
     return blogs
   }
+  public async findBlog(keyword: string): Promise<any> {
+    const blog = await this.blogRepository.findBlog(keyword)
+    return blog
+  }
   public async findById(id: string): Promise<any> {
     const blog = await this.blogRepository.findById(id)
     return blog

@@ -75,6 +75,11 @@ class BlogController implements Controller {
       this.authenticated.verifyTokenAndAuthorization,
       this.updateTitle,
     )
+    this.router.post(
+      `${this.path}${ConstantAPI.BLOG_FIND}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.findBlog,
+    )
   }
 
   private createBlog = async (
@@ -317,6 +322,41 @@ class BlogController implements Controller {
         )
       }
 
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.BLOG_FOUND,
+        data: { blog },
+      })
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
+  private findBlog = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Partial<Response> | void> => {
+    try {
+      const { keyword } = req.params
+      const blog = await this.blogService.findBlog(keyword)
+      if (!blog) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.BLOG_NOT_FOUND,
+          ),
+        )
+      }
       return res.status(ConstantHttpCode.OK).json({
         status: {
           code: ConstantHttpCode.OK,
