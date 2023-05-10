@@ -65,18 +65,6 @@ class AuthController implements Controller {
     try {
       const { fullname, email, password } = req.body
 
-      // const fullnameValidated = this.validate.validateFullname(fullname)
-      // if (!fullnameValidated) {
-      //   return next(
-      //     new HttpException(
-      //       ConstantHttpCode.CONFLICT,
-      //       ConstantHttpReason.CONFLICT,
-      //       ConstantMessage.FULLNAME_NOT_VALID,
-      //     ),
-      //   )
-      // }
-      // logger.info(`fullname ${fullname} is valid`)
-
       const emailValidated = this.validate.validateEmail(email)
       if (!emailValidated) {
         return next(
@@ -89,28 +77,28 @@ class AuthController implements Controller {
       }
       logger.info(`email ${email} is valid`)
 
-      // const passwordValidated = this.validate.validatePassword(password)
-      // if (!passwordValidated) {
-      //   return next(
-      //     new HttpException(
-      //       ConstantHttpCode.CONFLICT,
-      //       ConstantHttpReason.CONFLICT,
-      //       ConstantMessage.PASSWORD_NOT_VALID,
-      //     ),
-      //   )
-      // }
-      // logger.info(`password ${password} is valid`)
+      const passwordValidated = this.validate.validatePassword(password)
+      if (!passwordValidated) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.CONFLICT,
+            ConstantHttpReason.CONFLICT,
+            ConstantMessage.PASSWORD_NOT_VALID,
+          ),
+        )
+      }
+      logger.info(`password ${password} is valid`)
 
-      // const emailCheck = await this.authService.findByEmail(email)
-      // if (emailCheck) {
-      //   return next(
-      //     new HttpException(
-      //       ConstantHttpCode.CONFLICT,
-      //       ConstantHttpReason.CONFLICT,
-      //       ConstantMessage.EMAIL_EXIST,
-      //     ),
-      //   )
-      // }
+      const emailCheck = await this.authService.findByEmail(email)
+      if (emailCheck) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.CONFLICT,
+            ConstantHttpReason.CONFLICT,
+            ConstantMessage.EMAIL_EXIST,
+          ),
+        )
+      }
 
       const newUserData = {
         fullname,
@@ -159,17 +147,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { fullname, password, email } = req.body
-      const fullnameValidated = this.validate.validateFullname(fullname)
-      if (!fullnameValidated) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.INTERNAL_SERVER_ERROR,
-            ConstantHttpReason.INTERNAL_SERVER_ERROR,
-            ConstantMessage.FULLNAME_NOT_VALID,
-          ),
-        )
-      }
+      const { password, email } = req.body
 
       const passwordValidated = this.validate.validatePassword(password)
       if (!passwordValidated) {

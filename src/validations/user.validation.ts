@@ -9,7 +9,6 @@ class UserValidation {
   })
 
   public login = Joi.object({
-    fullname: Joi.string().max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
   })
