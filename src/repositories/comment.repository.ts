@@ -21,30 +21,38 @@ class CommentRepository {
     nested: true,
   }
 
-  // public async updateTitle(
-  //     id: string,
-  //     title: string,
-  // ): Promise<Partial<Blog> | null> {
-  //     try {
-  //         return await sequelize.transaction(async (transaction) => {
-  //             await Blog.update(
-  //                 {
-  //                     title,
-  //                 },
-  //                 {
-  //                     where: {
-  //                         id,
-  //                     },
-  //                     transaction,
-  //                 },
-  //             )
+  public async findById(id: string): Promise<Partial<Comment> | null> {
+    const comment = await Comment.findByPk(id)
+    if (comment) {
+      return comment.get({ plain: true })
+    }
+    return null
+  }
 
-  //             return await Blog.findByPk(id)
-  //         })
-  //     } catch (e) {
-  //         return null
-  //     }
-  // }
+  public async updateComment(
+    id: string,
+    content: string,
+  ): Promise<Partial<Comment> | null> {
+    try {
+      return await sequelize.transaction(async (transaction) => {
+        await Comment.update(
+          {
+            content,
+          },
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
+
+        return await Comment.findByPk(id)
+      })
+    } catch (e) {
+      return null
+    }
+  }
 
   public async createComment(comment: Comment): Promise<any> {
     try {

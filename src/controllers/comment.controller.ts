@@ -49,6 +49,11 @@ class CommentController implements Controller {
       this.createComment,
     )
 
+    this.router.post(
+      `${this.path}${ConstantAPI.COMMENT_UPDATE}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.updateComment,
+    )
     // this.router.delete(
     //     `${this.path}${ConstantAPI.BLOG_DELETE}`,
     //     this.authenticated.verifyTokenAndAuthorization,
@@ -59,11 +64,6 @@ class CommentController implements Controller {
     //     `${this.path}${ConstantAPI.BLOG_GET_ALL}`,
     //     [this.queryMiddleware.run()],
     //     this.getAllBlogs,
-    // )
-    // this.router.post(
-    //     `${this.path}${ConstantAPI.BLOG_UPDATE_TITLE}`,
-    //     this.authenticated.verifyTokenAndAuthorization,
-    //     this.updateTitle,
     // )
   }
 
@@ -162,68 +162,68 @@ class CommentController implements Controller {
   //     }
   // }
 
-  // private updateTitle = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const { title } = req.body
-  //         const { id } = req.params
+  private updateComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { content } = req.body
+      const { id } = req.params
 
-  //         const blog = await this.blogService.findById(id)
+      const comment = await this.commentService.findById(id)
 
-  //         if (!blog) {
-  //             return next(
-  //                 new HttpException(
-  //                     ConstantHttpCode.NOT_FOUND,
-  //                     ConstantHttpReason.NOT_FOUND,
-  //                     ConstantMessage.BLOG_NOT_FOUND,
-  //                 ),
-  //             )
-  //         }
-  //         if (blog.title === title) {
-  //             return next(
-  //                 new HttpException(
-  //                     ConstantHttpCode.BAD_REQUEST,
-  //                     ConstantHttpReason.BAD_REQUEST,
-  //                     ConstantMessage.BLOG_TITLE_NOT_CHANGE,
-  //                 ),
-  //             )
-  //         }
+      if (!comment) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.COMMENT_NOT_FOUND,
+          ),
+        )
+      }
+      if (comment.content === content) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.COMMENT_CONTENT_NOT_CHANGE,
+          ),
+        )
+      }
 
-  //         const updatedTitle = await this.blogService.updateTitle(id, title)
-  //         if (!updatedTitle) {
-  //             return next(
-  //                 new HttpException(
-  //                     ConstantHttpCode.BAD_REQUEST,
-  //                     ConstantHttpReason.BAD_REQUEST,
-  //                     ConstantMessage.BLOG_TITLE_NOT_CHANGE,
-  //                 ),
-  //             )
-  //         }
-  //         logger.info(`blog ${blog.title} updated`)
+      const updateContent = await this.commentService.updateContent(id, content)
+      if (!updateContent) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.COMMENT_CONTENT_NOT_CHANGE,
+          ),
+        )
+      }
+      logger.info(`comment ${comment.content} updated`)
 
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.BLOG_TITLE_CHANGE_SUCCESS,
-  //             data: {
-  //                 blog: updatedTitle,
-  //             },
-  //         })
-  //     } catch (err: any) {
-  //         next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err?.message,
-  //             ),
-  //         )
-  //     }
-  // }
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.COMMENT_CONTENT_CHANGE_SUCCESS,
+        data: {
+          comment: updateContent,
+        },
+      })
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
 }
 
 export default CommentController

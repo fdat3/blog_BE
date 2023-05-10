@@ -51,6 +51,7 @@ class Api {
 
   //comment
   public static readonly COMMENTS: string = '/comments'
+  public static readonly COMMENT_UPDATE: string = '/comment-title/:id'
   public static readonly COMMENT_CREATE: string = '/'
 
   // POLL

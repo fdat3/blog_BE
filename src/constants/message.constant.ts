@@ -32,6 +32,7 @@ class Message {
     'upvote post is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'
   public static readonly BLOG_NOT_FOUND: string = 'blog is not found'
+  public static readonly COMMENT_NOT_FOUND: string = 'comment is not found'
   public static readonly PASSWORD_NOT_MATCH: string = 'password is not match'
   public static readonly USER_LOGIN_SUCCESS: string = 'user is login success'
 
@@ -54,6 +55,10 @@ class Message {
   public static readonly NAME_CHANGE_SUCCESS: string = 'name is change success'
   public static readonly BLOG_TITLE_NOT_CHANGE: string = 'blog is not change'
   public static readonly BLOG_TITLE_CHANGE_SUCCESS: string =
+    'blog title is change success'
+  public static readonly COMMENT_CONTENT_NOT_CHANGE: string =
+    'blog is not change'
+  public static readonly COMMENT_CONTENT_CHANGE_SUCCESS: string =
     'blog title is change success'
   public static readonly EMAIL_NOT_CHANGE: string = 'email is not change'
   public static readonly EMAIL_CHANGE_SUCCESS: string =
