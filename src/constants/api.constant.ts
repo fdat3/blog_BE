@@ -111,7 +111,8 @@ class Api {
 
   // UPVOTE
   public static readonly UPVOTE: string = '/upvotes'
-  public static readonly UPVOTE_CREATE: string = '/'
+  public static readonly UPVOTE_CREATE: string = '/up'
+  public static readonly DOWNVOTE_CREATE: string = '/down'
   public static readonly UPVOTE_DELETE: string = '/:id'
 
   // Follow

@@ -10,7 +10,7 @@ import HttpException from '@/utils/exceptions/http.exceptions'
 // api constant
 import ConstantAPI from '@/constants/api.constant'
 // message constant
-// import ConstantMessage from '@/constants/message.constant'
+import ConstantMessage from '@/constants/message.constant'
 // http constant
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
@@ -45,8 +45,13 @@ class UpVoteController implements Controller {
     this.router.post(
       `${this.path}${ConstantAPI.UPVOTE_CREATE}`,
       this.authenticated.verifyTokenAndAuthorization,
-      // validationMiddleware(this.validate.create),
       this.createUpVote,
+    )
+
+    this.router.post(
+      `${this.path}${ConstantAPI.DOWNVOTE_CREATE}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.createDownVote,
     )
   }
 
@@ -59,8 +64,17 @@ class UpVoteController implements Controller {
       const data = req.body
       const { user } = req
       data.userId = user.id
-      const result = await this.upVoteService.create(data)
-      return this.baseController.onSuccess(res, result)
+      const result = await this.upVoteService.createUpVote(data)
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.UPVOTE_CREATE_SUCCESS,
+        data: {
+          result,
+        },
+      })
     } catch (error) {
       logger.error(error)
       next(
@@ -68,6 +82,39 @@ class UpVoteController implements Controller {
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           error || Message.BLOG_NOT_CREATE,
+          error,
+        ),
+      )
+    }
+  }
+
+  private createDownVote = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const data = req.body
+      const { user } = req
+      data.userId = user.id
+      const result = await this.upVoteService.createDownvote(data)
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.DOWNVOTE_CREATE_SUCCESS,
+        data: {
+          result,
+        },
+      })
+    } catch (error) {
+      logger.error(error)
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          error || Message.DOWNVOTE_NOT_CREATE,
           error,
         ),
       )

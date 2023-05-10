@@ -7,8 +7,11 @@ class UpVoteService {
   constructor() {
     this.upVoteRepository = new UpVoteRepository()
   }
-  public async create(data: any): Promise<unknown> {
-    return this.upVoteRepository.create(data)
+  public async createUpVote(data: any): Promise<unknown> {
+    return this.upVoteRepository.createUpVote(data)
+  }
+  public async createDownvote(data: any): Promise<unknown> {
+    return this.upVoteRepository.createDownvote(data)
   }
 }
 

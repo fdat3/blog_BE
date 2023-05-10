@@ -21,6 +21,10 @@ class Message {
     'user is not create, please try again'
   public static readonly BLOG_NOT_CREATE: string =
     'blog is not create, please try again'
+  public static readonly UPVOTE_NOT_CREATE: string =
+    'blog is not create, please try again'
+  public static readonly DOWNVOTE_NOT_CREATE: string =
+    'downvote is not create, please try again'
   public static readonly COMMENT_NOT_CREATE: string =
     'comment is not create, please try again'
   public static readonly USER_CREATE_SUCCESS: string =
@@ -29,7 +33,9 @@ class Message {
   public static readonly COMMENT_CREATE_SUCCESS: string =
     'comment is create success'
   public static readonly UPVOTE_CREATE_SUCCESS: string =
-    'upvote post is create success'
+    'upvote this post is create success'
+  public static readonly DOWNVOTE_CREATE_SUCCESS: string =
+    'downvote this post is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'
   public static readonly BLOG_NOT_FOUND: string = 'blog is not found'
   public static readonly COMMENT_NOT_FOUND: string = 'comment is not found'

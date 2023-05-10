@@ -15,23 +15,70 @@ class UpVoteRepository {
     this.model = UpVote
   }
 
-  // public async create(data: any): Promise<Partial<UpVote> | any> {
-  //   try {
-  //     const result: UpVote = await sequelize.transaction(
-  //       async (transaction) => {
-  //         UpVote.create(data, { transaction })
-  //         return Blog.increment('upVote', { by: 1, where: { id: data.blogId } })
-  //       },
-  //     )
-  //     return result.get({ plain: true })
-  //   } catch (error) {
-  //     logger.error(error)
-  //     return null
-  //   }
-  // }
-
-  public async create(data: any): Promise<UpVote | any> {
+  public async createUpVote(data: any): Promise<UpVote | any> {
     try {
+      const existingUpVote = await UpVote.findOne({
+        where: {
+          userId: data.userId,
+          blogId: data.blogId,
+        },
+      })
+
+      if (existingUpVote) {
+        return existingUpVote.get({ plain: true })
+      }
+
+      const result: UpVote = await sequelize.transaction(
+        async (transaction) => {
+          const upVote = await UpVote.create(
+            {
+              ...data,
+              count: 1,
+            },
+            { transaction },
+          )
+
+          await Blog.findOne({
+            where: {
+              id: data.blogId,
+            },
+            transaction,
+          }).then((instance) => {
+            if (instance) {
+              instance?.increment(
+                {
+                  upVote: 1,
+                },
+                {
+                  transaction,
+                },
+              )
+            } else return
+          })
+
+          return upVote
+        },
+      )
+
+      return result.get({ plain: true })
+    } catch (error) {
+      logger.error(error)
+      return null
+    }
+  }
+
+  public async createDownvote(data: any): Promise<UpVote | any> {
+    try {
+      const existingDownVote = await UpVote.findOne({
+        where: {
+          userId: data.userId,
+          blogId: data.blogId,
+        },
+      })
+
+      if (existingDownVote) {
+        return existingDownVote.get({ plain: true })
+      }
       const result: UpVote = await sequelize.transaction(
         async (transaction) => {
           const upVote = await UpVote.create(data, { transaction })
@@ -45,7 +92,7 @@ class UpVoteRepository {
               if (instance) {
                 instance?.increment(
                   {
-                    upVote: 1,
+                    downVote: 1,
                   },
                   {
                     transaction,

@@ -29,7 +29,6 @@ class UserRepository {
       return null
     }
   }
-
   public async findById(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     if (user) {
@@ -37,7 +36,6 @@ class UserRepository {
     }
     return null
   }
-
   public async findByFullname(fullname: string): Promise<Partial<User> | null> {
     const user = await User.findOne({
       where: {
@@ -49,7 +47,6 @@ class UserRepository {
     }
     return null
   }
-
   public async findByEmail(email: string): Promise<Partial<User> | null> {
     const user = await User.findOne({
       where: {
@@ -61,7 +58,6 @@ class UserRepository {
     }
     return null
   }
-
   public async findByIdWithPassword(id: string): Promise<Partial<User> | null> {
     const user = await User.findByPk(id)
     if (user) {
@@ -69,7 +65,6 @@ class UserRepository {
     }
     return null
   }
-
   public async findByFullnameWithPassword(
     fullname: string,
   ): Promise<User | null> {
@@ -78,7 +73,6 @@ class UserRepository {
     })
     return user
   }
-
   public async createUser(data: any): Promise<Partial<User> | null> {
     try {
       const result: User = await sequelize.transaction(async (transaction) => {
@@ -113,7 +107,6 @@ class UserRepository {
       throw err
     }
   }
-
   public async updateFullname(
     id: string,
     fullname: string,
@@ -140,7 +133,6 @@ class UserRepository {
       return null
     }
   }
-
   public async updateName(
     id: string,
     fullname: string,
@@ -165,7 +157,6 @@ class UserRepository {
       return null
     }
   }
-
   public async updateEmail(
     id: string,
     email: string,
@@ -190,7 +181,6 @@ class UserRepository {
       return null
     }
   }
-
   public async updateDob(id: string, dob: Date): Promise<Partial<User> | null> {
     try {
       return await sequelize.transaction(async (transaction) => {
@@ -212,7 +202,6 @@ class UserRepository {
       return null
     }
   }
-
   public async updatePassword(
     id: string,
     password: string,
@@ -237,7 +226,6 @@ class UserRepository {
       return null
     }
   }
-
   public async getUsersStats(): Promise<Partial<User[]> | null> {
     const users = await User.findAll()
     return users
