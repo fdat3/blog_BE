@@ -61,6 +61,11 @@ class BlogController implements Controller {
       this.getAllBlogs,
     )
     this.router.post(
+      `${this.path}${ConstantAPI.BLOG_UPDATE_CONTENT}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.updateContent,
+    )
+    this.router.post(
       `${this.path}${ConstantAPI.BLOG_UPDATE_TITLE}`,
       this.authenticated.verifyTokenAndAuthorization,
       this.updateTitle,
@@ -152,6 +157,69 @@ class BlogController implements Controller {
         )
       }
       this.baseController.onSuccessAsList(res, blogs, undefined, queryInfo)
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
+
+  private updateContent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { body } = req.body
+      const { id } = req.params
+
+      const blog = await this.blogService.findById(id)
+
+      if (!blog) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.BLOG_NOT_FOUND,
+          ),
+        )
+      }
+
+      if (blog.body === body) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.BLOG_CONTENT_NOT_CHANGE,
+          ),
+        )
+      }
+
+      const updateBody = this.blogService.updateContent(id, body)
+      if (!updateBody) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.BLOG_CONTENT_NOT_CHANGE,
+          ),
+        )
+      }
+      logger.info(`blog ${blog.body} updated`)
+      return res.status(ConstantHttpCode.OK).json({
+        status: {
+          code: ConstantHttpCode.OK,
+          msg: ConstantHttpReason.OK,
+        },
+        msg: ConstantMessage.BLOG_CONTENT_CHANGE_SUCCESS,
+        data: {
+          blog: updateBody,
+        },
+      })
     } catch (err: any) {
       next(
         new HttpException(

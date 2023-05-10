@@ -48,6 +48,7 @@ class Api {
   public static readonly BLOG_GET_ALL: string = '/get-all'
   public static readonly BLOG_DELETE: string = '/delete/:id'
   public static readonly BLOG_UPDATE_TITLE: string = '/update-title/:id'
+  public static readonly BLOG_UPDATE_CONTENT: string = '/update-body/:id'
 
   //comment
   public static readonly COMMENTS: string = '/comments'

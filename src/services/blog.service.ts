@@ -17,8 +17,12 @@ class BlogService {
     return blog
   }
   public async updateTitle(id: string, title: string): Promise<any> {
-    const user = await this.blogRepository.updateTitle(id, title)
-    return user
+    const blogTitle = await this.blogRepository.updateTitle(id, title)
+    return blogTitle
+  }
+  public async updateContent(id: string, body: string): Promise<any> {
+    const blogContent = await this.blogRepository.updateContent(id, body)
+    return blogContent
   }
   public async findAll(queryInfo?: ICrudOption): Promise<any> {
     const blogs = await this.blogRepository.findAll(queryInfo)

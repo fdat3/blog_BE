@@ -56,6 +56,10 @@ class Message {
   public static readonly BLOG_TITLE_NOT_CHANGE: string = 'blog is not change'
   public static readonly BLOG_TITLE_CHANGE_SUCCESS: string =
     'blog title is change success'
+  public static readonly BLOG_CONTENT_NOT_CHANGE: string =
+    'blog content is not change'
+  public static readonly BLOG_CONTENT_CHANGE_SUCCESS: string =
+    'blog content is change success'
   public static readonly COMMENT_CONTENT_NOT_CHANGE: string =
     'blog is not change'
   public static readonly COMMENT_CONTENT_CHANGE_SUCCESS: string =

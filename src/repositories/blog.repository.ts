@@ -54,10 +54,32 @@ class BlogRepository {
             transaction,
           },
         )
-
         return await Blog.findByPk(id)
       })
     } catch (e) {
+      return null
+    }
+  }
+
+  public async updateContent(
+    id: string,
+    body: string,
+  ): Promise<Partial<Blog> | null> {
+    try {
+      return await sequelize.transaction(async (transaction) => {
+        await Blog.update(
+          { body },
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
+        return await Blog.findByPk(id)
+      })
+    } catch (error) {
+      logger.error(error)
       return null
     }
   }
