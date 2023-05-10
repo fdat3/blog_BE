@@ -5,7 +5,7 @@ import Controller, {
 } from '@/interfaces/controller.interface'
 import Validate from '@/validations/comment.validation'
 import CommentService from '@/services/comment.service'
-import validationMiddleware from '@/middlewares/validation.middleware'
+// import validationMiddleware from '@/middlewares/validation.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 // api constant
 import ConstantAPI from '@/constants/api.constant'
@@ -45,7 +45,7 @@ class CommentController implements Controller {
     this.router.post(
       `${this.path}${ConstantAPI.COMMENT_CREATE}`,
       this.authenticated.verifyTokenAndAuthorization,
-      validationMiddleware(this.validate.createComment),
+      // validationMiddleware(this.validate.createComment),
       this.createComment,
     )
 

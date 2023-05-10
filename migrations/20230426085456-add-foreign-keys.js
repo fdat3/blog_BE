@@ -32,15 +32,7 @@ module.exports = {
             }
         })
 
-        await queryInterface.addConstraint('comments', {
-            fields: ['id'],
-            type: 'foreign key',
-            name: 'comments_id_fkey',
-            references: {
-                table: 'blogs',
-                field: 'id'
-            }
-        })
+
 
         await queryInterface.addConstraint('comments', {
             fields: ['blog_id'],
@@ -106,7 +98,6 @@ module.exports = {
         await queryInterface.removeConstraint('blogs', 'blogs_user_id_fkey')
         await queryInterface.removeConstraint('up_votes', 'up_votes_user_id_fkey')
         await queryInterface.removeConstraint('up_votes', 'up_votes_blog_id_fkey')
-        await queryInterface.removeConstraint('comments', 'comments_id_fkey')
         await queryInterface.removeConstraint('comments', 'comments_blog_id_fkey')
         await queryInterface.removeConstraint('comments', 'comments_user_id_fkey')
         await queryInterface.removeConstraint('banners', 'banners_id_fkey')

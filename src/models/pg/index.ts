@@ -8,7 +8,6 @@ import { User } from './User'
 import { sequelize } from '@/config/sql.config'
 
 export { Blog, UpVote, Comment, Setting, Banner, Theme, User }
-
 export const initModels = (): any => {
   Blog.initModel(sequelize)
   UpVote.initModel(sequelize)
@@ -36,15 +35,11 @@ export const initModels = (): any => {
   })
   Comment.belongsTo(Blog, {
     as: 'blogFkId',
-    foreignKey: 'id',
+    foreignKey: 'blog_id',
   })
   Comment.belongsTo(User, {
     as: 'userFkId',
-    foreignKey: 'id',
-  })
-  Comment.belongsTo(Comment, {
-    as: 'parentFkId',
-    foreignKey: 'id',
+    foreignKey: 'user_id',
   })
   Setting.hasOne(Banner, {
     as: 'banner',

@@ -14,7 +14,7 @@ import {
 import type { Blog } from './Blog'
 import type { User } from './User'
 
-type CommentAssociations = 'blogFkId' | 'userFkId' | 'parentFkId'
+type CommentAssociations = 'blogFkId' | 'userFkId'
 
 export class Comment extends Model<
   InferAttributes<Comment, { omit: CommentAssociations }>,
@@ -23,6 +23,7 @@ export class Comment extends Model<
   declare id: CreationOptional<number>
   declare blogId: number | null
   declare userId: number | null
+  declare employeeId: number | null
   declare parentId: number | null
   declare content: string | null
   declare image: string | null
@@ -41,16 +42,9 @@ export class Comment extends Model<
   declare setUserFkId: BelongsToSetAssociationMixin<User, number>
   declare createUserFkId: BelongsToCreateAssociationMixin<User>
 
-  // Comment belongsTo Comment (as ParentFkId)
-  declare parentFkId?: NonAttribute<Comment>
-  declare getParentFkId: BelongsToGetAssociationMixin<Comment>
-  declare setParentFkId: BelongsToSetAssociationMixin<Comment, number>
-  declare createParentFkId: BelongsToCreateAssociationMixin<Comment>
-
   declare static associations: {
     blogFkId: Association<Comment, Blog>
     userFkId: Association<Comment, User>
-    parentFkId: Association<Comment, Comment>
   }
 
   static initModel(sequelize: Sequelize): typeof Comment {
@@ -66,6 +60,9 @@ export class Comment extends Model<
           type: DataTypes.INTEGER,
         },
         userId: {
+          type: DataTypes.INTEGER,
+        },
+        employeeId: {
           type: DataTypes.INTEGER,
         },
         parentId: {
