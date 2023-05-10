@@ -113,6 +113,7 @@ export class Blog extends Model<
         },
         readCount: {
           type: DataTypes.INTEGER,
+          defaultValue: 0,
         },
         createdAt: {
           type: DataTypes.DATE,

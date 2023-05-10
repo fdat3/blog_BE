@@ -32,6 +32,9 @@ class BlogRepository {
   public async findById(id: string): Promise<Partial<Blog> | null> {
     const blog = await Blog.findByPk(id)
     if (blog) {
+      blog.increment({
+        readCount: 1,
+      })
       return blog.get({ plain: true })
     }
     return null

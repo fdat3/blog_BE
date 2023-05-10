@@ -30,13 +30,7 @@ class UpVoteRepository {
 
       const result: UpVote = await sequelize.transaction(
         async (transaction) => {
-          const upVote = await UpVote.create(
-            {
-              ...data,
-              count: 1,
-            },
-            { transaction },
-          )
+          const upVote = await UpVote.create(data, { transaction })
 
           await Blog.findOne({
             where: {
@@ -79,6 +73,7 @@ class UpVoteRepository {
       if (existingDownVote) {
         return existingDownVote.get({ plain: true })
       }
+
       const result: UpVote = await sequelize.transaction(
         async (transaction) => {
           const upVote = await UpVote.create(data, { transaction })

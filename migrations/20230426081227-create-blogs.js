@@ -48,7 +48,7 @@ module.exports = {
             },
             readCount: {
                 type: DataTypes.INTEGER,
-                field: 'read_count'
+                field: 'read_count',
             },
             createdAt: {
                 type: DataTypes.DATE,

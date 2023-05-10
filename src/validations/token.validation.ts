@@ -12,7 +12,6 @@ import ConstantMessage from '@/constants/message.constant'
 import ConstantHttpCode from '@/constants/http.code.constant'
 import ConstantHttpReason from '@/constants/http.reason.constant'
 import logger from '@/utils/logger.util'
-import { log } from 'console'
 
 export const verifyToken = async (
   req: Request,
@@ -43,8 +42,6 @@ export const verifyToken = async (
     }
 
     const accessToken = bearer.split('Bearer ')[1].trim()
-    log({ accessToken })
-
     const checkDeviceId = req.fingerprint?.hash
     if (checkDeviceId) {
       return jwt.verify(
@@ -61,7 +58,6 @@ export const verifyToken = async (
               msg: ConstantMessage.TOKEN_NOT_VALID,
             })
           }
-          log({ payload })
           req.user = payload
           return next()
         },
