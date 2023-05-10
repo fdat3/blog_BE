@@ -111,6 +111,7 @@ export class User extends Model<
         },
         followerCount: {
           type: DataTypes.INTEGER,
+          defaultValue: 0,
         },
         loginType: {
           type: DataTypes.ENUM('GOOGLE  FACEBOOK'),

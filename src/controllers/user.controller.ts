@@ -78,10 +78,10 @@ class UserController implements Controller {
     )
 
     this.router.post(
-      `${this.path}${ConstantAPI.USER_UPDATE_NAME}`,
+      `${this.path}${ConstantAPI.USER_UPDATE_DOB}`,
       this.authenticated.verifyTokenAndAuthorization,
-      validationMiddleware(this.validate.updateName),
-      this.updateName,
+      validationMiddleware(this.validate.updateDob),
+      this.updateDob,
     )
 
     this.router.post(
@@ -299,13 +299,13 @@ class UserController implements Controller {
     }
   }
 
-  private updateName = async (
+  private updateDob = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { name, password } = req.body
+      const { password, dob } = req.body
       const { id } = req.params
 
       const user = await this.userService.findByIdWithPassword(id)
@@ -318,31 +318,16 @@ class UserController implements Controller {
           ),
         )
       }
-      logger.info(`user ${user.username} found`)
 
-      const isNameValid = this.validate.validateName(name)
-      if (!isNameValid) {
+      if (user.dob === dob) {
         return next(
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.NAME_NOT_CHANGE,
+            ConstantMessage.DOB_NOT_CHANGE,
           ),
         )
       }
-      logger.info(`name ${name} is valid`)
-
-      const isPasswordValid = this.validate.validatePassword(password)
-      if (!isPasswordValid) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.BAD_REQUEST,
-            ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.PASSWORD_NOT_VALID,
-          ),
-        )
-      }
-      logger.info(`password ${password} is valid`)
 
       const isMatch = this.userService.comparePassword(password, user.password)
       if (!isMatch) {
@@ -354,36 +339,24 @@ class UserController implements Controller {
           ),
         )
       }
-      logger.info(`password ${password} match`)
 
-      if (user.name === name) {
-        return next(
-          new HttpException(
-            ConstantHttpCode.BAD_REQUEST,
-            ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.NAME_NOT_CHANGE,
-          ),
-        )
-      }
-
-      const updatedUser = await this.userService.updateName(id, name)
+      const updatedUser = await this.userService.updateDob(id, dob)
       if (!updatedUser) {
         return next(
           new HttpException(
             ConstantHttpCode.BAD_REQUEST,
             ConstantHttpReason.BAD_REQUEST,
-            ConstantMessage.NAME_NOT_CHANGE,
+            ConstantMessage.DOB_NOT_CHANGE,
           ),
         )
       }
-      logger.info(`user ${user.username} updated`)
-
+      delete updatedUser.password
       return res.status(ConstantHttpCode.OK).json({
         status: {
           code: ConstantHttpCode.OK,
           msg: ConstantHttpReason.OK,
         },
-        msg: ConstantMessage.NAME_CHANGE_SUCCESS,
+        msg: ConstantMessage.DOB_CHANGE_SUCCESS,
         data: {
           user: updatedUser,
         },

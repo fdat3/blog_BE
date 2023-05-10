@@ -63,7 +63,7 @@ class AuthController implements Controller {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { fullname, email, password } = req.body
+      const { fullname, email, password, dob } = req.body
 
       const emailValidated = this.validate.validateEmail(email)
       if (!emailValidated) {
@@ -104,6 +104,7 @@ class AuthController implements Controller {
         fullname,
         email,
         password,
+        dob,
       }
 
       const user = await this.authService.createUser(newUserData)

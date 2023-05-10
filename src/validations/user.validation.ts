@@ -6,6 +6,7 @@ class UserValidation {
     fullname: Joi.string().max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(30).required(),
+    dob: Joi.date(),
   })
 
   public login = Joi.object({
@@ -30,6 +31,11 @@ class UserValidation {
 
   public updateFullname = Joi.object({
     fullname: Joi.string().max(200).required(),
+    password: Joi.string().min(6).max(30).required(),
+  })
+
+  public updateDob = Joi.object({
+    dob: Joi.date().required(),
     password: Joi.string().min(6).max(30).required(),
   })
 

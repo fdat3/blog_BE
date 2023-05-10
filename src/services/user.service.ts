@@ -32,6 +32,7 @@ class UserService {
     const users = await this.userRepository.findAll(queryInfo)
     return users
   }
+
   public async findById(id: string): Promise<any> {
     const user = await this.userRepository.findById(id)
     return user
@@ -67,6 +68,10 @@ class UserService {
   public async updatePassword(id: string, password: string): Promise<any> {
     const encryptedPassword = this.userSecurity.encrypt(password)
     return this.userRepository.updatePassword(id, encryptedPassword)
+  }
+  public async updateDob(id: string, dob: Date): Promise<any> {
+    const user = await this.userRepository.updateDob(id, dob)
+    return user
   }
   public async getUsersStats(): Promise<any> {
     // const date = new Date()

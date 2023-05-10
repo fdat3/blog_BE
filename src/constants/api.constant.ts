@@ -31,6 +31,7 @@ class Api {
   public static readonly USER_UPDATE_ANY: string = '/:id'
   public static readonly USER_UPDATE_USERNAME: string = '/update-username/:id'
   public static readonly USER_UPDATE_FULLNAME: string = '/update-fullname/:id'
+  public static readonly USER_UPDATE_DOB: string = '/update-dob/:id'
   public static readonly USER_UPDATE_NAME: string = '/update-name/:id'
   public static readonly USER_UPDATE_EMAIL: string = '/update-email/:id'
   public static readonly USER_UPDATE_PASSWORD: string = '/update-password/:id'

@@ -67,6 +67,8 @@ class Message {
   public static readonly EMAIL_NOT_CHANGE: string = 'email is not change'
   public static readonly EMAIL_CHANGE_SUCCESS: string =
     'email is change success'
+  public static readonly DOB_CHANGE_SUCCESS: string = 'D.O.B is change success'
+  public static readonly DOB_NOT_CHANGE: string = 'D.O.B is not change'
   public static readonly PASSWORD_NOT_CHANGE: string = 'password is not change'
   public static readonly PASSWORD_CHANGE_SUCCESS: string =
     'password is change success'

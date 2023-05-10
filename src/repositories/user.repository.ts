@@ -208,6 +208,28 @@ class UserRepository {
     }
   }
 
+  public async updateDob(id: string, dob: Date): Promise<Partial<User> | null> {
+    try {
+      return await sequelize.transaction(async (transaction) => {
+        await User.update(
+          {
+            dob,
+          },
+          {
+            where: {
+              id,
+            },
+            transaction,
+          },
+        )
+        return await User.findByPk(id)
+      })
+    } catch (error) {
+      logger.error(error)
+      return null
+    }
+  }
+
   public async updatePassword(
     id: string,
     password: string,
