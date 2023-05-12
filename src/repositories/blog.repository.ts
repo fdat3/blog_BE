@@ -44,6 +44,12 @@ class BlogRepository {
               ),
               'total_upvote',
             ],
+            [
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "votes" as "Vote" WHERE "Vote"."blog_id" = "Blog"."id" AND type_vote = ' DOWN')`,
+              ),
+              'total_downvote',
+            ],
           ],
         },
       })
