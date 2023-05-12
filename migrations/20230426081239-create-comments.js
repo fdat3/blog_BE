@@ -18,10 +18,6 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 field: 'user_id'
             },
-            employeeId: {
-                type: DataTypes.INTEGER,
-                field: 'employee_id'
-            },
             parentId: {
                 type: DataTypes.INTEGER,
                 field: 'parent_id'

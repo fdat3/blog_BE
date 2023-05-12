@@ -1,26 +1,26 @@
 import { GetListRepository } from '@/interfaces/base.interface'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { UpVote } from '@/models/pg'
-import UpVoteRepository from '@/repositories/upvote.repository'
+import { Vote } from '@/models/pg'
+import VoteRepository from '@/repositories/vote.repository'
 // import type { UpVote } from '@/models/pg'
 // import { ICrudOption } from '@/interfaces/controller.interface'
 
-class UpVoteService {
-  private upVoteRepository: UpVoteRepository
+class VoteService {
+  private voteRepository: VoteRepository
   constructor() {
-    this.upVoteRepository = new UpVoteRepository()
+    this.voteRepository = new VoteRepository()
   }
   public async createUpVote(data: any): Promise<any> {
-    return this.upVoteRepository.create(data)
+    return this.voteRepository.create(data)
   }
   public async delete(id: string): Promise<any> {
-    return this.upVoteRepository.delete(id)
+    return this.voteRepository.delete(id)
   }
   public async findAll(
     queryInfo?: ICrudOption,
-  ): Promise<GetListRepository<UpVote>> {
-    return this.upVoteRepository.getAllVotes(queryInfo)
+  ): Promise<GetListRepository<Vote>> {
+    return this.voteRepository.getAllVotes(queryInfo)
   }
 }
 
-export default UpVoteService
+export default VoteService

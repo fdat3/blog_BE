@@ -32,8 +32,7 @@ module.exports = {
             },
             followerCount: {
                 type: DataTypes.INTEGER,
-                field: 'follower_count',
-                defaultValue: 0
+                field: 'follower_count'
             },
             loginType: {
                 type: DataTypes.ENUM('GOOGLE  FACEBOOK'),

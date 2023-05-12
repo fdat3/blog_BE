@@ -23,6 +23,8 @@ class Message {
     'blog is not create, please try again'
   public static readonly UPVOTE_NOT_CREATE: string =
     'blog is not create, please try again'
+  public static readonly USER_WAS_UPVOTE: string =
+    'user was vote, please change type'
   public static readonly DOWNVOTE_NOT_CREATE: string =
     'downvote is not create, please try again'
   public static readonly COMMENT_NOT_CREATE: string =

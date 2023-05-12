@@ -110,10 +110,9 @@ class Api {
   public static readonly LIKE_DELETE: string = '/:id'
 
   // UPVOTE
-  public static readonly UPVOTE: string = '/upvotes'
-  public static readonly UPVOTE_CREATE: string = '/up'
-  public static readonly DOWNVOTE_CREATE: string = '/down'
-  public static readonly UPVOTE_DELETE: string = '/:id'
+  public static readonly VOTE: string = '/votes'
+  public static readonly VOTE_CREATE: string = '/'
+  public static readonly VOTE_DELETE: string = '/:id'
   public static readonly GET_ALL_VOTES: string = '/get-all-votes'
 
   // Follow

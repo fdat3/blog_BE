@@ -4,7 +4,7 @@ import Controller, {
   Response,
 } from '@/interfaces/controller.interface'
 import Validate from '@/validations/upvote.validation'
-import UpVoteService from '@/services/upvote.service'
+import VoteService from '@/services/vote.service'
 // import validationMiddleware from '@/middlewares/validation.middleware'
 import HttpException from '@/utils/exceptions/http.exceptions'
 // api constant
@@ -22,19 +22,19 @@ import QueryMiddleware from '@/middlewares/quey.middleware'
 import BaseController from './base.controller'
 import { verifyToken } from '@/validations/token.validation'
 
-class UpVoteController implements Controller {
+class VoteController implements Controller {
   public path: string
   public router: Router
-  private upVoteService: UpVoteService
+  private voteService: VoteService
   private validate: Validate
   private authenticated: Authenticated
   private queryMiddleware: QueryMiddleware
   private baseController: BaseController
 
   constructor() {
-    this.path = `${ConstantAPI.UPVOTE}`
+    this.path = `${ConstantAPI.VOTE}`
     this.router = Router()
-    this.upVoteService = new UpVoteService()
+    this.voteService = new VoteService()
     this.validate = new Validate()
     this.authenticated = new Authenticated()
     this.queryMiddleware = new QueryMiddleware()
@@ -44,13 +44,13 @@ class UpVoteController implements Controller {
 
   private initialiseRoutes(): void {
     this.router.post(
-      `${this.path}${ConstantAPI.UPVOTE_CREATE}`,
+      `${this.path}${ConstantAPI.VOTE_CREATE}`,
       this.authenticated.verifyTokenAndAuthorization,
       this.createUpVote,
     )
 
     this.router.delete(
-      `${this.path}${ConstantAPI.UPVOTE_DELETE}`,
+      `${this.path}${ConstantAPI.VOTE_DELETE}`,
       this.authenticated.verifyTokenAndAuthorization,
       this.delete,
     )
@@ -70,7 +70,7 @@ class UpVoteController implements Controller {
       const data = req.body
       const { user } = req
       data.userId = user.id
-      const result = await this.upVoteService.createUpVote(data)
+      const result = await this.voteService.createUpVote(data)
       return res.status(ConstantHttpCode.OK).json({
         status: {
           code: ConstantHttpCode.OK,
@@ -101,7 +101,7 @@ class UpVoteController implements Controller {
   ): Promise<Response | any> => {
     try {
       const { queryInfo } = req
-      const results = await this.upVoteService.findAll(queryInfo)
+      const results = await this.voteService.findAll(queryInfo)
       this.baseController.onSuccessAsList(res, results, undefined, queryInfo)
     } catch (err) {
       logger.error(err)
@@ -122,7 +122,7 @@ class UpVoteController implements Controller {
   ): Promise<Response | any> => {
     try {
       const { id } = req.params
-      const upVoteDelete = await this.upVoteService.delete(id)
+      const upVoteDelete = await this.voteService.delete(id)
       if (!upVoteDelete) {
         return next(
           new HttpException(
@@ -153,4 +153,4 @@ class UpVoteController implements Controller {
   }
 }
 
-export default UpVoteController
+export default VoteController

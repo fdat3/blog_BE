@@ -20,9 +20,9 @@ import {
 } from 'sequelize'
 import type { Blog } from './Blog'
 import type { Comment } from './Comment'
-import type { UpVote } from './UpVote'
+import type { Vote } from './Vote'
 
-type UserAssociations = 'upVotes' | 'comments' | 'blogs'
+type UserAssociations = 'votes' | 'comments' | 'blogs'
 
 export class User extends Model<
   InferAttributes<User, { omit: UserAssociations }>,
@@ -40,18 +40,18 @@ export class User extends Model<
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // User hasMany UpVote
-  declare upVotes?: NonAttribute<UpVote[]>
-  declare getUpVotes: HasManyGetAssociationsMixin<UpVote>
-  declare setUpVotes: HasManySetAssociationsMixin<UpVote, number>
-  declare addUpVote: HasManyAddAssociationMixin<UpVote, number>
-  declare addUpVotes: HasManyAddAssociationsMixin<UpVote, number>
-  declare createUpVote: HasManyCreateAssociationMixin<UpVote>
-  declare removeUpVote: HasManyRemoveAssociationMixin<UpVote, number>
-  declare removeUpVotes: HasManyRemoveAssociationsMixin<UpVote, number>
-  declare hasUpVote: HasManyHasAssociationMixin<UpVote, number>
-  declare hasUpVotes: HasManyHasAssociationsMixin<UpVote, number>
-  declare countUpVotes: HasManyCountAssociationsMixin
+  // User hasMany Vote
+  declare votes?: NonAttribute<Vote[]>
+  declare getVotes: HasManyGetAssociationsMixin<Vote>
+  declare setVotes: HasManySetAssociationsMixin<Vote, number>
+  declare addVote: HasManyAddAssociationMixin<Vote, number>
+  declare addVotes: HasManyAddAssociationsMixin<Vote, number>
+  declare createVote: HasManyCreateAssociationMixin<Vote>
+  declare removeVote: HasManyRemoveAssociationMixin<Vote, number>
+  declare removeVotes: HasManyRemoveAssociationsMixin<Vote, number>
+  declare hasVote: HasManyHasAssociationMixin<Vote, number>
+  declare hasVotes: HasManyHasAssociationsMixin<Vote, number>
+  declare countVotes: HasManyCountAssociationsMixin
 
   // User hasMany Comment
   declare comments?: NonAttribute<Comment[]>
@@ -80,7 +80,7 @@ export class User extends Model<
   declare countBlogs: HasManyCountAssociationsMixin
 
   declare static associations: {
-    upVotes: Association<User, UpVote>
+    votes: Association<User, Vote>
     comments: Association<User, Comment>
     blogs: Association<User, Blog>
   }
@@ -111,7 +111,6 @@ export class User extends Model<
         },
         followerCount: {
           type: DataTypes.INTEGER,
-          defaultValue: 0,
         },
         loginType: {
           type: DataTypes.ENUM('GOOGLE  FACEBOOK'),

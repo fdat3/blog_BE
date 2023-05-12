@@ -22,11 +22,10 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Blog } from './Blog'
-import type { DownVote } from './DownVote'
-import type { UpVote } from './UpVote'
 import type { User } from './User'
+import type { Vote } from './Vote'
 
-type CommentAssociations = 'blogFkId' | 'userFkId' | 'upVotes' | 'downVotes'
+type CommentAssociations = 'blogFkId' | 'userFkId' | 'votes'
 
 export class Comment extends Model<
   InferAttributes<Comment, { omit: CommentAssociations }>,
@@ -53,37 +52,23 @@ export class Comment extends Model<
   declare setUserFkId: BelongsToSetAssociationMixin<User, number>
   declare createUserFkId: BelongsToCreateAssociationMixin<User>
 
-  // Comment hasMany UpVote
-  declare upVotes?: NonAttribute<UpVote[]>
-  declare getUpVotes: HasManyGetAssociationsMixin<UpVote>
-  declare setUpVotes: HasManySetAssociationsMixin<UpVote, number>
-  declare addUpVote: HasManyAddAssociationMixin<UpVote, number>
-  declare addUpVotes: HasManyAddAssociationsMixin<UpVote, number>
-  declare createUpVote: HasManyCreateAssociationMixin<UpVote>
-  declare removeUpVote: HasManyRemoveAssociationMixin<UpVote, number>
-  declare removeUpVotes: HasManyRemoveAssociationsMixin<UpVote, number>
-  declare hasUpVote: HasManyHasAssociationMixin<UpVote, number>
-  declare hasUpVotes: HasManyHasAssociationsMixin<UpVote, number>
-  declare countUpVotes: HasManyCountAssociationsMixin
-
-  // Comment hasMany DownVote
-  declare downVotes?: NonAttribute<DownVote[]>
-  declare getDownVotes: HasManyGetAssociationsMixin<DownVote>
-  declare setDownVotes: HasManySetAssociationsMixin<DownVote, number>
-  declare addDownVote: HasManyAddAssociationMixin<DownVote, number>
-  declare addDownVotes: HasManyAddAssociationsMixin<DownVote, number>
-  declare createDownVote: HasManyCreateAssociationMixin<DownVote>
-  declare removeDownVote: HasManyRemoveAssociationMixin<DownVote, number>
-  declare removeDownVotes: HasManyRemoveAssociationsMixin<DownVote, number>
-  declare hasDownVote: HasManyHasAssociationMixin<DownVote, number>
-  declare hasDownVotes: HasManyHasAssociationsMixin<DownVote, number>
-  declare countDownVotes: HasManyCountAssociationsMixin
+  // Comment hasMany Vote
+  declare votes?: NonAttribute<Vote[]>
+  declare getVotes: HasManyGetAssociationsMixin<Vote>
+  declare setVotes: HasManySetAssociationsMixin<Vote, number>
+  declare addVote: HasManyAddAssociationMixin<Vote, number>
+  declare addVotes: HasManyAddAssociationsMixin<Vote, number>
+  declare createVote: HasManyCreateAssociationMixin<Vote>
+  declare removeVote: HasManyRemoveAssociationMixin<Vote, number>
+  declare removeVotes: HasManyRemoveAssociationsMixin<Vote, number>
+  declare hasVote: HasManyHasAssociationMixin<Vote, number>
+  declare hasVotes: HasManyHasAssociationsMixin<Vote, number>
+  declare countVotes: HasManyCountAssociationsMixin
 
   declare static associations: {
     blogFkId: Association<Comment, Blog>
     userFkId: Association<Comment, User>
-    upVotes: Association<Comment, UpVote>
-    downVotes: Association<Comment, DownVote>
+    votes: Association<Comment, Vote>
   }
 
   static initModel(sequelize: Sequelize): typeof Comment {

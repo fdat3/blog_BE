@@ -19,7 +19,7 @@ import {
   Sequelize,
 } from 'sequelize'
 import type { Comment } from './Comment'
-import type { UpVote } from './UpVote'
+import type { Vote } from './Vote'
 
 type BlogAssociations = 'comments' | 'votes'
 
@@ -51,22 +51,22 @@ export class Blog extends Model<
   declare hasComments: HasManyHasAssociationsMixin<Comment, number>
   declare countComments: HasManyCountAssociationsMixin
 
-  // Blog hasMany UpVote (as Votes)
-  declare votes?: NonAttribute<UpVote[]>
-  declare getVotes: HasManyGetAssociationsMixin<UpVote>
-  declare setVotes: HasManySetAssociationsMixin<UpVote, number>
-  declare addVote: HasManyAddAssociationMixin<UpVote, number>
-  declare addVotes: HasManyAddAssociationsMixin<UpVote, number>
-  declare createVote: HasManyCreateAssociationMixin<UpVote>
-  declare removeVote: HasManyRemoveAssociationMixin<UpVote, number>
-  declare removeVotes: HasManyRemoveAssociationsMixin<UpVote, number>
-  declare hasVote: HasManyHasAssociationMixin<UpVote, number>
-  declare hasVotes: HasManyHasAssociationsMixin<UpVote, number>
+  // Blog hasMany Vote (as Votes)
+  declare votes?: NonAttribute<Vote[]>
+  declare getVotes: HasManyGetAssociationsMixin<Vote>
+  declare setVotes: HasManySetAssociationsMixin<Vote, number>
+  declare addVote: HasManyAddAssociationMixin<Vote, number>
+  declare addVotes: HasManyAddAssociationsMixin<Vote, number>
+  declare createVote: HasManyCreateAssociationMixin<Vote>
+  declare removeVote: HasManyRemoveAssociationMixin<Vote, number>
+  declare removeVotes: HasManyRemoveAssociationsMixin<Vote, number>
+  declare hasVote: HasManyHasAssociationMixin<Vote, number>
+  declare hasVotes: HasManyHasAssociationsMixin<Vote, number>
   declare countVotes: HasManyCountAssociationsMixin
 
   declare static associations: {
     comments: Association<Blog, Comment>
-    votes: Association<Blog, UpVote>
+    votes: Association<Blog, Vote>
   }
 
   static initModel(sequelize: Sequelize): typeof Blog {

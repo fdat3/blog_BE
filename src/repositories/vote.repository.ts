@@ -3,7 +3,7 @@ import Message from '@/constants/message.constant'
 import BaseController from '@/controllers/base.controller'
 import { GetListRepository } from '@/interfaces/base.interface'
 import { ICrudOption } from '@/interfaces/controller.interface'
-import { UpVote } from '@/models/pg'
+import { Vote } from '@/models/pg'
 import logger from '@/utils/logger.util'
 // import { ICrudOption } from '@/interfaces/controller.interface'
 // import {
@@ -11,32 +11,59 @@ import logger from '@/utils/logger.util'
 //     default as baseController,
 // } from '@/controllers/base.controller'
 
-class UpVoteRepository {
+class VoteRepository {
   private model
   // private baseController = new BaseController()
 
   constructor() {
-    this.model = UpVote
+    this.model = Vote
   }
 
-  public async create(data: any): Promise<UpVote | any> {
+  public async create(data: any): Promise<any> {
+    const t = await sequelize.transaction()
     try {
-      const result: UpVote = await sequelize.transaction(
-        async (transaction) => {
-          const upVote = await UpVote.create(data, { transaction })
-          return upVote
+      // Kiểm tra xem người dùng đã thực hiện hành động nào trước đó
+      const userActivity = await Vote.findOne({
+        where: {
+          userId: data.userId,
+          blogId: data.blogId,
+          typeVote: data.typeVote,
         },
-      )
-      return result.get({ plain: true })
-    } catch (error) {
-      logger.error(error)
-      return null
+        transaction: t,
+      })
+      if (userActivity) {
+        // Nếu người dùng đã thực hiện hành động trước đó, từ chối hành động mới
+        throw Message.USER_WAS_UPVOTE
+      }
+
+      // Khóa row-level để đảm bảo rằng chỉ có một transaction được thực hiện trên một hàng tại một thời điểm
+      const [result, created] = await Vote.findOrCreate({
+        where: {
+          userId: data.userId,
+          blogId: data.blogId,
+          typeVote: data.typeVote,
+        },
+        transaction: t,
+        lock: true,
+      })
+
+      if (!created) {
+        // Nếu hàng đã tồn tại, cập nhật hành động mới
+        await result.save({ transaction: t })
+      }
+      // Thực hiện transaction
+      await t.commit()
+      return result
+    } catch (err) {
+      // Nếu có lỗi, hoàn tác transaction
+      await t.rollback()
+      throw err
     }
   }
 
   public async getAllVotes(
     queryInfo?: ICrudOption,
-  ): Promise<GetListRepository<UpVote>> {
+  ): Promise<GetListRepository<Vote>> {
     try {
       return this.model.findAndCountAll(
         BaseController.applyFindOptions(queryInfo),
@@ -71,7 +98,7 @@ class UpVoteRepository {
     }
   }
 
-  public async update(id: string, data: any): Promise<UpVote | null> {
+  public async update(id: string, data: any): Promise<Vote | null> {
     try {
       await sequelize.transaction(async (transaction) => {
         await this.model
@@ -93,4 +120,4 @@ class UpVoteRepository {
   }
 }
 
-export default UpVoteRepository
+export default VoteRepository
