@@ -49,6 +49,7 @@ class VoteRepository {
 
       if (!created) {
         // Nếu hàng đã tồn tại, cập nhật hành động mới
+        result.typeVote = data.typeVote
         await result.save({ transaction: t })
       }
       // Thực hiện transaction

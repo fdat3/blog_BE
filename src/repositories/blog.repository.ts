@@ -40,7 +40,7 @@ class BlogRepository {
           include: [
             [
               sequelize.literal(
-                '(SELECT COUNT(type_vote) FROM "votes" as "Vote" WHERE type_vote = "UP")',
+                `(SELECT COUNT(*) FROM "votes" as "Vote" WHERE "Vote"."blog_id" = "Blog"."id" AND type_vote = 'UP')`,
               ),
               'total_upvote',
             ],
