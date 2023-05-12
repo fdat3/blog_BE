@@ -34,9 +34,6 @@ export class Blog extends Model<
   declare slug: string | null
   declare meta: string | null
   declare body: string | null
-  declare upVote: number | null
-  declare downVote: number | null
-  declare averageVote: number | null
   declare readCount: number | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
@@ -99,21 +96,8 @@ export class Blog extends Model<
         body: {
           type: DataTypes.TEXT,
         },
-        upVote: {
-          type: DataTypes.INTEGER,
-          defaultValue: 0,
-        },
-        downVote: {
-          type: DataTypes.INTEGER,
-          defaultValue: 0,
-        },
-        averageVote: {
-          type: DataTypes.FLOAT,
-          defaultValue: 0.0,
-        },
         readCount: {
           type: DataTypes.INTEGER,
-          defaultValue: 0,
         },
         createdAt: {
           type: DataTypes.DATE,

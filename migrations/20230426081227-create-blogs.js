@@ -34,21 +34,9 @@ module.exports = {
                 type: DataTypes.TEXT,
                 field: 'body'
             },
-            upVote: {
-                type: DataTypes.INTEGER,
-                field: 'up_vote'
-            },
-            downVote: {
-                type: DataTypes.INTEGER,
-                field: 'down_vote'
-            },
-            averageVote: {
-                type: DataTypes.FLOAT,
-                field: 'average_vote'
-            },
             readCount: {
                 type: DataTypes.INTEGER,
-                field: 'read_count',
+                field: 'read_count'
             },
             createdAt: {
                 type: DataTypes.DATE,

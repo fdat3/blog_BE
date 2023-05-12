@@ -14,6 +14,10 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 field: 'user_id'
             },
+            employeeId: {
+                type: DataTypes.INTEGER,
+                field: 'employee_id'
+            },
             blogId: {
                 type: DataTypes.INTEGER,
                 field: 'blog_id'

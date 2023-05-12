@@ -15,60 +15,54 @@ import type { Blog } from './Blog'
 import type { Comment } from './Comment'
 import type { User } from './User'
 
-type UpVoteAssociations = 'blogFkId' | 'userFkId' | 'commentFkId'
+type DownVoteAssociations = 'blogFkId' | 'userFkId' | 'commentFkId'
 
-export class UpVote extends Model<
-  InferAttributes<UpVote, { omit: UpVoteAssociations }>,
-  InferCreationAttributes<UpVote, { omit: UpVoteAssociations }>
+export class DownVote extends Model<
+  InferAttributes<DownVote, { omit: DownVoteAssociations }>,
+  InferCreationAttributes<DownVote, { omit: DownVoteAssociations }>
 > {
   declare id: CreationOptional<number>
-  declare userId: number | null
-  declare employeeId: number | null
   declare blogId: number | null
+  declare userId: number | null
   declare commentId: number | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 
-  // UpVote belongsTo Blog (as BlogFkId)
+  // DownVote belongsTo Blog (as BlogFkId)
   declare blogFkId?: NonAttribute<Blog>
   declare getBlogFkId: BelongsToGetAssociationMixin<Blog>
   declare setBlogFkId: BelongsToSetAssociationMixin<Blog, number>
   declare createBlogFkId: BelongsToCreateAssociationMixin<Blog>
 
-  // UpVote belongsTo User (as UserFkId)
+  // DownVote belongsTo User (as UserFkId)
   declare userFkId?: NonAttribute<User>
   declare getUserFkId: BelongsToGetAssociationMixin<User>
   declare setUserFkId: BelongsToSetAssociationMixin<User, number>
   declare createUserFkId: BelongsToCreateAssociationMixin<User>
 
-  // UpVote belongsTo Comment (as CommentFkId)
+  // DownVote belongsTo Comment (as CommentFkId)
   declare commentFkId?: NonAttribute<Comment>
   declare getCommentFkId: BelongsToGetAssociationMixin<Comment>
   declare setCommentFkId: BelongsToSetAssociationMixin<Comment, number>
   declare createCommentFkId: BelongsToCreateAssociationMixin<Comment>
 
   declare static associations: {
-    blogFkId: Association<UpVote, Blog>
-    userFkId: Association<UpVote, User>
-    commentFkId: Association<UpVote, Comment>
+    blogFkId: Association<DownVote, Blog>
+    userFkId: Association<DownVote, User>
+    commentFkId: Association<DownVote, Comment>
   }
 
-  static initModel(sequelize: Sequelize): typeof UpVote {
-    UpVote.init(
+  static initModel(sequelize: Sequelize): typeof DownVote {
+    DownVote.init(
       {
         id: {
-          type: DataTypes.INTEGER.UNSIGNED,
+          type: DataTypes.INTEGER,
           primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-        userId: {
-          type: DataTypes.INTEGER,
-        },
-        employeeId: {
-          type: DataTypes.INTEGER,
         },
         blogId: {
+          type: DataTypes.INTEGER,
+        },
+        userId: {
           type: DataTypes.INTEGER,
         },
         commentId: {
@@ -86,6 +80,6 @@ export class UpVote extends Model<
       },
     )
 
-    return UpVote
+    return DownVote
   }
 }

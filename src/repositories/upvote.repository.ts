@@ -71,14 +71,14 @@ class UpVoteRepository {
     }
   }
 
-  public async update(id: uuid, data: any): Promise<UpVote | null> {
+  public async update(id: string, data: any): Promise<UpVote | null> {
     try {
       await sequelize.transaction(async (transaction) => {
         await this.model
           .findByPk(id, { transaction })
-          .then((like) => {
-            if (!like) throw Message.UPDATE_UPVOTE_ERR
-            like.update(data, { transaction })
+          .then((vote) => {
+            if (!vote) throw Message.UPDATE_UPVOTE_ERR
+            vote.update(data, { transaction })
           })
           .catch((err) => {
             throw err

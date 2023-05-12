@@ -2,13 +2,11 @@ const DataTypes = require('sequelize').DataTypes
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('comments', {
+        await queryInterface.createTable('down_votes', {
             id: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
                 field: 'id',
-                primaryKey: true,
-                autoIncrement: true,
-                allowNull: false
+                primaryKey: true
             },
             blogId: {
                 type: DataTypes.INTEGER,
@@ -18,21 +16,9 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 field: 'user_id'
             },
-            employeeId: {
+            commentId: {
                 type: DataTypes.INTEGER,
-                field: 'employee_id'
-            },
-            parentId: {
-                type: DataTypes.INTEGER,
-                field: 'parent_id'
-            },
-            content: {
-                type: DataTypes.TEXT,
-                field: 'content'
-            },
-            image: {
-                type: DataTypes.STRING,
-                field: 'image'
+                field: 'comment_id'
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -45,6 +31,6 @@ module.exports = {
         })
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('comments');
+        await queryInterface.dropTable('down_votes');
     },
 };

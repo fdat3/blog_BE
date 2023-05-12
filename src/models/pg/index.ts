@@ -5,9 +5,11 @@ import { Setting } from './Setting'
 import { Banner } from './Banner'
 import { Theme } from './Theme'
 import { User } from './User'
+import { DownVote } from './DownVote'
 import { sequelize } from '@/config/sql.config'
 
-export { Blog, UpVote, Comment, Setting, Banner, Theme, User }
+export { Blog, UpVote, Comment, Setting, Banner, Theme, User, DownVote }
+
 export const initModels = (): any => {
   Blog.initModel(sequelize)
   UpVote.initModel(sequelize)
@@ -16,6 +18,7 @@ export const initModels = (): any => {
   Banner.initModel(sequelize)
   Theme.initModel(sequelize)
   User.initModel(sequelize)
+  DownVote.initModel(sequelize)
 
   Blog.hasMany(Comment, {
     as: 'comments',
@@ -33,6 +36,10 @@ export const initModels = (): any => {
     as: 'userFkId',
     foreignKey: 'user_id',
   })
+  UpVote.belongsTo(Comment, {
+    as: 'commentFkId',
+    foreignKey: 'comment_id',
+  })
   Comment.belongsTo(Blog, {
     as: 'blogFkId',
     foreignKey: 'blog_id',
@@ -40,6 +47,14 @@ export const initModels = (): any => {
   Comment.belongsTo(User, {
     as: 'userFkId',
     foreignKey: 'user_id',
+  })
+  Comment.hasMany(UpVote, {
+    as: 'upVotes',
+    foreignKey: 'comment_id',
+  })
+  Comment.hasMany(DownVote, {
+    as: 'downVotes',
+    foreignKey: 'comment_id',
   })
   Setting.hasOne(Banner, {
     as: 'banner',
@@ -69,6 +84,18 @@ export const initModels = (): any => {
     as: 'blogs',
     foreignKey: 'user_id',
   })
+  DownVote.belongsTo(Blog, {
+    as: 'blogFkId',
+    foreignKey: 'blog_id',
+  })
+  DownVote.belongsTo(User, {
+    as: 'userFkId',
+    foreignKey: 'user_id',
+  })
+  DownVote.belongsTo(Comment, {
+    as: 'commentFkId',
+    foreignKey: 'comment_id',
+  })
 
   return {
     Blog,
@@ -78,5 +105,6 @@ export const initModels = (): any => {
     Banner,
     Theme,
     User,
+    DownVote,
   }
 }
