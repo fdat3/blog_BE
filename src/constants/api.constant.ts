@@ -114,6 +114,7 @@ class Api {
   public static readonly UPVOTE_CREATE: string = '/up'
   public static readonly DOWNVOTE_CREATE: string = '/down'
   public static readonly UPVOTE_DELETE: string = '/:id'
+  public static readonly GET_ALL_VOTES: string = '/get-all-votes'
 
   // Follow
   public static readonly FOLLOW: string = '/follows'

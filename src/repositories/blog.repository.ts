@@ -6,6 +6,7 @@ import {
   // default as BaseController,
   default as baseController,
 } from '@/controllers/base.controller'
+import Message from '@/constants/message.constant'
 
 class BlogRepository {
   private model
@@ -30,14 +31,26 @@ class BlogRepository {
   }
 
   public async findById(id: string): Promise<Partial<Blog> | null> {
-    const blog = await Blog.findByPk(id)
-    if (blog) {
-      blog.increment({
-        readCount: 1,
+    try {
+      const blog = await Blog.findOne({
+        where: {
+          id: id,
+        },
+        attributes: {
+          include: [
+            [
+              sequelize.literal(
+                '(SELECT COUNT(*) FROM "up_votes" as "UpVote" WHERE "UpVote"."blog_id" = "Blog"."id")',
+              ),
+              'total_upvote',
+            ],
+          ],
+        },
       })
-      return blog.get({ plain: true })
+      return blog
+    } catch (error) {
+      return null
     }
-    return null
   }
 
   public async findBlog(keyword: string): Promise<Partial<Blog> | undefined> {
@@ -113,14 +126,22 @@ class BlogRepository {
 
   public async blogDelete(id: any): Promise<any> {
     try {
-      return sequelize.transaction(async (transaction) => {
-        return Blog.destroy({
-          where: {
-            id,
-          },
-          transaction,
-        })
+      let isSuccess: boolean = false
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findByPk(id, { transaction })
+          .then(async (upvote) => {
+            if (!upvote) throw Message.BLOG_NOT_DELETE
+            await upvote.destroy({ transaction })
+            isSuccess = true
+          })
+          .catch((err) => {
+            throw err
+          })
       })
+      return {
+        isSuccess,
+      }
     } catch (err) {
       logger.error(err)
       throw err

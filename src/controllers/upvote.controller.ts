@@ -20,6 +20,7 @@ import Authenticated from '@/middlewares/authenticated.middleware'
 import Message from '@/constants/message.constant'
 import QueryMiddleware from '@/middlewares/quey.middleware'
 import BaseController from './base.controller'
+import { verifyToken } from '@/validations/token.validation'
 
 class UpVoteController implements Controller {
   public path: string
@@ -48,10 +49,15 @@ class UpVoteController implements Controller {
       this.createUpVote,
     )
 
-    this.router.post(
-      `${this.path}${ConstantAPI.DOWNVOTE_CREATE}`,
+    this.router.delete(
+      `${this.path}${ConstantAPI.UPVOTE_DELETE}`,
       this.authenticated.verifyTokenAndAuthorization,
-      this.createDownVote,
+      this.delete,
+    )
+    this.router.get(
+      `${this.path}${ConstantAPI.GET_ALL_VOTES}`,
+      [verifyToken, this.authenticated.verifyTokenAndAuthorization],
+      this.getAllVotes,
     )
   }
 
@@ -81,32 +87,57 @@ class UpVoteController implements Controller {
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
-          error || Message.BLOG_NOT_CREATE,
+          error || Message.UPVOTE_NOT_CREATE,
           error,
         ),
       )
     }
   }
 
-  private createDownVote = async (
+  private getAllVotes = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response | any> => {
     try {
-      const data = req.body
-      const { user } = req
-      data.userId = user.id
-      const result = await this.upVoteService.createDownvote(data)
+      const { queryInfo } = req
+      const results = await this.upVoteService.findAll(queryInfo)
+      this.baseController.onSuccessAsList(res, results, undefined, queryInfo)
+    } catch (err) {
+      logger.error(err)
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          '',
+          err,
+        ),
+      )
+    }
+  }
+  private delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const upVoteDelete = await this.upVoteService.delete(id)
+      if (!upVoteDelete) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.DELETE_UPVOTE_ERR,
+          ),
+        )
+      }
       return res.status(ConstantHttpCode.OK).json({
         status: {
           code: ConstantHttpCode.OK,
           msg: ConstantHttpReason.OK,
         },
-        msg: ConstantMessage.DOWNVOTE_CREATE_SUCCESS,
-        data: {
-          result,
-        },
+        msg: Message.UPVOTE_DELETE_SUCCESS,
       })
     } catch (error) {
       logger.error(error)
@@ -114,7 +145,7 @@ class UpVoteController implements Controller {
         new HttpException(
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
-          error || Message.DOWNVOTE_NOT_CREATE,
+          error || Message.DELETE_UPVOTE_ERR,
           error,
         ),
       )

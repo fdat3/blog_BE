@@ -34,6 +34,8 @@ class Message {
     'comment is create success'
   public static readonly UPVOTE_CREATE_SUCCESS: string =
     'upvote this post is create success'
+  public static readonly UPVOTE_DELETE_SUCCESS: string =
+    'upvote this post is delete success'
   public static readonly DOWNVOTE_CREATE_SUCCESS: string =
     'downvote this post is create success'
   public static readonly USER_NOT_FOUND: string = 'user is not found'
@@ -157,11 +159,11 @@ class Message {
   public static readonly DELETE_BLOCK_ITEM_ERR: string =
     'Delete Block Item Error'
 
-  // Like
-  public static readonly CREATE_LIKE_ERR: string = 'Create Like Item Error'
-  public static readonly DELETE_LIKE_ERR: string = 'Delete Like Item Error'
-  public static readonly UPDATE_LIKE_ERR: string = 'Update Like Item Error'
-  public static readonly LIKE_NOT_FOUND: string = 'Like not found'
+  // UPVOTE
+  public static readonly CREATE_UPVOTE_ERR: string = 'Create Upvote Item Error'
+  public static readonly DELETE_UPVOTE_ERR: string = 'Delete Upvote Item Error'
+  public static readonly UPDATE_UPVOTE_ERR: string = 'Update Upvote Item Error'
+  public static readonly UPVOTE_NOT_FOUND: string = 'Upvote not found'
 
   //Policy
   public static readonly POLICY_NOT_FOUND: string = 'Policy not found'

@@ -1,5 +1,9 @@
 import { sequelize } from '@/config/sql.config'
-import { Blog, UpVote } from '@/models/pg'
+import Message from '@/constants/message.constant'
+import BaseController from '@/controllers/base.controller'
+import { GetListRepository } from '@/interfaces/base.interface'
+import { ICrudOption } from '@/interfaces/controller.interface'
+import { UpVote } from '@/models/pg'
 import logger from '@/utils/logger.util'
 // import { ICrudOption } from '@/interfaces/controller.interface'
 // import {
@@ -15,56 +19,14 @@ class UpVoteRepository {
     this.model = UpVote
   }
 
-  public async createUpVote(data: any): Promise<UpVote | any> {
+  public async create(data: any): Promise<UpVote | any> {
     try {
-      const existingUpVote = await Blog.findOne({
-        where: {
-          userId: data.userId,
-          id: data.blogId,
-        },
-      })
-
-      if (existingUpVote?.upVote === 1) {
-        return existingUpVote.get({ plain: true })
-      }
-
       const result: UpVote = await sequelize.transaction(
         async (transaction) => {
           const upVote = await UpVote.create(data, { transaction })
-          await Blog.findOne({
-            where: {
-              id: data.blogId,
-              userId: data.userId,
-            },
-            transaction,
-          }).then((instance) => {
-            if (instance?.upVote === 0 && instance?.downVote === 1) {
-              instance?.decrement({
-                downVote: 1,
-              })
-              instance?.increment(
-                {
-                  upVote: 1,
-                },
-                {
-                  transaction,
-                },
-              )
-            } else {
-              instance?.increment(
-                {
-                  upVote: 1,
-                },
-                {
-                  transaction,
-                },
-              )
-            }
-          })
           return upVote
         },
       )
-
       return result.get({ plain: true })
     } catch (error) {
       logger.error(error)
@@ -72,59 +34,61 @@ class UpVoteRepository {
     }
   }
 
-  public async createDownvote(data: any): Promise<UpVote | any> {
+  public async getAllVotes(
+    queryInfo?: ICrudOption,
+  ): Promise<GetListRepository<UpVote>> {
     try {
-      const existingDownVote = await Blog.findOne({
-        where: {
-          userId: data.userId,
-          id: data.blogId,
-        },
+      return this.model.findAndCountAll(
+        BaseController.applyFindOptions(queryInfo),
+      )
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  public async delete(id: string): Promise<{ isSuccess: boolean }> {
+    try {
+      let isSuccess: boolean = false
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findByPk(id, { transaction })
+          .then(async (upvote) => {
+            if (!upvote) throw Message.DELETE_UPVOTE_ERR
+            await upvote.destroy({ transaction })
+            isSuccess = true
+          })
+          .catch((err) => {
+            throw err
+          })
+      })
+      return {
+        isSuccess,
+      }
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  public async update(id: uuid, data: any): Promise<UpVote | null> {
+    try {
+      await sequelize.transaction(async (transaction) => {
+        await this.model
+          .findByPk(id, { transaction })
+          .then((like) => {
+            if (!like) throw Message.UPDATE_UPVOTE_ERR
+            like.update(data, { transaction })
+          })
+          .catch((err) => {
+            throw err
+          })
       })
 
-      if (existingDownVote?.downVote === 1) {
-        return existingDownVote.get({ plain: true })
-      }
-      const result: UpVote = await sequelize.transaction(
-        async (transaction) => {
-          const downVote = await UpVote.create(data, { transaction })
-          if (downVote) {
-            await Blog.findOne({
-              where: {
-                id: data.blogId,
-              },
-              transaction,
-            }).then((instance) => {
-              if (instance?.upVote === 1 && instance?.downVote === 0) {
-                instance?.decrement({
-                  upVote: 1,
-                })
-                instance?.increment(
-                  {
-                    downVote: 1,
-                  },
-                  {
-                    transaction,
-                  },
-                )
-              } else {
-                instance?.increment(
-                  {
-                    downVote: 1,
-                  },
-                  {
-                    transaction,
-                  },
-                )
-              }
-            })
-          }
-          return downVote
-        },
-      )
-      return result.get({ plain: true })
-    } catch (error) {
-      logger.error(error)
-      return null
+      return await this.model.findByPk(id)
+    } catch (err) {
+      logger.error(err)
+      throw err
     }
   }
 }
