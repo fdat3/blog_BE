@@ -59,6 +59,11 @@ class VoteController implements Controller {
       [verifyToken, this.authenticated.verifyTokenAndAuthorization],
       this.getAllVotes,
     )
+    this.router.put(
+      `${this.path}${ConstantAPI.VOTE_UPDATE}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.update,
+    )
   }
 
   private createUpVote = async (
@@ -146,6 +151,28 @@ class VoteController implements Controller {
           ConstantHttpCode.INTERNAL_SERVER_ERROR,
           ConstantHttpReason.INTERNAL_SERVER_ERROR,
           error || Message.DELETE_UPVOTE_ERR,
+          error,
+        ),
+      )
+    }
+  }
+  private update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const data = req.body
+      const { id } = req.params
+      const result = await this.voteService.updateVote(id, data)
+      this.baseController.onSuccess(res, result)
+    } catch (error) {
+      logger.error(error)
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          error || Message.UPDATE_UPVOTE_ERR,
           error,
         ),
       )

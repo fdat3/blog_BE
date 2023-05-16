@@ -99,21 +99,25 @@ class VoteRepository {
     }
   }
 
-  public async update(id: string, data: any): Promise<Vote | null> {
+  public async update(id: string, data: any): Promise<{ isSuccess: boolean }> {
     try {
+      let isSuccess: boolean = false
       await sequelize.transaction(async (transaction) => {
         await this.model
           .findByPk(id, { transaction })
-          .then((vote) => {
+          .then(async (vote) => {
             if (!vote) throw Message.UPDATE_UPVOTE_ERR
-            vote.update(data, { transaction })
+            await vote.update(data, { transaction })
+            Message.UPDATE_UPVOTE_SUCCESS
+            isSuccess = true
           })
           .catch((err) => {
             throw err
           })
       })
-
-      return await this.model.findByPk(id)
+      return {
+        isSuccess,
+      }
     } catch (err) {
       logger.error(err)
       throw err

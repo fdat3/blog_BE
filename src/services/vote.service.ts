@@ -21,6 +21,9 @@ class VoteService {
   ): Promise<GetListRepository<Vote>> {
     return this.voteRepository.getAllVotes(queryInfo)
   }
+  public async updateVote(id: string, data: any): Promise<any> {
+    return this.voteRepository.update(id, data)
+  }
 }
 
 export default VoteService

@@ -113,6 +113,7 @@ class Api {
   public static readonly VOTE: string = '/votes'
   public static readonly VOTE_CREATE: string = '/'
   public static readonly VOTE_DELETE: string = '/:id'
+  public static readonly VOTE_UPDATE: string = '/:id'
   public static readonly GET_ALL_VOTES: string = '/get-all-votes'
 
   // Follow

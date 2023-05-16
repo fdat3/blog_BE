@@ -165,6 +165,8 @@ class Message {
   public static readonly CREATE_UPVOTE_ERR: string = 'Create Upvote Item Error'
   public static readonly DELETE_UPVOTE_ERR: string = 'Delete Upvote Item Error'
   public static readonly UPDATE_UPVOTE_ERR: string = 'Update Upvote Item Error'
+  public static readonly UPDATE_UPVOTE_SUCCESS: string =
+    'Update Upvote Item Success'
   public static readonly UPVOTE_NOT_FOUND: string = 'Upvote not found'
 
   //Policy
