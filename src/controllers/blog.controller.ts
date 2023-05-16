@@ -311,7 +311,6 @@ class BlogController implements Controller {
     try {
       const { id } = req.params
       const blog = await this.blogService.findById(id)
-
       if (!blog) {
         return next(
           new HttpException(

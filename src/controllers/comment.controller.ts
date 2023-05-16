@@ -49,7 +49,7 @@ class CommentController implements Controller {
       this.createComment,
     )
 
-    this.router.post(
+    this.router.put(
       `${this.path}${ConstantAPI.COMMENT_UPDATE}`,
       this.authenticated.verifyTokenAndAuthorization,
       this.updateComment,
@@ -59,17 +59,17 @@ class CommentController implements Controller {
       [this.queryMiddleware.run()],
       this.getComment,
     )
-    // this.router.delete(
-    //     `${this.path}${ConstantAPI.BLOG_DELETE}`,
-    //     this.authenticated.verifyTokenAndAuthorization,
-    //     this.deleteBlog,
-    // )
+    this.router.delete(
+      `${this.path}${ConstantAPI.COMMENT_DELETE}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.deleteComment,
+    )
 
-    // this.router.get(
-    //     `${this.path}${ConstantAPI.BLOG_GET_ALL}`,
-    //     [this.queryMiddleware.run()],
-    //     this.getAllBlogs,
-    // )
+    this.router.get(
+      `${this.path}${ConstantAPI.COMMENT_GET_ALL}`,
+      [this.queryMiddleware.run()],
+      this.getAllComments,
+    )
   }
 
   private createComment = async (
@@ -110,15 +110,11 @@ class CommentController implements Controller {
   ): Promise<Comment | any> => {
     try {
       const { id } = req.params
-      const comment = await this.commentService.findById(id)
-      return res.status(ConstantHttpCode.CREATED).json({
-        status: {
-          code: ConstantHttpCode.CREATED,
-          msg: ConstantHttpReason.CREATED,
-        },
-        msg: ConstantMessage.COMMENT_FOUND,
-        data: { comment },
-      })
+      const result = await this.commentService.findById(id)
+      this.baseController.onSuccess(
+        result,
+        Message.COMMENT_CONTENT_CHANGE_SUCCESS,
+      )
     } catch (error) {
       logger.error(error)
       next(
@@ -132,69 +128,63 @@ class CommentController implements Controller {
     }
   }
 
-  // private deleteBlog = async (
-  //     req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | any> => {
-  //     try {
-  //         const { id } = req.params
-  //         const deleteBlog = await this.blogService.deleteBlog(id)
-  //         if (!deleteBlog) {
-  //             return next(
-  //                 new HttpException(
-  //                     ConstantHttpCode.BAD_REQUEST,
-  //                     ConstantHttpReason.BAD_REQUEST,
-  //                     ConstantMessage.BLOG_NOT_DELETE,
-  //                 ),
-  //             )
-  //         }
-  //         return res.status(ConstantHttpCode.OK).json({
-  //             status: {
-  //                 code: ConstantHttpCode.OK,
-  //                 msg: ConstantHttpReason.OK,
-  //             },
-  //             msg: ConstantMessage.BLOG_DELETE_SUCCESS,
-  //         })
-  //     } catch (err: any) {
-  //         next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err?.message,
-  //             ),
-  //         )
-  //     }
-  // }
+  private deleteComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const result = await this.commentService.deleteComment(id)
+      if (!result) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.BAD_REQUEST,
+            ConstantHttpReason.BAD_REQUEST,
+            ConstantMessage.BLOG_NOT_DELETE,
+          ),
+        )
+      }
+      this.baseController.onSuccess(res, result)
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
 
-  // private getAllBlogs = async (
-  //     _req: Request,
-  //     res: Response,
-  //     next: NextFunction,
-  // ): Promise<Response | void> => {
-  //     try {
-  //         const { queryInfo } = _req
-  //         const blogs = await this.blogService.findAll(queryInfo)
-  //         if (!blogs || blogs.rows.lenght == 0) {
-  //             return next(
-  //                 new HttpException(
-  //                     ConstantHttpCode.NOT_FOUND,
-  //                     ConstantHttpReason.NOT_FOUND,
-  //                     ConstantMessage.USER_NOT_FOUND,
-  //                 ),
-  //             )
-  //         }
-  //         this.baseController.onSuccessAsList(res, blogs, undefined, queryInfo)
-  //     } catch (err: any) {
-  //         next(
-  //             new HttpException(
-  //                 ConstantHttpCode.INTERNAL_SERVER_ERROR,
-  //                 ConstantHttpReason.INTERNAL_SERVER_ERROR,
-  //                 err?.message,
-  //             ),
-  //         )
-  //     }
-  // }
+  private getAllComments = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { queryInfo } = _req
+      const blogs = await this.commentService.getAllComments(queryInfo)
+      if (!blogs || blogs.rows.lenght == 0) {
+        return next(
+          new HttpException(
+            ConstantHttpCode.NOT_FOUND,
+            ConstantHttpReason.NOT_FOUND,
+            ConstantMessage.USER_NOT_FOUND,
+          ),
+        )
+      }
+      this.baseController.onSuccessAsList(res, blogs, undefined, queryInfo)
+    } catch (err: any) {
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          err?.message,
+        ),
+      )
+    }
+  }
 
   private updateComment = async (
     req: Request,

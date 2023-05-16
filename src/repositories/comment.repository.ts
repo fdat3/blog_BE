@@ -1,4 +1,7 @@
 import { sequelize } from '@/config/sql.config'
+import BaseController from '@/controllers/base.controller'
+import { GetListRepository } from '@/interfaces/base.interface'
+import { ICrudOption } from '@/interfaces/controller.interface'
 import { Comment } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import { Includeable } from 'sequelize'
@@ -68,21 +71,34 @@ class CommentRepository {
     }
   }
 
-  // public async blogDelete(id: any): Promise<any> {
-  //     try {
-  //         return sequelize.transaction(async (transaction) => {
-  //             return Blog.destroy({
-  //                 where: {
-  //                     id,
-  //                 },
-  //                 transaction,
-  //             })
-  //         })
-  //     } catch (err) {
-  //         logger.error(err)
-  //         throw err
-  //     }
-  // }
+  public async deleteComment(id: any): Promise<any> {
+    try {
+      return sequelize.transaction(async (transaction) => {
+        return Comment.destroy({
+          where: {
+            id,
+          },
+          transaction,
+        })
+      })
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
+
+  public async getAllComments(
+    queryInfo?: ICrudOption,
+  ): Promise<GetListRepository<Comment>> {
+    try {
+      return this.model.findAndCountAll(
+        BaseController.applyFindOptions(queryInfo),
+      )
+    } catch (err) {
+      logger.error(err)
+      throw err
+    }
+  }
 }
 
 export default CommentRepository

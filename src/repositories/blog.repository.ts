@@ -50,6 +50,12 @@ class BlogRepository {
               ),
               'total_downvote',
             ],
+            [
+              sequelize.literal(
+                `(SELECT COUNT(*) FROM "comments" as "Comment" WHERE "Comment"."blog_id" = "Blog"."id")`,
+              ),
+              'total_comments',
+            ],
           ],
         },
       })
