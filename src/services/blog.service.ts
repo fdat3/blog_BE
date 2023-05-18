@@ -1,6 +1,5 @@
 import type { Blog } from '@/models/pg'
 import BlogRepository from '@/repositories/blog.repository'
-import { ICrudOption } from '@/interfaces/controller.interface'
 
 class BlogService {
   private blogRepository: BlogRepository
@@ -24,8 +23,8 @@ class BlogService {
     const blogContent = await this.blogRepository.updateContent(id, body)
     return blogContent
   }
-  public async findAll(queryInfo?: ICrudOption): Promise<any> {
-    const blogs = await this.blogRepository.findAll(queryInfo)
+  public async findAll(): Promise<any> {
+    const blogs = await this.blogRepository.findAll()
     return blogs
   }
   public async findBlog(keyword: string): Promise<any> {

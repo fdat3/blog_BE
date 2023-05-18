@@ -150,14 +150,13 @@ class BlogController implements Controller {
   }
 
   private getAllBlogs = async (
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { queryInfo } = _req
-      const blogs = await this.blogService.findAll(queryInfo)
-      if (!blogs || blogs.rows.lenght == 0) {
+      const blogs = await this.blogService.findAll()
+      if (!blogs) {
         return next(
           new HttpException(
             ConstantHttpCode.NOT_FOUND,
@@ -166,7 +165,7 @@ class BlogController implements Controller {
           ),
         )
       }
-      this.baseController.onSuccessAsList(res, blogs, undefined, queryInfo)
+      this.baseController.onSuccessAsList(res, blogs)
     } catch (err: any) {
       next(
         new HttpException(

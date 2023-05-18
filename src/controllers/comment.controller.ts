@@ -111,10 +111,14 @@ class CommentController implements Controller {
     try {
       const { id } = req.params
       const result = await this.commentService.findById(id)
-      this.baseController.onSuccess(
-        result,
-        Message.COMMENT_CONTENT_CHANGE_SUCCESS,
-      )
+      return res.status(ConstantHttpCode.CREATED).json({
+        status: {
+          code: ConstantHttpCode.CREATED,
+          msg: ConstantHttpReason.CREATED,
+        },
+        msg: ConstantMessage.COMMENT_CREATE_SUCCESS,
+        data: result,
+      })
     } catch (error) {
       logger.error(error)
       next(

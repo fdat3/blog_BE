@@ -1,11 +1,6 @@
 import { sequelize } from '@/config/sql.config'
 import { Blog } from '@/models/pg'
 import logger from '@/utils/logger.util'
-import { ICrudOption } from '@/interfaces/controller.interface'
-import {
-  // default as BaseController,
-  default as baseController,
-} from '@/controllers/base.controller'
 import Message from '@/constants/message.constant'
 
 class BlogRepository {
@@ -16,13 +11,9 @@ class BlogRepository {
     this.model = Blog
   }
 
-  public async findAll(
-    queryInfo?: ICrudOption,
-  ): Promise<{ rows: Partial<Blog[]>; count: number } | null> {
+  public async findAll(): Promise<Partial<Blog[]> | null> {
     try {
-      const blogs = await this.model.findAndCountAll(
-        baseController.applyFindOptions(queryInfo),
-      )
+      const blogs = await Blog.findAll()
       return blogs
     } catch (e) {
       logger.error(e)
@@ -36,6 +27,11 @@ class BlogRepository {
         where: {
           id: id,
         },
+        include: [
+          {
+            association: 'comments',
+          },
+        ],
         attributes: {
           include: [
             [
