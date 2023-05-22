@@ -11,6 +11,7 @@ class VoteService {
     this.voteRepository = new VoteRepository()
   }
   public async createUpVote(data: any): Promise<any> {
+    console.log(data)
     return this.voteRepository.create(data)
   }
   public async delete(id: string): Promise<any> {

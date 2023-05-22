@@ -19,46 +19,64 @@ class VoteRepository {
     this.model = Vote
   }
 
+  // public async create(data: any): Promise<any> {
+  //   const t = await sequelize.transaction()
+  //   try {
+  //     // Kiểm tra xem người dùng đã thực hiện hành động nào trước đó
+  //     // const userActivity = await Vote.findOne({
+  //     //   where: {
+  //     //     userId: data.userId,
+  //     //     blogId: data.blogId,
+  //     //     typeVote: data.typeVote,
+  //     //   },
+  //     //   transaction: t,
+  //     // })
+  //     // if (userActivity) {
+  //     //   // Nếu người dùng đã thực hiện hành động trước đó, từ chối hành động mới
+  //     //   throw Message.USER_WAS_UPVOTE
+  //     // }
+
+  //     // Khóa row-level để đảm bảo rằng chỉ có một transaction được thực hiện trên một hàng tại một thời điểm
+  //     const [result, created] = await Vote.findOrCreate({
+  //       where: {
+  //         userId: data.userId,
+  //         blogId: data.blogId,
+  //         typeVote: data.typeVote,
+  //       },
+  //       transaction: t,
+  //       lock: true,
+  //     })
+
+  //     if (!created) {
+  //       // Nếu hàng đã tồn tại, cập nhật hành động mới
+  //       result.typeVote = data.typeVote
+  //       await result.save({ transaction: t })
+  //     }
+  //     // Thực hiện transaction
+  //     await t.commit()
+  //     return result
+  //   } catch (err) {
+  //     // Nếu có lỗi, hoàn tác transaction
+  //     await t.rollback()
+  //     throw err
+  //   }
+  // }
+
   public async create(data: any): Promise<any> {
-    const t = await sequelize.transaction()
     try {
-      // Kiểm tra xem người dùng đã thực hiện hành động nào trước đó
-      const userActivity = await Vote.findOne({
+      logger.http({ data })
+      const [result] = await Vote.findOrCreate({
         where: {
-          userId: data.userId,
-          blogId: data.blogId,
-          typeVote: data.typeVote,
+          ...data,
         },
-        transaction: t,
-      })
-      if (userActivity) {
-        // Nếu người dùng đã thực hiện hành động trước đó, từ chối hành động mới
-        throw Message.USER_WAS_UPVOTE
-      }
-
-      // Khóa row-level để đảm bảo rằng chỉ có một transaction được thực hiện trên một hàng tại một thời điểm
-      const [result, created] = await Vote.findOrCreate({
-        where: {
-          userId: data.userId,
-          blogId: data.blogId,
-          typeVote: data.typeVote,
+        defaults: {
+          ...data,
         },
-        transaction: t,
-        lock: true,
       })
 
-      if (!created) {
-        // Nếu hàng đã tồn tại, cập nhật hành động mới
-        result.typeVote = data.typeVote
-        await result.save({ transaction: t })
-      }
-      // Thực hiện transaction
-      await t.commit()
       return result
     } catch (err) {
-      // Nếu có lỗi, hoàn tác transaction
-      await t.rollback()
-      throw err
+      logger.error(err)
     }
   }
 

@@ -45,6 +45,7 @@ class VoteController implements Controller {
   private initialiseRoutes(): void {
     this.router.post(
       `${this.path}${ConstantAPI.VOTE_CREATE}`,
+      verifyToken,
       this.authenticated.verifyTokenAndAuthorization,
       this.createUpVote,
     )

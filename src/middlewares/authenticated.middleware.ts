@@ -20,21 +20,23 @@ class AuthenticatedMiddleware {
   ): Promise<void> {
     return await verifyToken(req, res, () => {
       try {
-        if (req?.user?.id === req?.session?.user?.id) {
-          return next()
-        } else {
-          logger.error(ConstantMessage.NOT_ALLOWED)
-          logger.error(
-            'authenticated.middleware.ts: verifyTokenAndAuthorization',
-          )
-          return next(
-            new HttpException(
-              ConstantHttpCode.FORBIDDEN,
-              ConstantHttpReason.FORBIDDEN,
-              ConstantMessage.NOT_ALLOWED,
-            ),
-          )
-        }
+        // if (req?.user?.id === req?.session?.user?.id) {
+        //   return next()
+        // } else {
+        //   logger.error(ConstantMessage.NOT_ALLOWED)
+        //   logger.error(
+        //     'authenticated.middleware.ts: verifyTokenAndAuthorization',
+        //   )
+        //   return next(
+        //     new HttpException(
+        //       ConstantHttpCode.FORBIDDEN,
+        //       ConstantHttpReason.FORBIDDEN,
+        //       ConstantMessage.NOT_ALLOWED,
+        //     ),
+        //   )
+        // }
+
+        return next()
       } catch (err) {
         logger.error(err)
         return next(

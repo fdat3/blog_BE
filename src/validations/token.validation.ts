@@ -42,27 +42,27 @@ export const verifyToken = async (
     }
 
     const accessToken = bearer.split('Bearer ')[1].trim()
-    const checkDeviceId = req.fingerprint?.hash
-    if (checkDeviceId) {
-      return jwt.verify(
-        req.cookies['jwt'],
-        Variable.JWT_SECRET,
-        (err: VerifyErrors | null, payload: any) => {
-          if (err) {
-            logger.http(err)
-            res.status(ConstantHttpCode.FORBIDDEN).json({
-              status: {
-                code: ConstantHttpCode.FORBIDDEN,
-                msg: ConstantHttpReason.FORBIDDEN,
-              },
-              msg: ConstantMessage.TOKEN_NOT_VALID,
-            })
-          }
-          req.user = payload
-          return next()
-        },
-      )
-    }
+    // const checkDeviceId = req.fingerprint?.hash
+    // if (checkDeviceId) {
+    //   return jwt.verify(
+    //     req.cookies['jwt'],
+    //     Variable.JWT_SECRET,
+    //     (err: VerifyErrors | null, payload: any) => {
+    //       if (err) {
+    //         logger.http(err)
+    //         res.status(ConstantHttpCode.FORBIDDEN).json({
+    //           status: {
+    //             code: ConstantHttpCode.FORBIDDEN,
+    //             msg: ConstantHttpReason.FORBIDDEN,
+    //           },
+    //           msg: ConstantMessage.TOKEN_NOT_VALID,
+    //         })
+    //       }
+    //       req.user = payload
+    //       return next()
+    //     },
+    //   )
+    // }
 
     return jwt.verify(accessToken, Variable.JWT_SECRET, (err, user: any) => {
       if (err) {
@@ -70,6 +70,7 @@ export const verifyToken = async (
           status: {
             code: ConstantHttpCode.FORBIDDEN,
             msg: ConstantHttpReason.FORBIDDEN,
+            err,
           },
           msg: ConstantMessage.TOKEN_NOT_VALID,
         })
