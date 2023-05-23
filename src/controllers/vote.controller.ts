@@ -65,6 +65,11 @@ class VoteController implements Controller {
       this.authenticated.verifyTokenAndAuthorization,
       this.update,
     )
+    this.router.get(
+      `${this.path}${ConstantAPI.FIND_VOTE_BY_ID}`,
+      this.authenticated.verifyTokenAndAuthorization,
+      this.find,
+    )
   }
 
   private createUpVote = async (
@@ -157,6 +162,29 @@ class VoteController implements Controller {
       )
     }
   }
+
+  private find = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | any> => {
+    try {
+      const { id } = req.params
+      const result = await this.voteService.findById(id)
+      this.baseController.onSuccess(res, result)
+    } catch (error) {
+      logger.error(error)
+      next(
+        new HttpException(
+          ConstantHttpCode.INTERNAL_SERVER_ERROR,
+          ConstantHttpReason.INTERNAL_SERVER_ERROR,
+          error || Message.CAN_NOT_FIND,
+          error,
+        ),
+      )
+    }
+  }
+
   private update = async (
     req: Request,
     res: Response,

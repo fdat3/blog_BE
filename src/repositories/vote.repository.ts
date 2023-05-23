@@ -62,6 +62,22 @@ class VoteRepository {
   //   }
   // }
 
+  public static isLikedAttribute = (userId: string): string | any => {
+    return [
+      //isLiked
+      sequelize.literal(`
+      (
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM votes
+        WHERE "votes"."user_id" = '${userId}' 
+        AND "votes"."blog_id" = "Blog"."id" 
+        AND "votes"."deleted_at" IS NULL 
+        GROUP BY "votes"."blog_id"
+      ) IS TRUE`),
+      'isLiked',
+    ] as any
+  }
+
   public async create(data: any): Promise<any> {
     try {
       logger.http({ data })
@@ -73,7 +89,6 @@ class VoteRepository {
           ...data,
         },
       })
-
       return result
     } catch (err) {
       logger.error(err)
@@ -90,6 +105,30 @@ class VoteRepository {
     } catch (err) {
       logger.error(err)
       throw err
+    }
+  }
+
+  public async findById(id: string): Promise<Partial<Vote> | null> {
+    try {
+      const vote = await Vote.findOne({
+        where: {
+          id: id,
+        },
+        include: [
+          {
+            association: 'userFkId',
+          },
+          {
+            association: 'blogFkId',
+          },
+        ],
+        attributes: {
+          include: [VoteRepository.isLikedAttribute(id)],
+        },
+      })
+      return vote
+    } catch (error) {
+      return null
     }
   }
 

@@ -25,6 +25,9 @@ class VoteService {
   public async updateVote(id: string, data: any): Promise<any> {
     return this.voteRepository.update(id, data)
   }
+  public async findById(id: string): Promise<any> {
+    return this.voteRepository.findById(id)
+  }
 }
 
 export default VoteService

@@ -168,6 +168,7 @@ class Message {
   public static readonly UPDATE_UPVOTE_SUCCESS: string =
     'Update Upvote Item Success'
   public static readonly UPVOTE_NOT_FOUND: string = 'Upvote not found'
+  public static readonly CAN_NOT_FIND: string = 'Upvote not found'
 
   //Policy
   public static readonly POLICY_NOT_FOUND: string = 'Policy not found'

@@ -31,6 +31,22 @@ class BlogRepository {
           {
             association: 'comments',
           },
+          {
+            association: 'votes',
+            attributes: {
+              exclude: [
+                'employeeId',
+                'commentId',
+                'blog_id',
+                'user_id',
+                'comment_id',
+                'id',
+                'createdAt',
+                'updatedAt',
+                'deletedAt',
+              ],
+            },
+          },
         ],
         attributes: {
           include: [
