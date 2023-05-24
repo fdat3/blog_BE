@@ -20,6 +20,7 @@ import Authenticated from '@/middlewares/authenticated.middleware'
 import Message from '@/constants/message.constant'
 import QueryMiddleware from '@/middlewares/quey.middleware'
 import BaseController from './base.controller'
+import { verifyToken } from '@/validations/token.validation'
 
 class BlogController implements Controller {
   public path: string
@@ -62,7 +63,11 @@ class BlogController implements Controller {
     )
     this.router.get(
       `${this.path}${ConstantAPI.BLOG_GET}`,
-      [this.queryMiddleware.run()],
+      [
+        verifyToken,
+        this.authenticated.verifyTokenAndAuthorization,
+        this.queryMiddleware.run(),
+      ],
       this.getBlog,
     )
     this.router.post(
@@ -309,7 +314,18 @@ class BlogController implements Controller {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params
-      const blog = await this.blogService.findById(id)
+      const queryInfo = req.queryInfo || {}
+
+      if (req.user) {
+        queryInfo.userId = req.user.id
+      }
+
+      const { user } = req
+      if (user) {
+        queryInfo.user = user
+      }
+
+      const blog = await this.blogService.getBlog(id as string, queryInfo)
       if (!blog) {
         return next(
           new HttpException(
@@ -320,14 +336,7 @@ class BlogController implements Controller {
         )
       }
 
-      return res.status(ConstantHttpCode.OK).json({
-        status: {
-          code: ConstantHttpCode.OK,
-          msg: ConstantHttpReason.OK,
-        },
-        msg: ConstantMessage.BLOG_FOUND,
-        data: { blog },
-      })
+      this.baseController.onSuccess(res, blog, undefined)
     } catch (err: any) {
       next(
         new HttpException(

@@ -2,6 +2,47 @@ import { sequelize } from '@/config/sql.config'
 import { Blog } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import Message from '@/constants/message.constant'
+import { ICrudOption } from '@/interfaces/controller.interface'
+import baseController from '@/controllers/base.controller'
+
+export class BlogExtendAttribute {
+  public static isLikedAttribute = (userId: string): (string | any)[] => {
+    return [
+      //isLiked
+      sequelize.literal(`
+      (
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM votes
+        WHERE "votes"."user_id" = '${userId}' 
+        AND "votes"."blog_id" = "Blog"."id" 
+        AND "votes"."deleted_at" IS NULL 
+        GROUP BY "votes"."blog_id"
+      ) IS TRUE`),
+      'isLiked',
+    ] as any
+  }
+
+  public static upVoteCount = [
+    sequelize.literal(
+      `(SELECT COUNT(*) FROM "votes" as "Vote" WHERE "Vote"."blog_id" = "Blog"."id" AND type_vote = 'UP')`,
+    ),
+    'total_upvote',
+  ]
+
+  public static downVoteCount = [
+    sequelize.literal(
+      `(SELECT COUNT(*) FROM "votes" as "Vote" WHERE "Vote"."blog_id" = "Blog"."id" AND type_vote = 'DOWN')`,
+    ),
+    'total_downvote',
+  ]
+
+  public static commentCount = [
+    sequelize.literal(
+      `(SELECT COUNT(*) FROM "comments" as "Comment" WHERE "Comment"."blog_id" = "Blog"."id")`,
+    ),
+    'total_comments',
+  ]
+}
 
 class BlogRepository {
   private model
@@ -21,6 +62,32 @@ class BlogRepository {
     }
   }
 
+  public async getBlog(
+    id: string,
+    queryInfo?: ICrudOption,
+  ): Promise<Blog | null> {
+    try {
+      if (queryInfo) {
+        queryInfo.attributes = {
+          include: [
+            BlogExtendAttribute.isLikedAttribute(queryInfo?.userId),
+            BlogExtendAttribute.upVoteCount,
+            BlogExtendAttribute.downVoteCount,
+            BlogExtendAttribute.commentCount,
+          ],
+        }
+      }
+      const result = await this.model.findByPk(id, {
+        ...baseController.applyFindOptions(queryInfo),
+      })
+
+      return result
+    } catch (err) {
+      logger.error(err)
+      return null
+    }
+  }
+
   public async findById(id: string): Promise<Partial<Blog> | null> {
     try {
       const blog = await Blog.findOne({
@@ -33,42 +100,10 @@ class BlogRepository {
           },
           {
             association: 'votes',
-            attributes: {
-              exclude: [
-                'employeeId',
-                'commentId',
-                'blog_id',
-                'user_id',
-                'comment_id',
-                'id',
-                'createdAt',
-                'updatedAt',
-                'deletedAt',
-              ],
-            },
           },
         ],
         attributes: {
-          include: [
-            [
-              sequelize.literal(
-                `(SELECT COUNT(*) FROM "votes" as "Vote" WHERE "Vote"."blog_id" = "Blog"."id" AND type_vote = 'UP')`,
-              ),
-              'total_upvote',
-            ],
-            [
-              sequelize.literal(
-                `(SELECT COUNT(*) FROM "votes" as "Vote" WHERE "Vote"."blog_id" = "Blog"."id" AND type_vote = 'DOWN')`,
-              ),
-              'total_downvote',
-            ],
-            [
-              sequelize.literal(
-                `(SELECT COUNT(*) FROM "comments" as "Comment" WHERE "Comment"."blog_id" = "Blog"."id")`,
-              ),
-              'total_comments',
-            ],
-          ],
+          include: [],
         },
       })
       return blog

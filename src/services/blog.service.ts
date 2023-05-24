@@ -1,3 +1,4 @@
+import { ICrudOption } from '@/interfaces/controller.interface'
 import type { Blog } from '@/models/pg'
 import BlogRepository from '@/repositories/blog.repository'
 
@@ -30,6 +31,10 @@ class BlogService {
   public async findBlog(keyword: string): Promise<any> {
     const blog = await this.blogRepository.findBlog(keyword)
     return blog
+  }
+  public async getBlog(id: string, queryInfo: ICrudOption): Promise<any> {
+    const result = await this.blogRepository.getBlog(id, queryInfo)
+    return result
   }
   public async findById(id: string): Promise<any> {
     const blog = await this.blogRepository.findById(id)

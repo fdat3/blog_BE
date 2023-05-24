@@ -14,7 +14,7 @@ export interface ICrudOption {
   offset?: number
   scope?: string[]
   order?: any[]
-  attributes?: FindAttributeOptions
+  attributes?: FindAttributeOptions | any
   includes?: any[]
   distinct?: boolean
   paranoid?: boolean
