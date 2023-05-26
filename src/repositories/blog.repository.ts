@@ -76,11 +76,15 @@ class BlogRepository {
             BlogExtendAttribute.commentCount,
           ],
         }
+        queryInfo.includes = [
+          {
+            association: 'comments',
+          },
+        ]
       }
       const result = await this.model.findByPk(id, {
         ...baseController.applyFindOptions(queryInfo),
       })
-
       return result
     } catch (err) {
       logger.error(err)
