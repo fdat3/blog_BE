@@ -1,5 +1,4 @@
 import { NextFunction, Router } from 'express'
-import * as fs from 'fs'
 import Controller, {
   Request,
   Response,

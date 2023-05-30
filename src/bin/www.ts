@@ -42,7 +42,7 @@ const { app } = new App({
     new BlogController(),
     new VoteController(),
     new CommentController(),
-    new ImageController()
+    new ImageController(),
     // new AdminController(),
   ],
 })
@@ -133,8 +133,9 @@ setTimeout(async () => {
 
 // Send Telegram that server is running
 setTimeout(() => {
-  const message = `Event: Server is running on ${process.env.NODE_ENV
-    } environment at ${new Date().toLocaleString()}`
+  const message = `Event: Server is running on ${
+    process.env.NODE_ENV
+  } environment at ${new Date().toLocaleString()}`
   TelegramUtil.sendToTelegram(message, undefined, true), 0
 })
 

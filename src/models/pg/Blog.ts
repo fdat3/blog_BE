@@ -19,7 +19,7 @@ import {
   InferAttributes,
   Model,
   NonAttribute,
-  Sequelize
+  Sequelize,
 } from 'sequelize'
 import type { Comment } from './Comment'
 import type { User } from './User'
@@ -75,49 +75,52 @@ export class Blog extends Model<
   declare createUser: BelongsToCreateAssociationMixin<User>
 
   declare static associations: {
-    comments: Association<Blog, Comment>,
-    votes: Association<Blog, Vote>,
+    comments: Association<Blog, Comment>
+    votes: Association<Blog, Vote>
     user: Association<Blog, User>
   }
 
   static initModel(sequelize: Sequelize): typeof Blog {
-    Blog.init({
-      id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false
+    Blog.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          primaryKey: true,
+          autoIncrement: true,
+          allowNull: false,
+        },
+        userId: {
+          type: DataTypes.INTEGER,
+        },
+        title: {
+          type: DataTypes.TEXT,
+        },
+        subTitle: {
+          type: DataTypes.TEXT,
+        },
+        slug: {
+          type: DataTypes.STRING,
+        },
+        meta: {
+          type: DataTypes.STRING,
+        },
+        body: {
+          type: DataTypes.TEXT,
+        },
+        readCount: {
+          type: DataTypes.INTEGER,
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+        },
       },
-      userId: {
-        type: DataTypes.INTEGER
+      {
+        sequelize,
       },
-      title: {
-        type: DataTypes.TEXT
-      },
-      subTitle: {
-        type: DataTypes.TEXT
-      },
-      slug: {
-        type: DataTypes.STRING
-      },
-      meta: {
-        type: DataTypes.STRING
-      },
-      body: {
-        type: DataTypes.TEXT
-      },
-      readCount: {
-        type: DataTypes.INTEGER
-      },
-      createdAt: {
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        type: DataTypes.DATE
-      }
-    }, {
-      sequelize
-    })
+    )
 
     return Blog
   }

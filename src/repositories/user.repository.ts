@@ -33,9 +33,9 @@ class UserRepository {
     const user = await User.findByPk(id, {
       include: [
         {
-          association: 'comments'
-        }
-      ]
+          association: 'comments',
+        },
+      ],
     })
     if (user) {
       return user.get({ plain: true })

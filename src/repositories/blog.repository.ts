@@ -1,5 +1,5 @@
 import { sequelize } from '@/config/sql.config'
-import { Blog, User } from '@/models/pg'
+import { Blog } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import Message from '@/constants/message.constant'
 import { ICrudOption } from '@/interfaces/controller.interface'
@@ -74,8 +74,8 @@ class BlogRepository {
             BlogExtendAttribute.upVoteCount,
             BlogExtendAttribute.downVoteCount,
             BlogExtendAttribute.commentCount,
-          ]
-        };
+          ],
+        }
       }
       const result = await this.model.findByPk(id, {
         ...baseController.applyFindOptions(queryInfo),
@@ -85,19 +85,18 @@ class BlogRepository {
             include: [
               {
                 association: 'user',
-                attributes: ['fullname']
-              }
-            ]
+                attributes: ['fullname'],
+              },
+            ],
           },
         ],
-      });
-      return result;
+      })
+      return result
     } catch (err) {
-      logger.error(err);
-      return null;
+      logger.error(err)
+      return null
     }
   }
-
 
   public async findById(id: string): Promise<Partial<Blog> | null> {
     try {

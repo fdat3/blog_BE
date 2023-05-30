@@ -29,9 +29,9 @@ class CommentRepository {
       include: [
         {
           association: 'userFkId',
-          attributes: ['fullname']
-        }
-      ]
+          attributes: ['fullname'],
+        },
+      ],
     })
     if (comment) {
       return comment.get({ plain: true })
@@ -99,7 +99,7 @@ class CommentRepository {
   ): Promise<GetListRepository<Comment>> {
     try {
       return this.model.findAndCountAll(
-        BaseController.applyFindOptions(queryInfo)
+        BaseController.applyFindOptions(queryInfo),
       )
     } catch (err) {
       logger.error(err)
