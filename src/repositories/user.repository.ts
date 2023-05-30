@@ -30,7 +30,13 @@ class UserRepository {
     }
   }
   public async findById(id: string): Promise<Partial<User> | null> {
-    const user = await User.findByPk(id)
+    const user = await User.findByPk(id, {
+      include: [
+        {
+          association: 'comments'
+        }
+      ]
+    })
     if (user) {
       return user.get({ plain: true })
     }

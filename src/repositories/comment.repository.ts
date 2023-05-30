@@ -25,7 +25,14 @@ class CommentRepository {
   }
 
   public async findById(id: string): Promise<Partial<Comment> | null> {
-    const comment = await Comment.findByPk(id)
+    const comment = await Comment.findByPk(id, {
+      include: [
+        {
+          association: 'userFkId',
+          attributes: ['fullname']
+        }
+      ]
+    })
     if (comment) {
       return comment.get({ plain: true })
     }
@@ -92,7 +99,7 @@ class CommentRepository {
   ): Promise<GetListRepository<Comment>> {
     try {
       return this.model.findAndCountAll(
-        BaseController.applyFindOptions(queryInfo),
+        BaseController.applyFindOptions(queryInfo)
       )
     } catch (err) {
       logger.error(err)

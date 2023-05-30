@@ -27,7 +27,7 @@ module.exports = {
                 field: 'dob'
             },
             avatar: {
-                type: DataTypes.STRING,
+                type: DataTypes.BLOB,
                 field: 'avatar'
             },
             followerCount: {

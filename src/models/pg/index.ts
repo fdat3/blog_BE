@@ -1,3 +1,4 @@
+import type { Sequelize, Model } from 'sequelize'
 import { Blog } from './Blog'
 import { Vote } from './Vote'
 import { Comment } from './Comment'
@@ -7,9 +8,17 @@ import { Theme } from './Theme'
 import { User } from './User'
 import { sequelize } from '@/config/sql.config'
 
-export { Blog, Vote, Comment, Setting, Banner, Theme, User }
+export {
+  Blog,
+  Vote,
+  Comment,
+  Setting,
+  Banner,
+  Theme,
+  User
+}
 
-export const initModels = (): any => {
+export function initModels() {
   Blog.initModel(sequelize)
   Vote.initModel(sequelize)
   Comment.initModel(sequelize)
@@ -20,63 +29,67 @@ export const initModels = (): any => {
 
   Blog.hasMany(Comment, {
     as: 'comments',
-    foreignKey: 'blog_id',
+    foreignKey: 'blog_id'
   })
   Blog.hasMany(Vote, {
     as: 'votes',
-    foreignKey: 'blog_id',
+    foreignKey: 'blog_id'
+  })
+  Blog.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id'
   })
   Vote.belongsTo(Blog, {
     as: 'blogFkId',
-    foreignKey: 'blog_id',
+    foreignKey: 'blog_id'
   })
   Vote.belongsTo(User, {
     as: 'userFkId',
-    foreignKey: 'user_id',
+    foreignKey: 'user_id'
   })
   Vote.belongsTo(Comment, {
     as: 'commentFkId',
-    foreignKey: 'comment_id',
+    foreignKey: 'comment_id'
   })
   Comment.belongsTo(Blog, {
     as: 'blogFkId',
-    foreignKey: 'blog_id',
+    foreignKey: 'blog_id'
   })
   Comment.belongsTo(User, {
-    as: 'userFkId',
-    foreignKey: 'user_id',
+    as: 'user',
+    foreignKey: 'user_id'
   })
   Comment.hasMany(Vote, {
     as: 'votes',
-    foreignKey: 'comment_id',
+    foreignKey: 'comment_id'
   })
   Setting.hasOne(Banner, {
     as: 'banner',
-    foreignKey: 'id',
+    foreignKey: 'id'
   })
   Setting.hasOne(Theme, {
     as: 'theme',
-    foreignKey: 'id',
+    foreignKey: 'id'
   })
   Banner.belongsTo(Setting, {
     as: 'bannerId',
-    foreignKey: 'banner_id',
+    foreignKey: 'banner_id'
   })
   Theme.belongsTo(Setting, {
     as: 'themeId',
-    foreignKey: 'theme_id',
+    foreignKey: 'theme_id'
   })
   User.hasMany(Vote, {
     as: 'votes',
-    foreignKey: 'user_id',
+    foreignKey: 'user_id'
   })
   User.hasMany(Comment, {
     as: 'comments',
-    foreignKey: 'user_id',
+    foreignKey: 'user_id'
   })
   User.hasMany(Blog, {
     as: 'blogs',
-    foreignKey: 'user_id',
+    foreignKey: 'user_id'
   })
 
   return {
@@ -86,6 +99,6 @@ export const initModels = (): any => {
     Setting,
     Banner,
     Theme,
-    User,
+    User
   }
 }

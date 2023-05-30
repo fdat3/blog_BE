@@ -1,5 +1,8 @@
 import {
   Association,
+  BelongsToGetAssociationMixin,
+  BelongsToSetAssociationMixin,
+  BelongsToCreateAssociationMixin,
   CreationOptional,
   DataTypes,
   HasManyGetAssociationsMixin,
@@ -16,12 +19,13 @@ import {
   InferAttributes,
   Model,
   NonAttribute,
-  Sequelize,
+  Sequelize
 } from 'sequelize'
 import type { Comment } from './Comment'
+import type { User } from './User'
 import type { Vote } from './Vote'
 
-type BlogAssociations = 'comments' | 'votes'
+type BlogAssociations = 'comments' | 'votes' | 'user'
 
 export class Blog extends Model<
   InferAttributes<Blog, { omit: BlogAssociations }>,
@@ -64,52 +68,56 @@ export class Blog extends Model<
   declare hasVotes: HasManyHasAssociationsMixin<Vote, number>
   declare countVotes: HasManyCountAssociationsMixin
 
+  // Blog belongsTo User
+  declare user?: NonAttribute<User>
+  declare getUser: BelongsToGetAssociationMixin<User>
+  declare setUser: BelongsToSetAssociationMixin<User, number>
+  declare createUser: BelongsToCreateAssociationMixin<User>
+
   declare static associations: {
-    comments: Association<Blog, Comment>
-    votes: Association<Blog, Vote>
+    comments: Association<Blog, Comment>,
+    votes: Association<Blog, Vote>,
+    user: Association<Blog, User>
   }
 
   static initModel(sequelize: Sequelize): typeof Blog {
-    Blog.init(
-      {
-        id: {
-          type: DataTypes.INTEGER.UNSIGNED,
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-        },
-        userId: {
-          type: DataTypes.INTEGER,
-        },
-        title: {
-          type: DataTypes.TEXT,
-        },
-        subTitle: {
-          type: DataTypes.TEXT,
-        },
-        slug: {
-          type: DataTypes.STRING,
-        },
-        meta: {
-          type: DataTypes.STRING,
-        },
-        body: {
-          type: DataTypes.TEXT,
-        },
-        readCount: {
-          type: DataTypes.INTEGER,
-        },
-        createdAt: {
-          type: DataTypes.DATE,
-        },
-        updatedAt: {
-          type: DataTypes.DATE,
-        },
+    Blog.init({
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
       },
-      {
-        sequelize,
+      userId: {
+        type: DataTypes.INTEGER
       },
-    )
+      title: {
+        type: DataTypes.TEXT
+      },
+      subTitle: {
+        type: DataTypes.TEXT
+      },
+      slug: {
+        type: DataTypes.STRING
+      },
+      meta: {
+        type: DataTypes.STRING
+      },
+      body: {
+        type: DataTypes.TEXT
+      },
+      readCount: {
+        type: DataTypes.INTEGER
+      },
+      createdAt: {
+        type: DataTypes.DATE
+      },
+      updatedAt: {
+        type: DataTypes.DATE
+      }
+    }, {
+      sequelize
+    })
 
     return Blog
   }

@@ -107,7 +107,7 @@ export class User extends Model<
           type: DataTypes.DATE,
         },
         avatar: {
-          type: DataTypes.STRING,
+          type: DataTypes.BLOB,
         },
         followerCount: {
           type: DataTypes.INTEGER,

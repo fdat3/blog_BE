@@ -27,6 +27,7 @@ import ConstantHttpReason from '@/constants/http.reason.constant'
 import logger from '@/utils/logger.util'
 import QueryMiddleware from '@/middlewares/quey.middleware'
 import BaseController from '@/controllers/base.controller'
+import { verifyToken } from '@/validations/token.validation'
 
 class UserController implements Controller {
   public path: string
@@ -100,7 +101,7 @@ class UserController implements Controller {
 
     this.router.get(
       `${this.path}${ConstantAPI.USER_GET}`,
-      this.authenticated.verifyTokenAndAuthorization,
+      verifyToken,
       this.getUser,
     )
 

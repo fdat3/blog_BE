@@ -1,5 +1,5 @@
 import { NextFunction, Router } from 'express'
-
+import * as fs from 'fs'
 import Controller, {
   Request,
   Response,
@@ -27,12 +27,13 @@ import logger from '@/utils/logger.util'
 import BaseController from '@/controllers/base.controller'
 import * as _ from 'lodash'
 import { SNSEnum } from '@/enums/auth.enum'
-
+import ImageController from './image.controller'
 class AuthController implements Controller {
   public path: string
   public router: Router
   private authService: AuthService
   private baseController: BaseController
+  private imageController: ImageController
   private validate: Validate
 
   constructor() {
@@ -41,6 +42,7 @@ class AuthController implements Controller {
     this.authService = new AuthService()
     this.validate = new Validate()
     this.baseController = new BaseController()
+    this.imageController = new ImageController()
     this.initialiseRoutes()
   }
 
@@ -63,14 +65,13 @@ class AuthController implements Controller {
       this.facebookLogin,
     )
   }
-
   private register = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { fullname, email, password, dob } = req.body
+      const { fullname, email, password, dob, avatar } = req.body
 
       const emailValidated = this.validate.validateEmail(email)
       if (!emailValidated) {
@@ -110,6 +111,7 @@ class AuthController implements Controller {
       const newUserData = {
         fullname,
         email,
+        avatar,
         password,
         dob,
       }

@@ -1,5 +1,5 @@
 import { sequelize } from '@/config/sql.config'
-import { Blog } from '@/models/pg'
+import { Blog, User } from '@/models/pg'
 import logger from '@/utils/logger.util'
 import Message from '@/constants/message.constant'
 import { ICrudOption } from '@/interfaces/controller.interface'
@@ -13,7 +13,7 @@ export class BlogExtendAttribute {
       (
         SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
         FROM votes
-        WHERE "votes"."user_id" = '${userId}' 
+        WHERE "votes"."user_id" = '${userId}'
         AND "votes"."blog_id" = "Blog"."id" 
         AND "votes"."deleted_at" IS NULL 
         GROUP BY "votes"."blog_id"
@@ -74,23 +74,30 @@ class BlogRepository {
             BlogExtendAttribute.upVoteCount,
             BlogExtendAttribute.downVoteCount,
             BlogExtendAttribute.commentCount,
-          ],
-        }
-        queryInfo.includes = [
-          {
-            association: 'comments',
-          },
-        ]
+          ]
+        };
       }
       const result = await this.model.findByPk(id, {
         ...baseController.applyFindOptions(queryInfo),
-      })
-      return result
+        include: [
+          {
+            association: 'comments',
+            include: [
+              {
+                association: 'user',
+                attributes: ['fullname']
+              }
+            ]
+          },
+        ],
+      });
+      return result;
     } catch (err) {
-      logger.error(err)
-      return null
+      logger.error(err);
+      return null;
     }
   }
+
 
   public async findById(id: string): Promise<Partial<Blog> | null> {
     try {
