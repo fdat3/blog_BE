@@ -34,7 +34,7 @@ export class Blog extends Model<
   declare id: CreationOptional<number>
   declare userId: number | null
   declare title: string | null
-  declare subTitle: string | null
+  declare hashtag: string | null
   declare slug: string | null
   declare meta: string | null
   declare body: string | null
@@ -95,7 +95,7 @@ export class Blog extends Model<
         title: {
           type: DataTypes.TEXT,
         },
-        subTitle: {
+        hashtag: {
           type: DataTypes.TEXT,
         },
         slug: {

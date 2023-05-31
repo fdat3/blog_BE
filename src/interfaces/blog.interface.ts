@@ -1,6 +1,6 @@
 export default interface Blog {
   title: string
-  subTitle: string
+  hashtag: string
   slug: string
   meta: string
   body: string

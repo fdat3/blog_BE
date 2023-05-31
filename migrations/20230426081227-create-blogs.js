@@ -18,7 +18,7 @@ module.exports = {
                 type: DataTypes.TEXT,
                 field: 'title'
             },
-            subTitle: {
+            hashtag: {
                 type: DataTypes.TEXT,
                 field: 'sub_title'
             },
